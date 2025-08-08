@@ -7,7 +7,7 @@ import { ItemCategoryFormData } from "@/core/models/requestItem/request-item.mod
 import { GET_CATEGORY_BY_PARENTID } from "@/core/graphql/queries/getCategories";
 import { ENV } from "@/core/config/env";
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
-import { Category } from "@/core/models/category/category";
+import { Category } from "@/core/models/categories/category";
 import { CategorySelectionSchema } from "@/core/validators/request-item.schema";
 import Button from "../ui/Button";
 

@@ -8,8 +8,8 @@ export const GET_BUSINESS_LIST = gql`
     $provinceIds: String!
     $cityIds: String!
     $suburbIds: String!
-    $page: Int!
-    $size: Int!
+    $size: Int = null
+    $page: Int = null
   ) {
     getBusinessList(
       statusIds: $statusIds

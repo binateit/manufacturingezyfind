@@ -8,12 +8,12 @@ import Link from "next/link";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGavel } from "@fortawesome/free-solid-svg-icons";
-import { Product } from "@/core/models/products/Product.model";
-import slugify from "slugify";
+import { ProductItem } from "@/core/models/products/productList";
 import ProductImage from "./ProductCard/ProductImage";
+import { slugify } from "@/lib/slugify";
 
 interface BidProductProps {
-  product: Product;
+  product: ProductItem;
 }
 
 export default function BidProduct({ product }: BidProductProps) {

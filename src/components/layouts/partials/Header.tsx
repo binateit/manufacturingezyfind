@@ -8,7 +8,7 @@ import Menu from './Header/Menu';
 import TopBar from './Header/TopBar';
 // import Search from './Search';
 import { useAppUI } from '@/contexts/AppUIContext';
-import { GlobalFilter } from '@/core/models/filter/globalfilter';
+import { GlobalFilter } from '@/core/models/filters/globalfilter';
 import { slugify } from '@/lib/slugify';
 import Logo from './Header/Logo';
 import Search from './Search';

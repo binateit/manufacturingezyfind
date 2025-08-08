@@ -1,4 +1,4 @@
-import { BusinessItem } from "@/core/models/business/businessList";
+import { BusinessItem } from "@/core/models/businesses/businessList";
 import { formatDate } from "@/lib/format";
 import { slugify } from "@/lib/slugify";
 import { faMapMarked } from "@fortawesome/free-solid-svg-icons";

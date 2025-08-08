@@ -11,7 +11,6 @@ interface ProductImageProps {
 }
 
 export default function ProductImage({ productImage, alt }: ProductImageProps) {
-    console.log('productImage', `${ENV.IMAGE_URL}${productImage}`)
   return (
     <div className="relative overflow-hidden mb-4">
       <div className="aspect-2/1">

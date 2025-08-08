@@ -1,8 +1,8 @@
 import { FC, useCallback, useState } from "react";
 import { AdvancedMarker, AdvancedMarkerProps, APIProvider, InfoWindow, Map, useAdvancedMarkerRef } from '@vis.gl/react-google-maps';
-import { BusinessItem } from "@/core/models/business/businessList";
+import { BusinessItem } from "@/core/models/businesses/businessList";
 import { ENV } from "@/core/config/env";
-import { MarkerData } from "@/core/models/business/markerData";
+import { MarkerData } from "@/core/models/businesses/markerData";
 
 type Props = {
     businesses: BusinessItem[];

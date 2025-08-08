@@ -4,10 +4,10 @@ import ProductInfo from "./ProductCard/ProductInfo";
 import QuantitySelector from "./ProductCard/QuantitySelector";
 import DateSelector from "./ProductCard/DateSelector";
 import Button from "../ui/Button";
-import { Product } from "@/core/models/products/Product.model";
+import { ProductItem } from "@/core/models/products/productList";
 
 interface HireProductProps {
-  product: Product;
+  product: ProductItem;
 }
 
 export default function HireProduct({ product }: HireProductProps) {

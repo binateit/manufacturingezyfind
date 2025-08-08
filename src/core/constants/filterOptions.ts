@@ -4,8 +4,8 @@ export interface Scope {
 }
 
 export interface SalesType {
-  salesTypeId: number;
-  salesTypeName: string;
+  saleTypeId: number;
+  saleTypeName: string;
 }
 
 export const SCOPES: Scope[] = [
@@ -16,7 +16,7 @@ export const SCOPES: Scope[] = [
 ];
 
 export const SALES_TYPES: SalesType[] = [
-  { salesTypeId: 1, salesTypeName: "Purchase" },
-  { salesTypeId: 2, salesTypeName: "Bid" },
-  { salesTypeId: 3, salesTypeName: "Hire" },
+  { saleTypeId: 1, saleTypeName: "Purchase" },
+  { saleTypeId: 2, saleTypeName: "Bid" },
+  { saleTypeId: 3, saleTypeName: "Hire" },
 ];

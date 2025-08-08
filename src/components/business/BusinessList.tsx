@@ -1,26 +1,28 @@
 import { ENV } from "@/core/config/env";
-import { BusinessItem } from "@/core/models/business/businessList";
+import { BusinessItem } from "@/core/models/businesses/businessList";
 import { slugify } from "@/lib/slugify";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { FilterSection } from "../ui/FilterSection";
-import { BusinessRequest } from "@/core/models/business/businessRequest";
+import { SearchBusinessRequest } from "@/core/models/businesses/businessRequest";
 import { GET_CATEGORY_BY_PARENTID } from "@/core/graphql/queries/getCategories";
 import { GET_CITIES } from "@/core/graphql/queries/getCities";
 import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
 import { GET_SUBURB } from "@/core/graphql/queries/getSuburbs";
-import { City } from "@/core/models/location/city";
-import { Suburb } from "@/core/models/location/suburb";
+import { City } from "@/core/models/locations/city";
+import { Suburb } from "@/core/models/locations/suburb";
 import { useQuery } from "@apollo/client";
 import { GET_BUSINESS_LIST } from "@/core/graphql/queries/getBusinessList";
 import { DEFAULT_PAGE_SIZE } from "@/core/constants";
-import { BusinessItemCard } from "./BusinessItemCard";
+import { BusinessItemCard } from "./partials/BusinessItemCard";
 import { Pagination } from "../shared/Pagination";
 import BusinessMapListing from "./BusinessMapListing";
-import { Province } from "@/core/models/location/province";
-import { Category } from "@/core/models/category/category";
+import { Province } from "@/core/models/locations/province";
+import { Category } from "@/core/models/categories/category";
 import Loading from "../shared/Loading";
+import { PaginationInfo } from "../shared/PaginationInfo";
+import { NoRecordsCard } from "../ui/NoRecordsCard";
 
 type FilterState = {
     searchText?: string;
@@ -82,7 +84,7 @@ export default function BusinessList({
         filters.city?.includes(suburb.cityId)
     );
 
-    const variables: BusinessRequest = {
+    const variables: SearchBusinessRequest = {
         statusIds: "1",
         companyName: filters.searchText,
         categoryIds: filters.category?.join(",") || String(ENV.CATEGORY_ID),
@@ -93,7 +95,7 @@ export default function BusinessList({
         size: filters.size ?? DEFAULT_PAGE_SIZE,
     };
 
-    const { data, loading, refetch } = useQuery(GET_BUSINESS_LIST, {
+    const { data, loading } = useQuery(GET_BUSINESS_LIST, {
         variables,
         fetchPolicy: "network-only",
     });
@@ -149,7 +151,7 @@ export default function BusinessList({
                 size: DEFAULT_PAGE_SIZE,
             });
         }
-    }, [provinces, cities, suburbs]);
+    }, [provinces, cities, suburbs, categories, searchParams]);
 
     useEffect(() => {
         if (data?.getBusinessList) {
@@ -279,16 +281,16 @@ export default function BusinessList({
             {/* Right Business Listing */}
             <div className="basis-12/12 lg:basis-8/12 xl:basis-9/12 mt-5 lg:mt-0">
                 {pagination && (
-                    <div className="bg-white card-shadow py-3 px-3 flex gap-3 items-center justify-between mb-5">
-                        <div className="text-sm">
-                            Showing {DEFAULT_PAGE_SIZE * (pagination.currentPage - 1) + 1} to{" "}
-                            {Math.min(pagination.currentPage * DEFAULT_PAGE_SIZE, pagination.count)} of{" "}
-                            {pagination.count} Manufacturing Businesses
-                        </div>
-                    </div>
+                    <PaginationInfo
+                        currentPage={pagination.currentPage}
+                        pageSize={DEFAULT_PAGE_SIZE}
+                        totalCount={pagination.count}
+                        label="Manufacturing Businesses"
+                    />
                 )}
 
                 {/* Business Cards */}
+                {businesses.length === 0 && (<NoRecordsCard />)}
                 <div className="flex flex-wrap gap-y-5 -mx-[12px]">
                     {businesses.map((business, index) => (
                         <BusinessItemCard key={`${business.companyId}-${index}`} business={business} />

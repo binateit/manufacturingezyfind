@@ -19,12 +19,39 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  swcMinify: true,
-  
   // ✅ Enable Experimental Features
   experimental: {
     optimizeCss: true, // Reduce CSS size
     scrollRestoration: true, // Better navigation UX
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: '/manufacturing/business/:id/:slug.html',
+        destination: '/manufacturing/business/:id/:slug', // maps to [...companyId].tsx
+      },
+      {
+        source: '/manufacturing/product/:id/:slug.html',
+        destination: '/manufacturing/product/:id/:slug', // maps to [...productId].tsx
+      },
+      {
+        source: '/manufacturing/article/:id/:slug.html',
+        destination: '/manufacturing/article/:id/:slug', // maps to [...articleId].tsx
+      },
+      {
+        source: '/manufacturing/jobs/:id/:slug.html',
+        destination: '/manufacturing/jobs/:id/:slug', // maps to [...jobId].tsx
+      },
+      {
+        source: '/manufacturing/tenders/:id/:slug.html',
+        destination: '/manufacturing/tenders/:id/:slug', // maps to [...tenderId].tsx
+      },
+      {
+        source: '/manufacturing/digital/:id/:slug.html',
+        destination: '/manufacturing/digital/:id/:slug', // maps to [...eflyerId].tsx
+      },
+    ];
   },
 
   // ✅ Enable HTTP/2 & Cache-Control Headers
@@ -41,21 +68,7 @@ const nextConfig: NextConfig = {
   },
 
   // ✅ Optimize Server Rendering
-  output: "standalone", // Reduce server-side bundle size
-
-   // ✅ Edge Runtime for Faster API Responses
-   async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: "/api/:path*", // Keep the same API structure
-      },
-      {
-        source: "/businesses/:companyId/:slug.html",
-        destination: "/businesses/:companyId/:slug",
-      }
-    ];
-  },
+  output: "export", // Reduce server-side bundle size
 
   // ✅ Enable Web Analytics for Core Web Vitals
   // analyticsId: process.env.NEXT_PUBLIC_ANALYTICS_ID || "",

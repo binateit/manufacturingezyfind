@@ -1,6 +1,6 @@
-import { ProductBid } from "./ProductBid.model";
+import { ProductBid } from "./productBid";
 
-export interface Product {
+export interface ProductItem {
   productID: number;
   productName: string;
   productImage: string;

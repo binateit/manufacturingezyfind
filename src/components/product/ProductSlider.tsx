@@ -2,7 +2,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Product } from '@/core/models/products/Product.model';
+import { ProductItem } from '@/core/models/products/productList';
 import { productSliderSetting } from '@/core/config/productSliderSetting';
 import PurchaseProduct from './PurchaseProduct';
 import BidProduct from './BidProduct';
@@ -11,10 +11,10 @@ import HireProduct from './HireProduct';
 
 
 interface ProductSliderProps {
-  products: Product[];
+  products: ProductItem[];
 }
 
-const componentMap: Record<number, React.FC<{ product: Product }>> = {
+const componentMap: Record<number, React.FC<{ product: ProductItem }>> = {
   1: PurchaseProduct,
   2: BidProduct,
   3: HireProduct

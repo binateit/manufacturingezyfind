@@ -2,11 +2,10 @@ import BusinessList from '@/components/business/BusinessList';
 import Loading from '@/components/shared/Loading';
 import { ENV } from '@/core/config/env';
 import { GET_BUSINESS_LIST } from '@/core/graphql/queries/getBusinessList';
-import { BusinessItem } from '@/core/models/business/businessList';
-import { BusinessRequest } from '@/core/models/business/businessRequest';
+import { BusinessItem } from '@/core/models/businesses/businessList';
+import { SearchBusinessRequest } from '@/core/models/businesses/businessRequest';
 import { initializeApollo } from '@/lib/apolloClient';
 import { getString } from '@/lib/stringUtils';
-import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
 interface Props {
@@ -25,13 +24,13 @@ export default function BusinessesPage({ businesses, pagination }: Props) {
     if (!isReady) return <Loading />; // prevent undefined query on first render
 
     const searchParams = {
-    category: getString(query.category),
-    province: getString(query.province),
-    city: getString(query.city),
-    suburb: getString(query.suburb),
-    text: getString(query.text),
-    page: query.page ? parseInt(query.page as string, 10) : 1,
-};
+        category: getString(query.category),
+        province: getString(query.province),
+        city: getString(query.city),
+        suburb: getString(query.suburb),
+        text: getString(query.text),
+        page: query.page ? parseInt(query.page as string, 10) : 1,
+    };
 
     return (
         <>
@@ -48,9 +47,9 @@ export default function BusinessesPage({ businesses, pagination }: Props) {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getStaticProps = async () => {
     const apolloClient = initializeApollo();
-    const businessRequest: BusinessRequest = {
+    const businessRequest: SearchBusinessRequest = {
         statusIds: '1',
         categoryIds: String(ENV.CATEGORY_ID),
         provinceIds: '',

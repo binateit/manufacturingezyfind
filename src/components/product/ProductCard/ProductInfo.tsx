@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { formatCurrency } from "@/lib/format";
-import slugify from "slugify";
+import { slugify } from "@/lib/slugify";
 
 interface ProductInfoProps {
   productID: number;

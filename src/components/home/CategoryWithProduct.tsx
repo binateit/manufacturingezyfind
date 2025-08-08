@@ -3,11 +3,10 @@ import Image from 'next/image';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { GET_CATEGORY_BY_PARENTID } from '@/core/graphql/queries/getCategories';
 import { ENV } from '@/core/config/env';
-import { Category } from '@/core/models/category/category';
-import { GET_PRODUCTS_BY_CATEGORY } from '@/core/graphql/queries/getProductsByCategory';
-import { Product } from '@/core/models/products/Product.model';
-import { ProductsByCategoryResponse } from '@/core/models/products/ProductByCategory.model';
+import { Category } from '@/core/models/categories/category';
 import ProductSlider from '../product/ProductSlider';
+import { ProductItem } from '@/core/models/products/productList';
+import { GET_PRODUCTS } from '@/core/graphql/queries/getProductList';
 
 
 
@@ -22,7 +21,7 @@ const fallbackImages = [
 
 export default function CategoryWithProduct() {
   const client = useApolloClient();
-  const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({});
+  const [categoryProducts, setCategoryProducts] = useState<Record<string, ProductItem[]>>({});
 
   const { loading: categoryLoading, data: categoryData } = useQuery(GET_CATEGORY_BY_PARENTID, {
     variables: { id: Number(ENV.CATEGORY_ID), size: 20 }
@@ -38,8 +37,8 @@ export default function CategoryWithProduct() {
       try {
         const responses = await Promise.all(
           categories.map(category =>
-            client.query<ProductsByCategoryResponse>({
-              query: GET_PRODUCTS_BY_CATEGORY,
+            client.query({
+              query: GET_PRODUCTS,
               variables: {
                 domainCategoryIds: String(category.categoryId),
                 page: 1,
@@ -49,7 +48,7 @@ export default function CategoryWithProduct() {
           )
         );
 
-        const newCategoryProducts: Record<string, Product[]> = {};
+        const newCategoryProducts: Record<string, ProductItem[]> = {};
         responses.forEach((res, idx) => {
           const categoryId = String(categories[idx].categoryId);
           newCategoryProducts[categoryId] = res.data.getPrdProductList?.result || [];

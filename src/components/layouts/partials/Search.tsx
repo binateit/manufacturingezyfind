@@ -1,9 +1,9 @@
 import { ENV } from "@/core/config/env";
-import { Category } from "@/core/models/category/category";
-import { GlobalFilter } from "@/core/models/filter/globalfilter";
-import { City } from "@/core/models/location/city";
-import { Province } from "@/core/models/location/province";
-import { Suburb } from "@/core/models/location/suburb";
+import { Category } from "@/core/models/categories/category";
+import { GlobalFilter } from "@/core/models/filters/globalfilter";
+import { City } from "@/core/models/locations/city";
+import { Province } from "@/core/models/locations/province";
+import { Suburb } from "@/core/models/locations/suburb";
 import { SelectOptionNumber, SelectOptionString } from "@/core/models/shared/selectOption";
 import { dropdownStyle } from "@/styles/primereact/header-dropdown";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";

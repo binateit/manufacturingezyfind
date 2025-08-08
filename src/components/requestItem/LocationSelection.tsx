@@ -7,9 +7,9 @@ import { LocationSelectionFormData } from "@/core/models/requestItem/request-ite
 import { GET_CITY_BY_PROVINCE } from "@/core/graphql/queries/getCitiesByProvince";
 import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
 import { GET_SUBURB_BY_CITY } from "@/core/graphql/queries/getSuburbsByCity";
-import { City } from "@/core/models/location/city";
-import { Province } from "@/core/models/location/province";
-import { Suburb } from "@/core/models/location/suburb";
+import { City } from "@/core/models/locations/city";
+import { Province } from "@/core/models/locations/province";
+import { Suburb } from "@/core/models/locations/suburb";
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
 import { LocationSelectionSchema } from "@/core/validators/request-item.schema";
 import { Button } from "primereact/button";

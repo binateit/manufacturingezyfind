@@ -2,8 +2,8 @@ import Slider, { LazyLoadTypes } from "react-slick";
 import Link from "next/link";
 import { useQuery } from '@apollo/client';
 import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
-import { City } from "@/core/models/location/city";
-import { Province } from "@/core/models/location/province";
+import { City } from "@/core/models/locations/city";
+import { Province } from "@/core/models/locations/province";
 import { GET_CITIES } from "@/core/graphql/queries/getCities";
 import slugify from "slugify";
 
@@ -78,7 +78,6 @@ export default function ProvinceWithCities() {
 }
 
 function groupCitiesByProvince(cities: City[], provinces: Province[]) {
-    debugger;
     const cityMap = new Map<string, City[]>();
 
     cities

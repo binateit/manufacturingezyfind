@@ -23,8 +23,8 @@ select:invalid {
     padding: 0px 15px;
 }
 
-.conatiner-full {
-    margin: 0 15px;
+.container-full {
+  margin: 0 15px;
 }
 
 @layer utilities {
@@ -313,10 +313,10 @@ ul.nav-ul {
     border-bottom: none;
 }
 
-ul.nav-ul li:nth-child(2) {
+/* ul.nav-ul li:nth-child(2) {
     border-left: 0;
     border-right: 0;
-}
+} */
 
 .tab-header svg {
     position: absolute;
@@ -411,4 +411,25 @@ table {
 
 .form-wizard-steps {
     display: none !important;
+}
+
+.custom-html-content h1,
+.custom-html-content h2,
+.custom-html-content h3 {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.custom-html-content p {
+  margin-bottom: 1rem;
+}
+
+.custom-html-content ul {
+  padding-left: 1.5rem;
+  list-style: disc;
+  margin-bottom: 1rem;
+}
+
+.custom-html-content li {
+  margin-bottom: 0.5rem;
 }

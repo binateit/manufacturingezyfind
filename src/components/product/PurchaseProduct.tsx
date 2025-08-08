@@ -1,16 +1,16 @@
 import { useState } from "react";
 import Link from "next/link";
-import { Product } from "@/core/models/products/Product.model";
-import slugify from "slugify";
+import { ProductItem } from "@/core/models/products/productList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Button from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/format";
 import ProductImage from "./ProductCard/ProductImage";
+import { slugify } from "@/lib/slugify";
 
 
 interface PurchaseProductProps {
-  product: Product;
+  product: ProductItem;
 }
 
 export default function PurchaseProduct({ product }: PurchaseProductProps) {
