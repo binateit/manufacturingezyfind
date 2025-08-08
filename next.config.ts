@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
 
   // ✅ Enable Experimental Features
   experimental: {
-    optimizeCss: true, // Reduce CSS size
+    optimizeCss: false, // Reduce CSS size
     scrollRestoration: true, // Better navigation UX
   },
 
