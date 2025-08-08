@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui";
 import PageBanner from "@/components/ui/PageBanner";
-import { initialLoginValues } from "@/core/auth/LoginModal";
-import { LoginValidationSchema } from "@/core/validators/login-form-schema";
+import { initialLoginValues } from "@/core/models/auth/login";
+import { LoginValidationSchema } from "@/core/validators/login-schema";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
@@ -9,7 +9,6 @@ import { useFormik } from "formik";
 import Link from "next/link";
 
 export default function LoginPage() {
-    const dashboard = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
     const formik = useFormik({
         initialValues: initialLoginValues,
@@ -76,11 +75,16 @@ export default function LoginPage() {
                         {formik.touched.password && formik.errors.password && (
                             <div className='mt-1 text-sm text-red-600'>{formik.errors.password}</div>
                         )}
-                        <div className='mt-2 text-right'>
-                            <Link href='/forgot-password' className='text-sm text-primary hover:underline'>
-                                Forgot Password?
-                            </Link>
+                    </div>
+                    <div className='flex justify-between items-center'>
+                        <div className='flex gap-2 items-center'>
+                            <div className='relative h-5 w-5 '>
+                                <input type='checkbox' name='remember' id='remember' className='peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border border-slate-300 checked:bg-slate-800 checked:border-slate-800' />
+                                <span className='inline-block absolute h-3 w-2 border-r-3 border-b-3 border-amber-50 rotate-45 left-1/2 top-[2px] -translate-x-1/2'></span>
+                            </div>
+                            <label htmlFor='remember' className='text-sm cursor-pointer'>Remember Me</label>
                         </div>
+                        <Link href={'/forgot-password'} className='text-primary text-sm md:text-md inline-block'>Forgot Password?</Link>
                     </div>
 
                     <div className='text-center mt-10'>
@@ -89,6 +93,15 @@ export default function LoginPage() {
                             {formik.isSubmitting ? 'Logging in...' : 'Log in'}
                         </button>
                         <p className='text-gray-500 my-4'>Don&apos;t Have An Account? <Link href='/register' className='text-primary'>Register Now</Link></p>
+                        {/* <p className='text-md'>Sign in with one-click with your social accounts.</p>
+                        <div className='flex flex-col sm:flex-row justify-between mt-5 gap-4'>
+                            <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 items-center w-full transition-all delay-100 hover:bg-gray-50 '>
+                                <Image src={'/images/facebook-icon.webp'} width={26} height={26} alt='facebook-icon' /> Sign in with Facebook
+                            </a>
+                            <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 w-full transition-all delay-100 hover:bg-gray-50 '>
+                                <Image src={'/images/google-icon.webp'} width={26} height={26} alt='google-icon' /> Sign in with Google
+                            </a>
+                        </div> */}
                     </div>
                 </form>
             </Card>

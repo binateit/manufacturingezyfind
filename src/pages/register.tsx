@@ -1,6 +1,5 @@
 import PageBanner from "@/components/ui/PageBanner";
 import { Card } from "@/components/ui";
-import { IndividualRegister, individualRegisterInitialValues } from "@/core/auth/IndividualRegister";
 import { GET_CITY_BY_PROVINCE } from "@/core/graphql/queries/getCitiesByProvince";
 import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
 import { GET_SUBURB_BY_CITY } from "@/core/graphql/queries/getSuburbsByCity";
@@ -8,7 +7,7 @@ import { City } from "@/core/models/locations/city";
 import { Province } from "@/core/models/locations/province";
 import { Suburb } from "@/core/models/locations/suburb";
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
-import { individualRegisterValidationSchema } from "@/core/validators/individual-register-form-schema";
+import { individualRegisterValidationSchema } from "@/core/validators/individual-register-schema";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { useFormik } from "formik";
 import { useEffect, useMemo } from "react";
@@ -17,6 +16,7 @@ import { faAngleRight, faEnvelope, faLock, faMobile, faUser } from "@fortawesome
 import clsx from "clsx";
 import { Dropdown } from "primereact/dropdown";
 import Link from "next/link";
+import { IndividualRegister, individualRegisterInitialValues } from "@/core/models/registration/individualRegister";
 
 const RegisterPage = () => {
     const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
@@ -47,7 +47,7 @@ const RegisterPage = () => {
     const formik = useFormik<IndividualRegister>({
         initialValues: individualRegisterInitialValues,
         validationSchema: individualRegisterValidationSchema,
-        onSubmit: async (values, actions) => {
+        onSubmit: async () => {
             
         }
     });
@@ -193,12 +193,12 @@ const RegisterPage = () => {
                             <label className='mb-2 block'>Confirm Password</label>
                             <div className='relative'>
                                 <input
-                                    {...formik.getFieldProps('repeatPassword')}
+                                    {...formik.getFieldProps('confirmPassword')}
                                     type='password'
                                     placeholder='Confirm Password'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
-                                        formik.touched.repeatPassword && formik.errors.repeatPassword
+                                        formik.touched.confirmPassword && formik.errors.confirmPassword 
                                             ? 'border border-red-500'
                                             : 'border border-gray-300'
                                     )}
@@ -207,14 +207,14 @@ const RegisterPage = () => {
                                     icon={faLock}
                                     className={clsx(
                                         'absolute top-1/2 right-4 transform -translate-y-1/2',
-                                        formik.touched.repeatPassword && formik.errors.repeatPassword
+                                        formik.touched.confirmPassword && formik.errors.confirmPassword
                                             ? 'text-red-500'
                                             : 'text-gray-500'
                                     )}
                                 />
                             </div>
-                            {formik.touched.repeatPassword && formik.errors.repeatPassword && (
-                                <div className='mt-1 text-sm text-red-600'>{formik.errors.repeatPassword}</div>
+                            {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                                <div className='mt-1 text-sm text-red-600'>{formik.errors.confirmPassword}</div>
                             )}
                         </div>
 
@@ -339,18 +339,18 @@ const RegisterPage = () => {
                         <div className='flex items-start gap-2 mb-4'>
                             <input
                                 type='checkbox'
-                                name='accept'
-                                id='accept'
-                                checked={formik.values.accept}
+                                name='agreeTerms'
+                                id='agreeTerms'
+                                checked={formik.values.agreeTerms}
                                 onChange={formik.handleChange}
                                 className='mt-1'
                             />
-                            <label htmlFor='accept' className='text-sm'>
+                            <label htmlFor='agreeTerms' className='text-sm'>
                                 I agree that the information provided above is true to my knowledge and accept the terms & conditions
                             </label>
                         </div>
-                        {formik.touched.accept && formik.errors.accept && (
-                            <div className='text-sm text-red-600 -mt-2 mb-2'>{formik.errors.accept}</div>
+                        {formik.touched.agreeTerms && formik.errors.agreeTerms && (
+                            <div className='text-sm text-red-600 -mt-2 mb-2'>{formik.errors.agreeTerms}</div>
                         )}
 
 
@@ -358,13 +358,21 @@ const RegisterPage = () => {
                             <button
                                 type="submit"
                                 className="py-2 hover:cursor-pointer duration-300 ease-in-out bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10"
-                                disabled={formik.isSubmitting || !formik.isValid}>
+                                >
                                 {!formik.isSubmitting ? 'Register ' : 'Please wait...'}
                                 {!formik.isSubmitting ? <FontAwesomeIcon icon={faAngleRight} /> : <span className='spinner-border spinner-border-sm align-middle ms-2'></span>}
                             </button>
 
                             <p className='text-gray-500 my-4'>Already Have An Account? <Link href='/login' className='text-primary'>Login</Link></p>
-                            <p className='text-md'>Sign in with one-click with your social accounts.</p>
+                            {/* <p className='text-md'>Sign in with one-click with your social accounts.</p>
+                            <div className='flex flex-col sm:flex-row justify-between mt-5 gap-4'>
+                                <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 items-center w-full transition-all delay-100 hover:bg-gray-50 '>
+                                    <Image src={'/images/facebook-icon.webp'} width={26} height={26} alt='facebook-icon' /> Sign in with Facebook
+                                </a>
+                                <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 w-full transition-all delay-100 hover:bg-gray-50 '>
+                                    <Image src={'/images/google-icon.webp'} width={26} height={26} alt='google-icon' /> Sign in with Google
+                                </a>
+                            </div> */}
                             
                         </div>
                     </form>

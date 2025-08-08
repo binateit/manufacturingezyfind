@@ -10,7 +10,7 @@ export const MENU_ITEMS: MenuItem[] = [
   { label: "Articles", href: "/manufacturing/article" },
   { label: "Digital Catalogue", href: "/manufacturing/digital" },
   { label: "Special", href: "/manufacturing/special" },
-  { label: "List Your Business", href: "/register-business" },
+  { label: "List Your Business", href: "/manufacturing/list-business" },
   { label: "Jobs", href: "/manufacturing/jobs" },
   { label: "Tenders", href: "/manufacturing/tenders" },
   { label: "Contact", href: "/manufacturing/contact" },

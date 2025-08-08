@@ -23,3 +23,10 @@ export enum PostCategory {
     Bursary = 8,
     Blog = 9,
 }
+
+export enum Tenure {
+    OneMonth = 1,
+    ThreeMonths = 3,
+    SixMonths = 6,
+    TwelveMonths = 12,
+} 

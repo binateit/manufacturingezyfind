@@ -11,3 +11,4 @@ export function detectMobileOS(): 'Huawei' | 'Android' | 'Unknown' {
 
   return 'Unknown';
 }
+

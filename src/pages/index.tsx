@@ -13,6 +13,7 @@ import Testimonials from "@/components/widgets/Testimonials";
 import PartnerLogosSlider from "@/components/widgets/PartnerLogosSlider";
 import ProvinceWithCities from "@/components/widgets/ProvinceWithCities";
 import CategoryWithProduct from "@/components/home/CategoryWithProduct";
+import { SubscriptionPlan } from "@/components/pricing/SubscriptionPlan";
 
 export default function HomePage() {
   const { toggleRegisterModal } = useAppUI()
@@ -208,7 +209,10 @@ export default function HomePage() {
           </div>
 
           <div className="container">
-            {/* <Packages /> */}
+            <h3 className="sm:text-3xl md:text-4xl/10 font-bold mb-10 text-center uppercase">Do you own a business?</h3>
+            <h2 className="sm:text-3xl md:text-4xl/10 font-bold mb-10 text-center uppercase">We help you grow it. Register today!</h2>
+            <h1 className="sm:text-3xl md:text-4xl/10 font-bold mb-10 text-center uppercase">Select Subscription Plans</h1>
+            <SubscriptionPlan />
           </div>
 
           <div className="py-10 md:py-15 bg-gray-50">
@@ -236,10 +240,3 @@ export default function HomePage() {
     </>)
 }
 
-// export async function getServerSideProps() {
-//   return {
-//     props: {
-//       data: 'Server-side content',
-//     },
-//   };
-// }

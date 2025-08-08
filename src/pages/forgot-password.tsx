@@ -6,8 +6,8 @@ import clsx from "clsx"
 import { useFormik } from "formik"
 import Link from "next/link"
 import { useState } from "react"
-import { initialForgotPasswordValue } from "@/core/auth/ForotPasswordModal"
-import { ForgotPasswordSchema } from "@/core/validators/forgot-form-schema"
+import { initialForgotPasswordValue } from "@/core/models/auth/forgotPassword"
+import { ForgotPasswordSchema } from "@/core/validators/forgot-password-schema"
 
 export default function ForgotPasswordPage() {
     const [loading, setLoading] = useState(false)
@@ -18,9 +18,9 @@ export default function ForgotPasswordPage() {
         onSubmit: async (values, actions) => {
             setLoading(true)
             try {
-                
+                console.log("Forgot Password Values:", values)
             } catch (error) {
-
+                console.error("Error during forgot password:", error instanceof Error ? error.message : 'Something went wrong')
             }
             setLoading(false)
             actions.setSubmitting(false)

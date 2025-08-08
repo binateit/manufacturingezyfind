@@ -1,25 +1,29 @@
-export interface IndividualRegister {
+export interface BusinessRegisterModel {
+    companyName: string;
+    categoryId?: number;
     firstName: string;
     lastName: string;
     email: string;
     password: string;
-    repeatPassword: string;
+    confirmPassword: string;
     mobileNumber: string;
     provinceId?: number;
     cityId?: number;
     suburbId?: number;
-    accept: boolean;
+    agreeTerms: boolean;
 }
 
-export const individualRegisterInitialValues: IndividualRegister = {
+export const businessRegisterInitialValues: BusinessRegisterModel = {
+    companyName: '',
+    categoryId: undefined,
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    repeatPassword: '',
+    confirmPassword: '',
     mobileNumber: '',
     provinceId: undefined,
     cityId: undefined,
     suburbId: undefined,
-    accept: false,
+    agreeTerms: false,
 };

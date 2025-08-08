@@ -17,7 +17,7 @@ const RegisterModal = () => {
                     <FontAwesomeIcon icon={faTimes} className=' absolute top-2 right-2 text-xl cursor-pointer transition-all hover:text-[var(--primary-color)] scale-100 hover:scale-120 ' onClick={() => toggleRegisterModal()} />
 
                     <div className='flex justify-center gap-5'>
-                        <Link href={'/subscription-plan'} className='px-4 bg-white flex max-[500px]:flex-col max-[500px]:gap-0 flex-row gap-3 justify-center items-center' onClick={() => toggleRegisterModal()}>
+                        <Link href={'/manufacturing/list-business'} className='px-4 bg-white flex max-[500px]:flex-col max-[500px]:gap-0 flex-row gap-3 justify-center items-center' onClick={() => toggleRegisterModal()}>
                             <FontAwesomeIcon icon={faBriefcase} className='text-3xl max-[500px]:mb-0 mb-2 text-[var(--primary-color)] transition-all group-hover:text-white' />
                             <p className='text-center text-[18px]'>Business User</p>
                         </Link>
