@@ -7,6 +7,8 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import "@fontsource/poppins/300.css";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/600.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import RootLayout from "@/components/layouts/RootLayout";
 import { AppUIProvider } from "@/providers/AppUIProvider";
 import { ApolloProvider } from "@apollo/client";

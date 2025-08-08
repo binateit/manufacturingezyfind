@@ -2,8 +2,6 @@ import MoreLinks from "@/components/home/MoreLink";
 import VideoBanner from "@/components/home/VideoBanner";
 import { useAppUI } from "@/contexts/AppUIContext";
 import { useInView } from "react-intersection-observer";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import RequestItemForm from "@/components/requestItem/RequestItemForm";
 import Link from "next/link";
 import Image from "next/image";
