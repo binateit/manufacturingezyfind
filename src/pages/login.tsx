@@ -1,23 +1,19 @@
 import { Card } from "@/components/ui";
 import PageBanner from "@/components/ui/PageBanner";
+import { initialLoginValues } from "@/core/auth/LoginModal";
+import { LoginValidationSchema } from "@/core/validators/login-form-schema";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { useFormik } from "formik";
 import Link from "next/link";
-import * as Yup from 'yup';
 
 export default function LoginPage() {
     const dashboard = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
     const formik = useFormik({
-        initialValues: { email: '', password: '' },
-        validationSchema: Yup.object({
-            email: Yup.string().email('Invalid email').required('Email is required'),
-            password: Yup.string()
-                .matches(/^(?=.*[A-Z])(?=.*\d).*$/, 'Include at least one capital letter and one number')
-                .required('Password is required'),
-        }),
+        initialValues: initialLoginValues,
+        validationSchema: LoginValidationSchema,
         onSubmit: async (values, actions) => {
             actions.setSubmitting(true);
             const token = 'Basic ' + window.btoa(`${values.email}:${values.password}`);
@@ -80,6 +76,11 @@ export default function LoginPage() {
                         {formik.touched.password && formik.errors.password && (
                             <div className='mt-1 text-sm text-red-600'>{formik.errors.password}</div>
                         )}
+                        <div className='mt-2 text-right'>
+                            <Link href='/forgot-password' className='text-sm text-primary hover:underline'>
+                                Forgot Password?
+                            </Link>
+                        </div>
                     </div>
 
                     <div className='text-center mt-10'>
