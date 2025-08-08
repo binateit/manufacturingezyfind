@@ -54,7 +54,7 @@ export async function getStaticPaths() {
     });
 
     const paths = finalData.getBusinessList?.result?.map((business: BusinessItem) => ({
-        params: { companyId: [`${business?.companyId || ''}`, `${slugify(business?.companyName) || ''}`] },
+        params: { companyId: [`${business?.companyId || ''}`, `${slugify(business?.companyName) || ''}.html`] },
     })) || [];
 
 
