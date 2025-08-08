@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { FilterSection } from "../ui/FilterSection";
 import { GET_CATEGORY_BY_PARENTID } from "@/core/graphql/queries/getCategories";
 import { useQuery } from "@apollo/client";
-import { DEFAULT_PAGE_SIZE, SALES_TYPES, SalesType, Scope, SCOPES } from "@/core/constants";
+import { DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { Pagination } from "../shared/Pagination";
 import { Category } from "@/core/models/categories/category";
 import Loading from "../shared/Loading";

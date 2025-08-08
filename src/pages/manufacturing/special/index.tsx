@@ -1,4 +1,3 @@
-import ProductList from "@/components/product/ProductList";
 import Loading from "@/components/shared/Loading";
 import SpecialList from "@/components/special/SpecialList";
 import { ENV } from "@/core/config/env";
