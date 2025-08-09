@@ -433,3 +433,12 @@ table {
 .custom-html-content li {
   margin-bottom: 0.5rem;
 }
+
+.custom-html-content h1 {
+    color: var(--color-red-800);
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
+    margin-bottom: calc(var(--spacing) * 4);
+}

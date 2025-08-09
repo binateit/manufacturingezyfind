@@ -46,8 +46,8 @@ export default function TenderList({
         domainId: Number(ENV.CATEGORY_ID),
         categoryId: PostCategory.Tender,
         title: filters.searchText,
-        page: DEFAULT_PAGE,
-        size: DEFAULT_PAGE_SIZE,
+        page: filters.page,
+        size: filters.size || DEFAULT_PAGE_SIZE,
     };
 
     const { data, loading } = useQuery(GET_POST_LIST, {

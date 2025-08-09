@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
     scrollRestoration: true,
   },
 
-  output: "export", // fully static
+  output: "standalone", // fully static
 
   reactStrictMode: true,
 
