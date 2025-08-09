@@ -5,6 +5,6 @@ export const LoginValidationSchema = Yup.object().shape({
         .email('Invalid email')
         .required('Email is required'),
     password: Yup.string()
-        .matches(/^(?=.*[A-Z])(?=.*\d).*$/, 'Include at least one capital letter and one number')
+        .min(6, 'Password must be at least 6 characters')
         .required('Password is required'),
 })

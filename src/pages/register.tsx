@@ -17,6 +17,8 @@ import clsx from "clsx";
 import { Dropdown } from "primereact/dropdown";
 import Link from "next/link";
 import { IndividualRegister, individualRegisterInitialValues } from "@/core/models/registration/individualRegister";
+import { emailChecker, mobileChecker, registerUser } from "@/lib/OAuth";
+import { detectMobileOS } from "@/lib/utils";
 
 const RegisterPage = () => {
     const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
@@ -47,8 +49,47 @@ const RegisterPage = () => {
     const formik = useFormik<IndividualRegister>({
         initialValues: individualRegisterInitialValues,
         validationSchema: individualRegisterValidationSchema,
-        onSubmit: async () => {
-            
+        onSubmit: async (values, actions) => {
+            actions.setSubmitting(true);
+            const emailCheck = await emailChecker(values.email);
+            if (emailCheck?.message === 'Email already exists') {
+                formik.setFieldError('email', emailCheck.message);
+                actions.setSubmitting(false);
+                return;
+            }
+            const mobileCheck = await mobileChecker(values.mobileNumber);
+            if (mobileCheck?.result !== 'true') {
+                formik.setFieldError('mobileNumber', mobileCheck?.message || 'Phone number already exists');
+                actions.setSubmitting(false)
+                return;
+            }
+
+            const result = await registerUser({
+                email: values.email,
+                contactNo: values.mobileNumber,
+                userName: `${values.firstName} ${values.lastName}`,
+                password: values.password,
+                track: 1,
+                firstName: values.firstName,
+                lastName: values.lastName,
+                fullName: `${values.firstName} ${values.lastName}`,
+                provinceID: Number(values.provinceId),
+                cityID: Number(values.cityId),
+                suburbID: Number(values.suburbId),
+                userProfileImage: null,
+                userProfileThumbNailImage: null,
+                domainUrl: '1',
+                paymentUrl: null
+            },
+                detectMobileOS() === 'Unknown' ? 1 : 0
+            );
+            actions.setSubmitting(false)
+            if (result?.token) {
+                console.log('Successfully registered!');
+                window.location.replace('/');
+            } else {
+                console.log('Failed to register');
+            }
         }
     });
 
@@ -198,7 +239,7 @@ const RegisterPage = () => {
                                     placeholder='Confirm Password'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
-                                        formik.touched.confirmPassword && formik.errors.confirmPassword 
+                                        formik.touched.confirmPassword && formik.errors.confirmPassword
                                             ? 'border border-red-500'
                                             : 'border border-gray-300'
                                     )}
@@ -358,7 +399,7 @@ const RegisterPage = () => {
                             <button
                                 type="submit"
                                 className="py-2 hover:cursor-pointer duration-300 ease-in-out bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10"
-                                >
+                            >
                                 {!formik.isSubmitting ? 'Register ' : 'Please wait...'}
                                 {!formik.isSubmitting ? <FontAwesomeIcon icon={faAngleRight} /> : <span className='spinner-border spinner-border-sm align-middle ms-2'></span>}
                             </button>
@@ -373,7 +414,7 @@ const RegisterPage = () => {
                                     <Image src={'/images/google-icon.webp'} width={26} height={26} alt='google-icon' /> Sign in with Google
                                 </a>
                             </div> */}
-                            
+
                         </div>
                     </form>
                 </Card>
