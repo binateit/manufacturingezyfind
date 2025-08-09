@@ -6,18 +6,46 @@ import { ProductDetails } from "@/core/models/products/productDetail";
 import { ProductItem } from "@/core/models/products/productList";
 import { initializeApollo } from "@/lib/apolloClient";
 import { slugify } from "@/lib/slugify";
+import { toSeoSlug } from "@/lib/utils";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 
 interface Props {
     product: ProductDetails | null;
 }
 
 export default function ProductDetailPage({ product }: Props) {
-    if(product === null) {
+    if (product === null) {
         return <div className="container my-10">Product not found</div>;
     }
+    const title = product.productName.length > 50
+        ? `${product.productName.slice(0, 50).trim().substring(0, product.productName.slice(0, 50).lastIndexOf(' '))}`
+        : `${product.productName} | www.ManufacturingEzyFind.co.za`;
+
+    const description = product.description?.length > 100
+        ? `${product.description.slice(0, 100).replace(/<[^>]*>?/gm, '').trim().substring(0, product.description.slice(0, 100).replace(/<[^>]*>?/gm, '').lastIndexOf(' '))}...`
+        : 'Manufacturing Products for sale in South Africa';
+
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/product/${product.productID}/${toSeoSlug(product.productName || '')}.html`;
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name="description" content={description} />
+                <link rel="canonical" href={canonicalUrl} />
+                {product?.googleSchema && (
+                    <script
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{
+                            __html: product.googleSchema
+                                .replace(`<script type=\"application/ld+json\">\r\n{`, '')
+                                .replace(`}\r\n</script>`, '')
+                        }}
+                    />
+                )}
+            </Head>
             <ProductDetail product={product} />
         </>
     );

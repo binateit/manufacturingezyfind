@@ -1,3 +1,5 @@
+import slugify from "slugify";
+
 export function detectMobileOS(): 'Huawei' | 'Android' | 'Unknown' {
   const userAgent = navigator.userAgent || navigator.vendor;
 
@@ -12,3 +14,11 @@ export function detectMobileOS(): 'Huawei' | 'Android' | 'Unknown' {
   return 'Unknown';
 }
 
+export function toSeoSlug(text: string): string {
+  return slugify(text, {
+    lower: true,
+    replacement: "-",
+    strict: true,
+    trim: true,
+  });
+}

@@ -8,7 +8,9 @@ import { PostDetail } from "@/core/models/posts/postDetail";
 import { PostItem } from "@/core/models/posts/postList";
 import { initializeApollo } from "@/lib/apolloClient";
 import { slugify } from "@/lib/slugify";
+import { toSeoSlug } from "@/lib/utils";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 
 interface Props {
     tender: PostDetail | null;
@@ -18,8 +20,30 @@ export default function TenderDetailPage({ tender }: Props) {
     if (tender === null) {
         return <div className="container my-10">Tender not found</div>;
     }
+    const title = tender?.titleSEO + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Article'
+    const description = tender?.descriptionSEO || 'Manufacturing articles covering all sectors of the manufacturing industy.';
+    const keywords = tender?.keywordsSEO || 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${tender?.postID}/${toSeoSlug(tender?.title || '')}.html`;
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name="description" content={description} />
+                <meta name="keywords" content={keywords} />
+                <link rel="canonical" href={canonicalUrl} />
+                {tender?.googleSchema && (
+                        <script
+                            type="application/ld+json"
+                            dangerouslySetInnerHTML={{
+                                __html: tender.googleSchema
+                                    .replace(`<script type=\"application/ld+json\">\r\n{`, '')
+                                    .replace(`}\r\n</script>`, '')
+                            }}
+                        />
+                )}
+            </Head>
             <TenderDetail tender={tender} />
         </>
     );

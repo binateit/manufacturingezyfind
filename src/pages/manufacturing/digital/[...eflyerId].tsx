@@ -1,5 +1,6 @@
 import MagazineDetail from "@/components/magazines/MagazineDetail";
 import PageBanner from "@/components/ui/PageBanner";
+import { ENV } from "@/core/config/env";
 import { GET_MAGAZINES_DETAILS } from "@/core/graphql/queries/getMagazineDetail";
 import { GET_MAGAZINES_LIST } from "@/core/graphql/queries/getMagazineList";
 import { MagazineDetails } from "@/core/models/magazines/magazineDetail";
@@ -7,7 +8,9 @@ import { MagazineItem } from "@/core/models/magazines/magazineList";
 
 import { initializeApollo } from "@/lib/apolloClient";
 import { slugify } from "@/lib/slugify";
+import { toSeoSlug } from "@/lib/utils";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 
 interface Props {
     magazine: MagazineDetails | null;
@@ -17,8 +20,19 @@ export default function MagazineDetailPage({ magazine }: Props) {
     if (magazine === null) {
         return <div className="container my-10">Magazine not found</div>;
     }
+    const title = magazine?.magazineName + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Digital Catalogue'
+    const description = magazine?.eFlyerDescription || 'Manufacturing digital catalogue covering all sectors of the manufacturing industy.';
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/digital/${magazine?.eflyerId}/${toSeoSlug(magazine?.magazineName || '')}.html`;
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name="description" content={description} />
+                <link rel="canonical" href={canonicalUrl} />
+
+            </Head>
             <PageBanner title={magazine.magazineName || 'Digital Catalogue'} backgroundImage='/images/manufacturing.webp' />
             <MagazineDetail magazine={magazine} />
         </>

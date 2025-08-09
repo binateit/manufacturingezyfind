@@ -12,6 +12,7 @@ export interface BusinessDetails {
   compCityID: number | null;
   compCityName: string | null;
   compCountryID: number | null;
+  compCategory: string | null;
   compCountryName: string | null;
   compDescription: string | null;
   compEmailId: string | null;
@@ -23,6 +24,8 @@ export interface BusinessDetails {
   compStreetAddress: string | null;
   compSuburb: string | null;
   compSuburbID: number | null;
+  suburbName: string | null;
+  companyID: number | null;
   compWebSite: string | null;
   directorsCount: number | null;
   documentPath: string | null;
