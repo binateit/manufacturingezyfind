@@ -494,3 +494,9 @@ table {
     margin: 0;
     padding: 6px 0 6px 22px
 }
+
+.custom-html-content a:link, .custom-html-content a:visited {
+    color: blue;
+    background-color: transparent;
+    text-decoration: none;
+}
