@@ -38,3 +38,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+
+Meta Tags Sample
+
+<!-- HTML Meta Tags -->
+<title>SA Manufacturing B2B Marketplace | Mining & Engineering Business Directory</title>
+<meta name="description" content="Connect with 10000+ industrial suppliers in South Africa. Browse the leading B2B marketplace for manufacturing, mining, engineering & construction companies. Get quotes today!">
+
+<!-- Facebook Meta Tags -->
+<meta property="og:url" content="https://www.manufacturingezyfind.co.za">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SA Manufacturing B2B Marketplace | Mining & Engineering Business Directory">
+<meta property="og:description" content="Connect with 10000+ industrial suppliers in South Africa. Browse the leading B2B marketplace for manufacturing, mining, engineering & construction companies. Get quotes today!">
+<meta property="og:image" content="https://opengraph.b-cdn.net/production/images/884433fd-aa41-4175-82ec-89c9fdb656a4.jpg?token=KjEp9Yjx3w8_9GFmdL3SASpC7bqXKi9Y4spzL4zQ-_8&height=800&width=1200&expires=33290724663">
+
+<!-- Twitter Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta property="twitter:domain" content="manufacturingezyfind.co.za">
+<meta property="twitter:url" content="https://www.manufacturingezyfind.co.za">
+<meta name="twitter:title" content="SA Manufacturing B2B Marketplace | Mining & Engineering Business Directory">
+<meta name="twitter:description" content="Connect with 10000+ industrial suppliers in South Africa. Browse the leading B2B marketplace for manufacturing, mining, engineering & construction companies. Get quotes today!">
+<meta name="twitter:image" content="https://opengraph.b-cdn.net/production/images/884433fd-aa41-4175-82ec-89c9fdb656a4.jpg?token=KjEp9Yjx3w8_9GFmdL3SASpC7bqXKi9Y4spzL4zQ-_8&height=800&width=1200&expires=33290724663">
