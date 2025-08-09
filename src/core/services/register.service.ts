@@ -1,8 +1,8 @@
 import { EMAIL_CHECK } from "@/core/graphql/queries/emailCheck";
-import { initializeApollo } from "./apolloClient";
+import { initializeApollo } from "../../lib/apolloClient";
 import { MOBILE_CHECK } from "@/core/graphql/queries/mobileCheck";
 import { REGISTER_USER } from "@/core/graphql/queries/individual-register";
-import { RegisterUserDto, UserInputType } from "@/core/models/registration/individualRegister";
+import { RegisterUserResponseDto, IndividualRegister } from "@/core/models/registration/individualRegister";
 import { EmailCheckDto } from "@/core/models/registration/emailCheckModal";
 import { MobileCheckDto } from "@/core/models/registration/mobileCheckModal";
 
@@ -34,12 +34,12 @@ export async function mobileChecker(mobile: string): Promise<MobileCheckDto> {
     }
 }
 
-export async function registerUser(userData: UserInputType, platform: number): Promise<RegisterUserDto> {
+export async function registerUser(userData: IndividualRegister, platform: number): Promise<RegisterUserResponseDto> {
     try {
         const response = await apolloClient.mutate({
             mutation: REGISTER_USER,
             variables: {
-                userDto:userData, platform,
+                userDto: userData, platform,
             },
         });
         if (!response || !response.data) throw new Error('Cannot register')

@@ -10,14 +10,14 @@ export const individualRegisterValidationSchema = Yup.object({
     confirmPassword: Yup.string()
         .required('Confirm Password is required')
         .oneOf([Yup.ref('password')], 'Passwords must match'),
-    mobileNumber: Yup.string()
+    contactNo: Yup.string()
         .required('Mobile Number is required')
         .matches(/^\d+$/, 'Mobile Number must contain only digits')
         .min(7, 'Mobile Number must be at least 7 digits')
         .max(15, 'Mobile Number must be at most 15 digits'),
-    provinceId: Yup.number().required('Province is required'),
-    cityId: Yup.number().required('City is required'),
-    suburbId: Yup.number().required('Suburb is required'),
+    provinceID: Yup.number().required('Province is required'),
+    cityID: Yup.number().required('City is required'),
+    suburbID: Yup.number().required('Suburb is required'),
     agreeTerms: Yup.boolean()
         .oneOf([true], 'You must accept the terms and conditions')
         .required('You must accept the terms and conditions')

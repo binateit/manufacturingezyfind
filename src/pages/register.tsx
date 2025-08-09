@@ -17,7 +17,7 @@ import clsx from "clsx";
 import { Dropdown } from "primereact/dropdown";
 import Link from "next/link";
 import { IndividualRegister, individualRegisterInitialValues } from "@/core/models/registration/individualRegister";
-import { emailChecker, mobileChecker, registerUser } from "@/lib/OAuth";
+import { emailChecker, mobileChecker, registerUser } from "@/core/services/register.service";
 import { detectMobileOS } from "@/lib/utils";
 
 const RegisterPage = () => {
@@ -57,29 +57,24 @@ const RegisterPage = () => {
                 actions.setSubmitting(false);
                 return;
             }
-            const mobileCheck = await mobileChecker(values.mobileNumber);
+            const mobileCheck = await mobileChecker(values.contactNo);
             if (mobileCheck?.result !== 'true') {
-                formik.setFieldError('mobileNumber', mobileCheck?.message || 'Phone number already exists');
+                formik.setFieldError('contactNo', mobileCheck?.message || 'Phone number already exists');
                 actions.setSubmitting(false)
                 return;
             }
 
             const result = await registerUser({
                 email: values.email,
-                contactNo: values.mobileNumber,
+                contactNo: values.contactNo,
                 userName: `${values.firstName} ${values.lastName}`,
-                password: values.password,
-                track: 1,
                 firstName: values.firstName,
                 lastName: values.lastName,
-                fullName: `${values.firstName} ${values.lastName}`,
-                provinceID: Number(values.provinceId),
-                cityID: Number(values.cityId),
-                suburbID: Number(values.suburbId),
-                userProfileImage: null,
-                userProfileThumbNailImage: null,
-                domainUrl: '1',
-                paymentUrl: null
+                password: values.password,
+                track: 1,
+                provinceID: Number(values.provinceID),
+                cityID: Number(values.cityID),
+                suburbID: Number(values.suburbID),
             },
                 detectMobileOS() === 'Unknown' ? 1 : 0
             );
@@ -95,19 +90,19 @@ const RegisterPage = () => {
 
 
     useEffect(() => {
-        if (formik.values.provinceId !== 0) {
-            getCitiesByProvince({ variables: { id: formik.values.provinceId } });
-            formik.setFieldValue("cityId", 0);
-            formik.setFieldValue("suburbId", 0);
+        if (formik.values.provinceID !== 0) {
+            getCitiesByProvince({ variables: { id: formik.values.provinceID } });
+            formik.setFieldValue("cityID", 0);
+            formik.setFieldValue("suburbID", 0);
         }
-    }, [formik.values.provinceId]);
+    }, [formik.values.provinceID]);
 
     useEffect(() => {
-        if (formik.values.cityId !== 0) {
-            getSuburbsByCity({ variables: { id: formik.values.cityId } });
-            formik.setFieldValue("suburbId", 0);
+        if (formik.values.cityID !== 0) {
+            getSuburbsByCity({ variables: { id: formik.values.cityID } });
+            formik.setFieldValue("suburbID", 0);
         }
-    }, [formik.values.cityId]);
+    }, [formik.values.cityID]);
     return (
         <>
             <PageBanner
@@ -264,26 +259,26 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>Province</label>
                                 <Dropdown
                                     loading={provinceLoading}
-                                    name="provinceId"
-                                    value={formik.values.provinceId}
+                                    name="provinceID"
+                                    value={formik.values.provinceID}
                                     options={provinceOptions}
                                     optionLabel="label"
                                     placeholder="Select Province"
                                     onChange={(e) => {
-                                        formik.setFieldValue('provinceId', e.value);
-                                        formik.setFieldValue('cityId', '');
-                                        formik.setFieldValue('suburbId', '');
+                                        formik.setFieldValue('provinceID', e.value);
+                                        formik.setFieldValue('cityID', '');
+                                        formik.setFieldValue('suburbID', '');
                                     }}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.provinceId && formik.errors.provinceId
+                                        formik.touched.provinceID && formik.errors.provinceID
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.provinceId && formik.errors.provinceId && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceId}</div>
+                                {formik.touched.provinceID && formik.errors.provinceID && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceID}</div>
                                 )}
                             </div>
 
@@ -291,26 +286,26 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>City</label>
                                 <Dropdown
                                     loading={cityLoading}
-                                    name="cityId"
-                                    value={formik.values.cityId}
+                                    name="cityID"
+                                    value={formik.values.cityID}
                                     options={cityOptions}
                                     optionLabel="label"
                                     placeholder="Select City"
                                     onChange={(e) => {
-                                        formik.setFieldValue('cityId', e.value);
-                                        formik.setFieldValue('suburbId', '');
+                                        formik.setFieldValue('cityID', e.value);
+                                        formik.setFieldValue('suburbID', '');
                                     }}
-                                    disabled={!formik.values.provinceId}
+                                    disabled={!formik.values.provinceID}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.cityId && formik.errors.cityId
+                                        formik.touched.cityID && formik.errors.cityID
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.cityId && formik.errors.cityId && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.cityId}</div>
+                                {formik.touched.cityID && formik.errors.cityID && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.cityID}</div>
                                 )}
                             </div>
 
@@ -320,23 +315,23 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>Suburb</label>
                                 <Dropdown
                                     loading={suburbLoading}
-                                    name="suburbId"
-                                    value={formik.values.suburbId}
+                                    name="suburbID"
+                                    value={formik.values.suburbID}
                                     options={suburbOptions}
                                     optionLabel="label"
                                     placeholder="Select Suburb"
-                                    onChange={(e) => formik.setFieldValue('suburbId', e.value)}
-                                    disabled={!formik.values.cityId}
+                                    onChange={(e) => formik.setFieldValue('suburbID', e.value)}
+                                    disabled={!formik.values.cityID}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.suburbId && formik.errors.suburbId
+                                        formik.touched.suburbID && formik.errors.suburbID
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.suburbId && formik.errors.suburbId && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbId}</div>
+                                {formik.touched.suburbID && formik.errors.suburbID && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbID}</div>
                                 )}
                             </div>
 
@@ -350,12 +345,12 @@ const RegisterPage = () => {
                                         className='form-control border-r-0 w-[50px] h-10 px-3 text-sm border border-gray-300 bg-gray-100'
                                     />
                                     <input
-                                        {...formik.getFieldProps('mobileNumber')}
+                                        {...formik.getFieldProps('contactNo')}
                                         type='text'
                                         placeholder='Enter mobile number'
                                         className={clsx(
                                             'form-control w-full h-10 px-3 pr-10 text-sm',
-                                            formik.touched.mobileNumber && formik.errors.mobileNumber
+                                            formik.touched.contactNo && formik.errors.contactNo
                                                 ? 'border border-red-500'
                                                 : 'border border-gray-300'
                                         )}
@@ -364,14 +359,14 @@ const RegisterPage = () => {
                                         icon={faMobile}
                                         className={clsx(
                                             'absolute right-4 top-1/2 transform -translate-y-1/2',
-                                            formik.touched.mobileNumber && formik.errors.mobileNumber
+                                            formik.touched.contactNo && formik.errors.contactNo
                                                 ? 'text-red-500'
                                                 : 'text-gray-500'
                                         )}
                                     />
                                 </div>
-                                {formik.touched.mobileNumber && formik.errors.mobileNumber && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.mobileNumber}</div>
+                                {formik.touched.contactNo && formik.errors.contactNo && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.contactNo}</div>
                                 )}
                             </div>
 
