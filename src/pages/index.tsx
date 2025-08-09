@@ -14,6 +14,8 @@ import PartnerLogosSlider from "@/components/widgets/PartnerLogosSlider";
 import ProvinceWithCities from "@/components/widgets/ProvinceWithCities";
 import CategoryWithProduct from "@/components/home/CategoryWithProduct";
 import { SubscriptionPlan } from "@/components/pricing/SubscriptionPlan";
+import Head from "next/head";
+import { ENV } from "@/core/config/env";
 
 export default function HomePage() {
   const { toggleRegisterModal } = useAppUI()
@@ -22,8 +24,26 @@ export default function HomePage() {
     threshold: 0.1, // Trigger when 10% visible
   });
 
+  const title = 'SA Manufacturing B2B Marketplace | Mining & Engineering Business Directory'
+  const description = 'Connect with 10000+ industrial suppliers in South Africa. Browse the leading B2B marketplace for manufacturing, mining, engineering & construction companies. Get quotes today!';
+  const keywords = 'Manufacturing B2B marketplace, Manufacturing business directory, SA industrial suppliers, Mining companies directory, engineering companies directory, manufacturing mobile app, manufacturing b2b marketplace mobile app'
+  const canonicalUrl = `${ENV.DOMAIN_URL}`;
+
+
   return (
     <>
+    <Head>
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <meta name="keywords" content={keywords} />
+      <link rel="canonical" href={canonicalUrl} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content="https://www.manufacturingezyfind.co.za/" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+    </Head>
       <div className="flex flex-col md:flex-row md:flex-wrap xl:flex-row">
         <div className="basis-12/12 md:basis-12/12 lg:order-1 xl:basis-9/16 xl:order-2 relative overflow-hidden mt-0">
           <VideoBanner />
