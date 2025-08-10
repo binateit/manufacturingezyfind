@@ -24,7 +24,7 @@ export default function LoginPage() {
                 const loginResult = await authService.login(token);
                 if (loginResult && loginResult.token) {
                     tokenService.setLoggedUserDetail(loginResult.token, loginResult.tokenExpires, loginResult.firstName, loginResult.lastName);
-                    let user = JSON.stringify(loginResult);
+                    const user = JSON.stringify(loginResult);
                     window.location.replace(`${ENV.DASHBOARD_URL}?token=${loginResult.token}&value=${user}`);
                 } else {
                     toast.error('Login failed. Please check your credentials.');

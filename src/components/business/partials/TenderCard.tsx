@@ -9,7 +9,6 @@ import { SearchPostRequest } from "@/core/models/posts/postRequest";
 import { formatDate } from "@/lib/format";
 import { slugify } from "@/lib/slugify";
 import { useQuery } from "@apollo/client";
-import Image from "next/image";
 import Link from "next/link";
 import Slider, { Settings } from "react-slick";
 
