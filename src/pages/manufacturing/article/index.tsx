@@ -7,6 +7,7 @@ import { GET_POST_LIST } from "@/core/graphql/queries/getPostList";
 import { PostItem } from "@/core/models/posts/postList";
 import { SearchPostRequest } from "@/core/models/posts/postRequest";
 import { initializeApollo } from "@/lib/apolloClient";
+import Head from "next/head";
 
 interface ArticlePageProps {
     articles: PostItem[];
@@ -18,9 +19,20 @@ interface ArticlePageProps {
 }
 
 export default function ArticlePage({ articles, pagination }: ArticlePageProps) {
-    
+
+    const title = 'ManufacturingEzyFind | Article'
+    const description = 'Manufacturing articles covering all sectors of the manufacturing industy.';
+    const keywords = 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article`;
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="description" content={description} />
+                <meta name="keywords" content={keywords} />
+                <link rel="canonical" href={canonicalUrl} />
+            </Head>
             <div className="my-10">
                 <div className="container">
                     <ArticleList

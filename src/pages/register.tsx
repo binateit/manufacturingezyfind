@@ -9,7 +9,7 @@ import { Suburb } from "@/core/models/locations/suburb";
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
 import { individualRegisterValidationSchema } from "@/core/validators/individual-register-schema";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import { useEffect, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faEnvelope, faLock, faMobile, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -17,10 +17,20 @@ import clsx from "clsx";
 import { Dropdown } from "primereact/dropdown";
 import Link from "next/link";
 import { IndividualRegister, individualRegisterInitialValues } from "@/core/models/registration/individualRegister";
-import { emailChecker, mobileChecker, registerUser } from "@/core/services/register.service";
 import { detectMobileOS } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { tokenService } from "@/core/services/token.service";
+import { authService } from "@/core/services/authService";
+import { ENV } from "@/core/config/env";
+import { useCookies } from "react-cookie";
+import Cryptr from "cryptr";
+
+
+const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
+const cryptr = new Cryptr(secretKey as string);
 
 const RegisterPage = () => {
+    const [, setCookie] = useCookies(['EzyFind_UID', 'EzyFind_Contract'])
     const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
     const [getCitiesByProvince, { data: cityData, loading: cityLoading }] = useLazyQuery(GET_CITY_BY_PROVINCE);
     const [getSuburbsByCity, { data: suburbData, loading: suburbLoading }] = useLazyQuery(GET_SUBURB_BY_CITY);
@@ -49,60 +59,95 @@ const RegisterPage = () => {
     const formik = useFormik<IndividualRegister>({
         initialValues: individualRegisterInitialValues,
         validationSchema: individualRegisterValidationSchema,
-        onSubmit: async (values, actions) => {
+        onSubmit: async (values, actions: FormikHelpers<IndividualRegister>) => {
             actions.setSubmitting(true);
-            const emailCheck = await emailChecker(values.email);
-            if (emailCheck?.message === 'Email already exists') {
-                formik.setFieldError('email', emailCheck.message);
+
+            // Use AuthService to check email and mobile
+            const isEmailExists = await authService.emailCheck(values.email);
+            if (isEmailExists) {
                 actions.setSubmitting(false);
-                return;
+                formik.setFieldError('email', 'Email Address already exists');
+                return
             }
-            const mobileCheck = await mobileChecker(values.contactNo);
-            if (mobileCheck?.result !== 'true') {
-                formik.setFieldError('contactNo', mobileCheck?.message || 'Phone number already exists');
-                actions.setSubmitting(false)
+
+            const isMobileExists = await authService.mobileCheck(values.contactNo);
+            if (isMobileExists) {
+                actions.setSubmitting(false);
+                formik.setFieldError('contactNo', 'Mobile number already exists');
                 return;
             }
 
-            const result = await registerUser({
-                email: values.email,
-                contactNo: values.contactNo,
-                userName: `${values.firstName} ${values.lastName}`,
-                firstName: values.firstName,
-                lastName: values.lastName,
-                password: values.password,
-                track: 1,
-                provinceID: Number(values.provinceID),
-                cityID: Number(values.cityID),
-                suburbID: Number(values.suburbID),
-            },
-                detectMobileOS() === 'Unknown' ? 1 : 0
-            );
-            actions.setSubmitting(false)
-            if (result?.token) {
-                console.log('Successfully registered!');
-                window.location.replace('/');
-            } else {
-                console.log('Failed to register');
+            try {
+                const result = await authService.registerUser(
+                    {
+                        email: values.email,
+                        contactNo: values.contactNo,
+                        userName: `${values.firstName} ${values.lastName}`,
+                        firstName: values.firstName,
+                        lastName: values.lastName,
+                        password: values.password,
+                        track: 1,
+                        provinceID: Number(values.provinceId),
+                        cityID: Number(values.cityId),
+                        suburbID: Number(values.suburbId),
+                        domainUrl: "2"
+                    },
+                    detectMobileOS() === "Unknown" ? 1 : 0
+                );
+
+                actions.setSubmitting(false);
+
+                if (result?.token) {
+                    tokenService.setLoggedUserDetail(result.token, result.tokenExpires, result.firstName ?? '', result.lastName ?? '');
+                    toast.success("Successfully registered!");
+
+                    const session = await authService.getSession(1);
+
+                    if (session?.sessionKeyLogin) {
+                        const cookieOptions = {
+                            path: "/",
+                            expires: new Date(Date.now() + 120 * 60 * 1000), // 2 hours
+                            domain: process.env.NEXT_PUBLIC_ROOT_URL?.replace("https://", "."),
+                        };
+
+                        setCookie("EzyFind_UID", cryptr.encrypt(session.sessionKeyLogin), cookieOptions);
+                        setCookie("EzyFind_Contract", cryptr.encrypt("Contract"), cookieOptions);
+                        window.location.assign(ENV.DASHBOARD_URL);
+                    }
+                    else {
+                        window.location.assign("/");
+                    }
+
+                } else {
+                    toast.error("Registration failed.");
+                }
+
+            }
+            catch (error) {
+                console.log("An error occurred during registration:", error);
+                actions.setSubmitting(false);
+                toast.error("An error occurred during registration.");
             }
         }
+
+
     });
 
 
     useEffect(() => {
-        if (formik.values.provinceID !== 0) {
-            getCitiesByProvince({ variables: { id: formik.values.provinceID } });
+        if (formik.values.provinceId !== 0) {
+            getCitiesByProvince({ variables: { id: formik.values.provinceId } });
             formik.setFieldValue("cityID", 0);
             formik.setFieldValue("suburbID", 0);
         }
-    }, [formik.values.provinceID]);
+    }, [formik.values.provinceId]);
 
     useEffect(() => {
-        if (formik.values.cityID !== 0) {
-            getSuburbsByCity({ variables: { id: formik.values.cityID } });
+        if (formik.values.cityId !== 0) {
+            getSuburbsByCity({ variables: { id: formik.values.cityId } });
             formik.setFieldValue("suburbID", 0);
         }
-    }, [formik.values.cityID]);
+    }, [formik.values.cityId]);
     return (
         <>
             <PageBanner
@@ -260,7 +305,7 @@ const RegisterPage = () => {
                                 <Dropdown
                                     loading={provinceLoading}
                                     name="provinceID"
-                                    value={formik.values.provinceID}
+                                    value={formik.values.provinceId}
                                     options={provinceOptions}
                                     optionLabel="label"
                                     placeholder="Select Province"
@@ -271,14 +316,14 @@ const RegisterPage = () => {
                                     }}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.provinceID && formik.errors.provinceID
+                                        formik.touched.provinceId && formik.errors.provinceId
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.provinceID && formik.errors.provinceID && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceID}</div>
+                                {formik.touched.provinceId && formik.errors.provinceId && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceId}</div>
                                 )}
                             </div>
 
@@ -287,7 +332,7 @@ const RegisterPage = () => {
                                 <Dropdown
                                     loading={cityLoading}
                                     name="cityID"
-                                    value={formik.values.cityID}
+                                    value={formik.values.cityId}
                                     options={cityOptions}
                                     optionLabel="label"
                                     placeholder="Select City"
@@ -295,17 +340,17 @@ const RegisterPage = () => {
                                         formik.setFieldValue('cityID', e.value);
                                         formik.setFieldValue('suburbID', '');
                                     }}
-                                    disabled={!formik.values.provinceID}
+                                    disabled={!formik.values.provinceId}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.cityID && formik.errors.cityID
+                                        formik.touched.cityId && formik.errors.cityId
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.cityID && formik.errors.cityID && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.cityID}</div>
+                                {formik.touched.cityId && formik.errors.cityId && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.cityId}</div>
                                 )}
                             </div>
 
@@ -316,22 +361,22 @@ const RegisterPage = () => {
                                 <Dropdown
                                     loading={suburbLoading}
                                     name="suburbID"
-                                    value={formik.values.suburbID}
+                                    value={formik.values.suburbId}
                                     options={suburbOptions}
                                     optionLabel="label"
                                     placeholder="Select Suburb"
                                     onChange={(e) => formik.setFieldValue('suburbID', e.value)}
-                                    disabled={!formik.values.cityID}
+                                    disabled={!formik.values.cityId}
                                     className={clsx(
                                         'w-full',
-                                        formik.touched.suburbID && formik.errors.suburbID
+                                        formik.touched.suburbId && formik.errors.suburbId
                                             ? 'p-invalid border border-red-500'
                                             : 'border border-gray-300'
                                     )}
                                     filter
                                 />
-                                {formik.touched.suburbID && formik.errors.suburbID && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbID}</div>
+                                {formik.touched.suburbId && formik.errors.suburbId && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbId}</div>
                                 )}
                             </div>
 

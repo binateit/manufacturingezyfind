@@ -13,7 +13,9 @@ import RootLayout from "@/components/layouts/RootLayout";
 import { AppUIProvider } from "@/providers/AppUIProvider";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "@/lib/useApollo";
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { CookiesProvider } from 'react-cookie';
 
 config.autoAddCss = false;
 
@@ -22,14 +24,30 @@ export default function App({ Component, pageProps }: AppProps) {
   const apolloClient = useApollo(pageProps.initialApolloState);
 
   return (
-    <AppUIProvider>
-      <TailwindProvider>
-        <ApolloProvider client={apolloClient}>
-          <RootLayout>
-            <Component {...pageProps} />
-          </RootLayout>
-        </ApolloProvider>
-      </TailwindProvider>
-    </AppUIProvider>
+    <>
+      {/* Global ToastContainer for toast notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000} // Automatically close toast after 5 seconds
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <AppUIProvider>
+        <TailwindProvider>
+          <ApolloProvider client={apolloClient}>
+            <CookiesProvider>
+              <RootLayout>
+                <Component {...pageProps} />
+              </RootLayout>
+            </CookiesProvider>
+          </ApolloProvider>
+        </TailwindProvider>
+      </AppUIProvider>
+    </>
   );
 }

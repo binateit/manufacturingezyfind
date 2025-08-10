@@ -3,6 +3,9 @@ import { GUEST_LOGIN } from "../graphql/queries/guest-login";
 
 const TOKEN_KEY = "access_token";
 const VALID_TO_KEY = "access_token_valid_to";
+const IS_GUEST_TOKEN = "is_guest_token";
+const FIRST_NAME_KEY = "first_name";
+const LAST_NAME_KEY = "last_name";
 const EXPIRY_BUFFER_MS = 60 * 1000; // 1 minute buffer
 
 const isStaticBuild = () => process.env.BUILD_MODE === "static";
@@ -15,45 +18,56 @@ const guestTokenClient = new ApolloClient({
 export class TokenService {
   private tokenPromise: Promise<string | null> | null = null;
 
-  getToken(): string | null {
+  private getStorage(key: string): string | null {
     if (typeof window === "undefined") return null;
-
-    if (isStaticBuild()) {
-      return localStorage.getItem(TOKEN_KEY);
-    }
-
-    const match = document.cookie.match(/(^| )access_token=([^;]+)/);
+    if (isStaticBuild()) return localStorage.getItem(key);
+    const match = document.cookie.match(new RegExp(`(^| )${key}=([^;]+)`));
     return match ? decodeURIComponent(match[2]) : null;
   }
 
-  setToken(token: string, validTo: string) {
+  private setStorage(key: string, value: string, expires?: string) {
     if (typeof window === "undefined") return;
-
-    const expires = new Date(validTo).toUTCString();
-
     if (isStaticBuild()) {
-      localStorage.setItem(TOKEN_KEY, token);
-      localStorage.setItem(VALID_TO_KEY, validTo);
+      localStorage.setItem(key, value);
     } else {
-      document.cookie = `${TOKEN_KEY}=${encodeURIComponent(token)}; path=/; expires=${expires}`;
-      document.cookie = `${VALID_TO_KEY}=${encodeURIComponent(validTo)}; path=/; expires=${expires}`;
+      document.cookie = `${key}=${encodeURIComponent(value)}; path=/; expires=${expires}`;
     }
   }
 
+  getToken(): string | null {
+    return this.getStorage(TOKEN_KEY);
+  }
+
+  getUserName(): string | null {
+    if (typeof window === "undefined") return null;
+    const firstName = this.getStorage(FIRST_NAME_KEY);
+    const lastName = this.getStorage(LAST_NAME_KEY);
+    return firstName && lastName ? `${firstName} ${lastName}` : null;
+  }
+
+  setGuestToken(token: string, validTo: string) {
+    const expires = new Date(validTo).toUTCString();
+    this.setStorage(TOKEN_KEY, token, expires);
+    this.setStorage(VALID_TO_KEY, validTo, expires);
+    this.setStorage(IS_GUEST_TOKEN, JSON.stringify(true), expires);
+  }
+
+  setLoggedUserDetail(token: string, validTo: string, first_name: string, last_name: string) {
+    const expires = new Date(validTo).toUTCString();
+    this.setStorage(TOKEN_KEY, token, expires);
+    this.setStorage(VALID_TO_KEY, validTo, expires);
+    this.setStorage(IS_GUEST_TOKEN, JSON.stringify(false), expires);
+    this.setStorage(FIRST_NAME_KEY, first_name, expires);
+    this.setStorage(LAST_NAME_KEY, last_name, expires);
+  }
+
+  isGuest(): boolean {
+    return Boolean(this.getStorage(IS_GUEST_TOKEN));
+  }
+
   isExpired(): boolean {
-    if (typeof window === "undefined") return true;
-
-    let validTo: string | null = null;
-
-    if (isStaticBuild()) {
-      validTo = localStorage.getItem(VALID_TO_KEY);
-    } else {
-      const match = document.cookie.match(/(^| )access_token_valid_to=([^;]+)/);
-      validTo = match ? decodeURIComponent(match[2]) : null;
-    }
-
+    const validTo = this.getStorage(VALID_TO_KEY);
     if (!validTo) return true;
-
     const expiryTime = new Date(validTo).getTime();
     return Date.now() + EXPIRY_BUFFER_MS > expiryTime;
   }
@@ -74,7 +88,7 @@ export class TokenService {
       .then(res => {
         const result = res?.data?.guestLogin?.result;
         if (result?.value && result?.validTo) {
-          this.setToken(result.value, result.validTo);
+          this.setGuestToken(result.value, result.validTo);
           return result.value;
         }
         return null;
@@ -95,13 +109,11 @@ export class TokenService {
     if (token && !this.isExpired()) {
       return token;
     }
-
     return await this.fetchNewToken();
   }
 
   clearToken() {
     if (typeof window === "undefined") return;
-
     if (isStaticBuild()) {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(VALID_TO_KEY);
