@@ -6,5 +6,4 @@ export interface SearchMagazineRequest extends PaginationRequest {
   provinceIds?: string;
   cityIds?: string;
   suburbIds?: string;
-  categoryIds?: string,
 }

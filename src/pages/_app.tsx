@@ -13,9 +13,7 @@ import RootLayout from "@/components/layouts/RootLayout";
 import { AppUIProvider } from "@/providers/AppUIProvider";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "@/lib/useApollo";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { CookiesProvider } from 'react-cookie';
+
 
 config.autoAddCss = false;
 

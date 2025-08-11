@@ -7,10 +7,6 @@ import RatingWidget from "../widgets/Rating";
 import { RatingKeyType, ReviewKeyType } from "@/core/constants/enum";
 import CategoryWidget from "../widgets/Category";
 import ReviewWidget from "../widgets/Review";
-import SpecialCard from "./partials/SpecialCard";
-import MagazineCard from "./partials/MagazineCard";
-import ProductCard from "./partials/ProductCard";
-import TenderCard from "./partials/TenderCard";
 
 interface BusinessDetailProps {
     business: BusinessDetails;
@@ -39,12 +35,15 @@ export default function BusinessDetail({ business }: BusinessDetailProps) {
                         dangerouslySetInnerHTML={{ __html: business?.compDescription || '' }}
                     ></div>
 
-                    <SpecialCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
-                    <MagazineCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
-                    <ProductCard companyName={business?.companyName || ''} companyId={business?.companyId || -1} />
-                    <TenderCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
+                    {/* <SpecialByBusiness companyId={business?.companyId || null} companyName={business?.companyName || null} />
 
+            <DigitalByBusiness companyId={business?.companyId || null} companyName={business?.companyName || null} />
 
+            <ProductByBusiness companyName={business?.companyName || null} companyId={business?.companyId || null} />
+
+            <TenderByBusiness companyId={business?.companyId || null} companyName={business?.companyName || null} />
+
+             */}
                     <ReviewWidget keyType={ReviewKeyType.Company} key={business?.companyId || 0} keyName={business?.companyName || ''} />
                 </div>
                 <div className="basis-12/12 lg:basis-4/12">
