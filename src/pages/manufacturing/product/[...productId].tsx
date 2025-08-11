@@ -46,7 +46,11 @@ export default function ProductDetailPage({ product }: Props) {
                     sessionId,
                     optimistic: { productName: product.productName || '', productImage: product.productImage || '', unitCost: product.unitCost || 0 },
                 });
-                res.success ? toast.success('Added to cart') : toast.error(res.message || 'Failed to add');
+                if (res.success) {
+                    toast.success('Added to cart');
+                } else {
+                    toast.error(res.message || 'Failed to add');
+                }
             } else if (product.salesTypeId === 3) {
                 if (!fromDate || !endDate) {
                     toast.error('Please select start and end date');
@@ -60,7 +64,11 @@ export default function ProductDetailPage({ product }: Props) {
                     endDate: new Date(endDate).toISOString(),
                     optimistic: { productName: product.productName || '', productImage: product.productImage || '', unitCost: product.unitCost || 0 },
                 });
-                res.success ? toast.success('Added to cart') : toast.error(res.message || 'Failed to add');
+                if (res.success) {
+                    toast.success('Added to cart');
+                } else {
+                    toast.error(res.message || 'Failed to add');
+                }
             }
         } catch {
             toast.error('Failed to add to cart');
@@ -74,7 +82,7 @@ export default function ProductDetailPage({ product }: Props) {
                 <meta name="title" content={title} />
                 <meta name="description" content={description} />
                 <link rel="canonical" href={canonicalUrl} />
-                {product?.googleSchema && (
+                {product?.googleSchema ? (
                     <script
                         type="application/ld+json"
                         dangerouslySetInnerHTML={{
@@ -83,7 +91,7 @@ export default function ProductDetailPage({ product }: Props) {
                                 .replace(`}\r\n</script>`, '')
                         }}
                     />
-                )}
+                ) : null}
             </Head>
             <ProductDetail
                 product={product}

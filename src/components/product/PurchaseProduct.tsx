@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ProductItem } from "@/core/models/products/productList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -54,7 +54,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
       } else {
         toast.error(res.message || "Failed to add to cart");
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to add to cart");
     } finally {
       setIsWorking(false);

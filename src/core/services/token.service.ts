@@ -62,7 +62,13 @@ export class TokenService {
   }
 
   isGuest(): boolean {
-    return Boolean(this.getStorage(IS_GUEST_TOKEN));
+    const raw = this.getStorage(IS_GUEST_TOKEN);
+    if (raw == null) return true; // default to guest if not set
+    try {
+      return JSON.parse(raw) === true;
+    } catch {
+      return true;
+    }
   }
 
   isExpired(): boolean {
@@ -117,9 +123,15 @@ export class TokenService {
     if (isStaticBuild()) {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(VALID_TO_KEY);
+      localStorage.removeItem(IS_GUEST_TOKEN);
+      localStorage.removeItem(FIRST_NAME_KEY);
+      localStorage.removeItem(LAST_NAME_KEY);
     } else {
       document.cookie = `${TOKEN_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       document.cookie = `${VALID_TO_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `${IS_GUEST_TOKEN}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `${FIRST_NAME_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      document.cookie = `${LAST_NAME_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     }
   }
 }
