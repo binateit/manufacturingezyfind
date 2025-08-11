@@ -37,17 +37,17 @@ export default function App({ Component, pageProps }: AppProps) {
         draggable
         pauseOnHover
       />
-      <AppUIProvider>
-        <TailwindProvider>
-          <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={apolloClient}>
+        <AppUIProvider>
+          <TailwindProvider>
             <CookiesProvider>
               <RootLayout>
                 <Component {...pageProps} />
               </RootLayout>
             </CookiesProvider>
-          </ApolloProvider>
-        </TailwindProvider>
-      </AppUIProvider>
+          </TailwindProvider>
+        </AppUIProvider>
+      </ApolloProvider>
     </>
   );
 }

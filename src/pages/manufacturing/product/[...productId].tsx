@@ -9,6 +9,10 @@ import { slugify } from "@/lib/slugify";
 import { toSeoSlug } from "@/lib/utils";
 import { GetStaticProps } from "next";
 import Head from "next/head";
+import { useState } from "react";
+import { cartService } from "@/core/services/cartService";
+import { tokenService } from "@/core/services/token.service";
+import { toast } from "react-toastify";
 
 interface Props {
     product: ProductDetails | null;
@@ -28,6 +32,41 @@ export default function ProductDetailPage({ product }: Props) {
 
     const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/product/${product.productID}/${toSeoSlug(product.productName || '')}.html`;
 
+    const [qty, setQty] = useState(1);
+    const [fromDate, setFromDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
+
+    const handleAddToCart = async () => {
+        try {
+            const sessionId = tokenService.getUserName() ? undefined : tokenService.getToken() || undefined;
+            if (product.salesTypeId === 1) {
+                const res = await cartService.addToCart({
+                    productId: product.productID,
+                    quantity: qty,
+                    sessionId,
+                    optimistic: { productName: product.productName || '', productImage: product.productImage || '', unitCost: product.unitCost || 0 },
+                });
+                res.success ? toast.success('Added to cart') : toast.error(res.message || 'Failed to add');
+            } else if (product.salesTypeId === 3) {
+                if (!fromDate || !endDate) {
+                    toast.error('Please select start and end date');
+                    return;
+                }
+                const res = await cartService.addToCart({
+                    productId: product.productID,
+                    quantity: qty,
+                    sessionId,
+                    fromDate: new Date(fromDate).toISOString(),
+                    endDate: new Date(endDate).toISOString(),
+                    optimistic: { productName: product.productName || '', productImage: product.productImage || '', unitCost: product.unitCost || 0 },
+                });
+                res.success ? toast.success('Added to cart') : toast.error(res.message || 'Failed to add');
+            }
+        } catch {
+            toast.error('Failed to add to cart');
+        }
+    };
+
     return (
         <>
             <Head>
@@ -46,7 +85,19 @@ export default function ProductDetailPage({ product }: Props) {
                     />
                 )}
             </Head>
-            <ProductDetail product={product} />
+            <ProductDetail
+                product={product}
+                quantity={qty}
+                onIncreaseQuantity={() => setQty((q) => q + 1)}
+                onDecreaseQuantity={() => setQty((q) => Math.max(1, q - 1))}
+                hireFromDate={fromDate}
+                hireEndDate={endDate}
+                onChangeHireFromDate={setFromDate}
+                onChangeHireEndDate={setEndDate}
+                onAddToCartClick={handleAddToCart}
+            />
+
+            {/* controls integrated in ProductDetail above */}
         </>
     );
 }

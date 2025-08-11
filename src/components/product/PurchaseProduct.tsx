@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ProductItem } from "@/core/models/products/productList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +7,11 @@ import Button from "@/components/ui/Button";
 import { formatCurrency } from "@/lib/format";
 import ProductImage from "./ProductCard/ProductImage";
 import { slugify } from "@/lib/slugify";
+import { toast } from "react-toastify";
+import { tokenService } from "@/core/services/token.service";
+import { cartService } from "@/core/services/cartService";
+import { useApolloClient } from "@apollo/client";
+import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
 
 
 interface PurchaseProductProps {
@@ -15,6 +20,8 @@ interface PurchaseProductProps {
 
 export default function PurchaseProduct({ product }: PurchaseProductProps) {
   const [orderQuantity, setOrderQuantity] = useState(1);
+  const [isWorking, setIsWorking] = useState(false);
+  const client = useApolloClient();
 
   const handleQuantityChange = (value: number) => {
     setOrderQuantity(Math.max(1, value)); // Minimum 1
@@ -24,6 +31,41 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
   const decrement = () => handleQuantityChange(orderQuantity - 1);
 
   const productLink = `/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}.html`;
+
+  const addToCart = async () => {
+    try {
+      setIsWorking(true);
+      const sessionId = tokenService.getUserName() ? undefined : tokenService.getToken() || undefined;
+      const res = await cartService.addToCart({
+        productId: product.productID,
+        quantity: orderQuantity,
+        sessionId,
+        optimistic: {
+          productName: product.productName,
+          productImage: product.productImage,
+          unitCost: product.unitCost,
+        },
+      });
+      if (res.success) {
+        toast.success("Added to cart");
+        try {
+          await client.refetchQueries({ include: [GET_CART_LIST] });
+        } catch {}
+      } else {
+        toast.error(res.message || "Failed to add to cart");
+      }
+    } catch (err) {
+      toast.error("Failed to add to cart");
+    } finally {
+      setIsWorking(false);
+    }
+  };
+
+  const buyNow = async () => {
+    await addToCart();
+    // Redirect to cart/checkout after adding
+    window.location.assign('/cart');
+  };
 
 
   return (
@@ -70,11 +112,19 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
 
         {/* Actions */}
         <div className="flex justify-between mt-auto gap-2">
-          <Button className="bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] text-sm flex items-center gap-1">
-            Buy Now
+          <Button
+            onClick={buyNow}
+            disabled={isWorking}
+            className="bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] text-sm flex items-center gap-1"
+          >
+            {isWorking ? 'Processing…' : 'Buy Now'}
           </Button>
-          <Button className="bg-white text-sm border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white">
-            Add To Cart
+          <Button
+            onClick={addToCart}
+            disabled={isWorking}
+            className="bg-white text-sm border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white"
+          >
+            {isWorking ? 'Please wait…' : 'Add To Cart'}
           </Button>
         </div>
       </div>

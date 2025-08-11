@@ -7,15 +7,18 @@ import { ENV } from "@/core/config/env";
 import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
 import { PrdShoppingCartDto } from "@/core/models/cart/shoppingCart";
 import { formatCurrency } from "@/lib/format";
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { cartService } from "@/core/services/cartService";
+import { toast } from "react-toastify";
 
 export default function CartPage() {
-    const [loadingStates,] = useState<{ [key: number]: boolean }>({});
+    const client = useApolloClient();
+    const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
     const { data, loading } = useQuery(GET_CART_LIST, {
         variables: { page: 1, size: 10 }
     });
@@ -23,6 +26,50 @@ export default function CartPage() {
     if (loading) return <Loading />;
 
     const cartItems = data?.getPrdShoppingCart?.result?.prdShoppingCartDto || [];
+    const setItemLoading = (id: number, value: boolean) => {
+        setLoadingStates(prev => ({ ...prev, [id]: value }));
+    };
+
+    const increment = async (item: PrdShoppingCartDto) => {
+        const id = item.recordID ?? 0;
+        const nextQty = (item.quantity ?? 0) + 1;
+        setItemLoading(id, true);
+        const res = await cartService.updateCart({ recordId: id, quantity: nextQty });
+        setItemLoading(id, false);
+        if (res.success) {
+            toast.success('Quantity updated');
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+        } else {
+            toast.error(res.message || 'Failed to update');
+        }
+    };
+
+    const decrement = async (item: PrdShoppingCartDto) => {
+        const id = item.recordID ?? 0;
+        const nextQty = Math.max(1, (item.quantity ?? 1) - 1);
+        setItemLoading(id, true);
+        const res = await cartService.updateCart({ recordId: id, quantity: nextQty });
+        setItemLoading(id, false);
+        if (res.success) {
+            toast.success('Quantity updated');
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+        } else {
+            toast.error(res.message || 'Failed to update');
+        }
+    };
+
+    const removeItem = async (item: PrdShoppingCartDto) => {
+        const id = item.recordID ?? 0;
+        setItemLoading(id, true);
+        const res = await cartService.deleteCart(id);
+        setItemLoading(id, false);
+        if (res.success) {
+            toast.success('Item removed');
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+        } else {
+            toast.error(res.message || 'Failed to remove');
+        }
+    };
     const totalAmount = data?.getPrdShoppingCart?.result?.totalAmount || 0;
     const vatAmount = data?.getPrdShoppingCart?.result?.vatAmount || 0;
 
@@ -63,17 +110,17 @@ export default function CartPage() {
                                         <p className="text-lg font-semibold mb-2">{formatCurrency(item.totalPrice ?? 0)}</p>
                                         <p className="uppercase mb-2">Quantity</p>
                                         <div className="flex gap-4">
-                                            <div className="quntity-input-box relative">
-                                                <input type="number" value={item.quantity ?? 0}
+                                        <div className="quntity-input-box relative">
+                                                <input readOnly type="number" value={item.quantity ?? 0}
                                                     className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
-                                                <button className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer">
+                                                <button onClick={() => decrement(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60">
                                                     {loadingStates[item.recordID ?? 0] ? "..." : <FontAwesomeIcon icon={faMinus} />}
                                                 </button>
-                                                <button className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white cursor-pointer">
+                                                <button onClick={() => increment(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60">
                                                     {loadingStates[item.recordID ?? 0] ? "..." : <FontAwesomeIcon icon={faPlus} />}
                                                 </button>
                                             </div>
-                                            <button className="flex justify-center items-center px-4 bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer" disabled={loadingStates[item.recordID ?? 0]}>
+                                            <button onClick={() => removeItem(item)} className="flex justify-center items-center px-4 bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer disabled:opacity-60" disabled={loadingStates[item.recordID ?? 0]}>
                                                 {loadingStates[item.recordID ?? 0] ? "Removing..." : "Remove"}
                                             </button>
                                         </div>

@@ -183,9 +183,10 @@ class AuthService {
         try {
             const { data, errors } = await apolloClient.query({
                 query: SSO_LOGIN,
+                fetchPolicy: 'no-cache',
                 context: {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: token,
                     },
                 },
             });

@@ -14,9 +14,17 @@ import { formatTimeLeft } from "@/lib/formatTimeLeft";
 
 interface ProductDetailProps {
     product: ProductDetails;
+    quantity?: number;
+    onIncreaseQuantity?: () => void;
+    onDecreaseQuantity?: () => void;
+    hireFromDate?: string;
+    hireEndDate?: string;
+    onChangeHireFromDate?: (val: string) => void;
+    onChangeHireEndDate?: (val: string) => void;
+    onAddToCartClick?: () => void;
 }
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function ProductDetail({ product, quantity = 1, onIncreaseQuantity, onDecreaseQuantity, hireFromDate = "", hireEndDate = "", onChangeHireFromDate, onChangeHireEndDate, onAddToCartClick }: ProductDetailProps) {
 
     const images = product?.mapProductImages?.map(e => ({
         itemImageSrc: e?.imagePath ? `${ENV.IMAGE_URL}${e.imagePath}` : "/images/no-image.webp",
@@ -123,11 +131,11 @@ export default function ProductDetail({ product }: ProductDetailProps) {
 
                         {(product?.salesTypeId === 1 || product?.salesTypeId === 3) && (
                             <div className="quntity-input-box relative mb-3 w-[300px] mt-5">
-                                <input type="number" defaultValue={1} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
-                                <button className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer justify-items-center">
+                                <input type="number" value={quantity} readOnly className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
+                                <button onClick={onDecreaseQuantity} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer justify-items-center">
                                     <FontAwesomeIcon icon={faMinus} className="w-5 h-5" />
                                 </button>
-                                <button className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white justify-items-center cursor-pointer">
+                                <button onClick={onIncreaseQuantity} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white justify-items-center cursor-pointer">
                                     <FontAwesomeIcon icon={faPlus} className="w-5 h-5" />
                                 </button>
                             </div>
@@ -153,13 +161,13 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                         {product?.salesTypeId === 3 && (
                             <div className="quntity-input-box relative mb-3 w-[300px] mt-5">
                                 <div className="flex gap-5 mb-4">
-                                    <input type='date' className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
-                                    <input type='date' className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
+                                    <input type='date' value={hireFromDate} onChange={(e) => onChangeHireFromDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
+                                    <input type='date' value={hireEndDate} onChange={(e) => onChangeHireEndDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
                                 </div>
                             </div>)}
                         <div className="flex gap-4 mt-5">
                             {(product?.salesTypeId === 1 || product?.salesTypeId === 3) && (
-                                <button className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
+                                <button onClick={onAddToCartClick} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
                                     <FontAwesomeIcon icon={faShoppingCart} />
                                     Add Cart
                                 </button>

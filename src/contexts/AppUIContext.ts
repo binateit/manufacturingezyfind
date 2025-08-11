@@ -9,6 +9,8 @@ export type AppUIContextType = {
 
   isGlobalSearchOpen: boolean;
   toggleGlobalSearch: () => void;
+
+  cartCount?: number;
 };
 
 export const AppUIContext = createContext<AppUIContextType | undefined>(undefined);
