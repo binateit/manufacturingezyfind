@@ -1,16 +1,17 @@
+'use client'
 import { useEffect, useMemo, useState } from "react";
 import { formatCurrency } from "@/lib/format";
 import { formatTimeLeft } from "@/lib/formatTimeLeft";
-
-
 import Button from "@/components/ui/Button";
 import Link from "next/link";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGavel } from "@fortawesome/free-solid-svg-icons";
 import { ProductItem } from "@/core/models/products/productList";
 import ProductImage from "./ProductCard/ProductImage";
 import { slugify } from "@/lib/slugify";
+import { cartService } from "@/core/services/cartService";
+import { toast } from "react-toastify";
+import { tokenService } from "@/core/services/token.service";
 
 interface BidProductProps {
   product: ProductItem;
@@ -18,7 +19,8 @@ interface BidProductProps {
 
 export default function BidProduct({ product }: BidProductProps) {
   const [timeLeft, setTimeLeft] = useState(0);
-
+  const token = tokenService.isGuest()
+  
   const lastBid = useMemo(() => {
     return product.prdBid?.slice().sort((a, b) => (b?.bidId ?? 0) - (a?.bidId ?? 0))[0] ?? null;
   }, [product.prdBid]);
@@ -43,6 +45,27 @@ export default function BidProduct({ product }: BidProductProps) {
     const timer = setInterval(updateTime, 1000);
     return () => clearInterval(timer);
   }, [product.endDate]);
+
+  const handleBidNow = async (amount?: number) => {
+    if (token) {
+      window.location.href = `/login?from=${window.location.pathname}`;
+      return;
+    }
+    try {
+      const result = await cartService.bidOnProduct({
+        bidId: lastBid?.bidId || 1,
+        userId: null,
+        bidAmount: amount || baseAmount,
+        createdDate: null,
+      });
+      if (result) {
+        toast("Successfully bid!");
+      }
+    } catch (err) {
+      console.error("Bid failed:", err);
+      toast.error("Something went wrong while bidding.");
+    }
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -90,7 +113,7 @@ export default function BidProduct({ product }: BidProductProps) {
 
         {/* Action */}
         <div className="flex justify-between items-center mt-auto">
-          <Button className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]">
+          <Button className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]" onClick={() => handleBidNow(bidAmount)}>
             <FontAwesomeIcon icon={faGavel} />
             Bid Now
           </Button>
