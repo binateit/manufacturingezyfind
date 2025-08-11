@@ -184,10 +184,12 @@ class AuthService {
             const { data, errors } = await apolloClient.query({
                 query: SSO_LOGIN,
                 fetchPolicy: 'no-cache',
+                // Provide explicit Authorization and signal the auth link to skip auto Bearer injection
                 context: {
                     headers: {
                         Authorization: token,
                     },
+                    skipAuth: true,
                 },
             });
 
@@ -201,7 +203,7 @@ class AuthService {
                 throw new Error("Invalid response: Missing sSOLogin data");
             }
 
-            return data.sSOLogin;
+            return data.sSOLogin.result;
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
             console.error("SSO Login Error:", errorMessage); // Optionally log the error for debugging

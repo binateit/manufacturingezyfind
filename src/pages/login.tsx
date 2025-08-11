@@ -19,9 +19,15 @@ export default function LoginPage() {
         validationSchema: LoginValidationSchema,
         onSubmit: async (values, actions: FormikHelpers<Login>) => {
             actions.setSubmitting(true);
-            const token = 'Basic ' + window.btoa(`${values.email}:${values.password}`);
+            // Robust base64 for potential non-ASCII credentials
+            const credentials = `${values.email}:${values.password}`;
+            const basicValue = typeof window !== 'undefined' 
+                ? window.btoa(unescape(encodeURIComponent(credentials))) 
+                : '';
+            const token = `Basic ${basicValue}`;
             try {
                 const loginResult = await authService.login(token);
+                console.log(loginResult);
                 if (loginResult && loginResult.token) {
                     tokenService.setLoggedUserDetail(loginResult.token, loginResult.tokenExpires, loginResult.firstName, loginResult.lastName);
                     const user = JSON.stringify(loginResult);

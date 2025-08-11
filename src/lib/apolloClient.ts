@@ -25,15 +25,21 @@ function createApolloClient() {
     return new Observable(observer => {
       (async () => {
         try {
-          const token = await tokenService.getValidToken();
+          const context = operation.getContext() as { headers?: Record<string, string>; skipAuth?: boolean };
+          const hasExplicitAuthHeader = Boolean(context?.headers?.Authorization || context?.headers?.authorization);
+          const shouldSkipAuth = Boolean(context?.skipAuth);
 
-          if (token) {
-            operation.setContext(({ headers = {} }) => ({
-              headers: {
-                ...headers,
-                authorization: `Bearer ${token}`,
-              },
-            }));
+          if (!shouldSkipAuth && !hasExplicitAuthHeader) {
+            const token = await tokenService.getValidToken();
+            if (token) {
+              operation.setContext(({ headers = {} }) => ({
+                headers: {
+                  ...headers,
+                  // Standardize header casing and avoid overriding explicit Authorization
+                  Authorization: `Bearer ${token}`,
+                },
+              }));
+            }
           }
 
           const subscriber = forward(operation).subscribe({
