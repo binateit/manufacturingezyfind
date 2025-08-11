@@ -1,37 +1,37 @@
 import { Card } from "@/components/ui";
 import PageBanner from "@/components/ui/PageBanner";
-import { initialLoginValues } from "@/core/models/auth/login";
+import { ENV } from "@/core/config/env";
+import { initialLoginValues, Login } from "@/core/models/auth/login";
+import { authService } from "@/core/services/authService";
+import { tokenService } from "@/core/services/token.service";
 import { LoginValidationSchema } from "@/core/validators/login-schema";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
 
     const formik = useFormik({
         initialValues: initialLoginValues,
         validationSchema: LoginValidationSchema,
-        onSubmit: async (values, actions) => {
+        onSubmit: async (values, actions: FormikHelpers<Login>) => {
             actions.setSubmitting(true);
             const token = 'Basic ' + window.btoa(`${values.email}:${values.password}`);
-            console.log("token", token);
             try {
-                // const data = await authService.sSOLogin(token);
-                // if (data?.success && data?.result?.token) {
-                //     localStorage.setItem('token', data.result.token);
-                //     login({ firstName: data?.result?.firstName || '', lastName: data?.result?.lastName || 'Unknown' });
-
-                //     const user = JSON.stringify({ firstName: data.result.firstName, lastName: data.result.lastName });
-                //     sessionStorage.setItem('user', user);
-
-                //     window.location.replace(`${dashboard}?token=${data?.result?.token}&value=${JSON.stringify(data.result)}`);
-                // } else {
-                //     console.log(data?.message || 'Failed to login.');
-                // }
+                const loginResult = await authService.login(token);
+                if (loginResult && loginResult.token) {
+                    tokenService.setLoggedUserDetail(loginResult.token, loginResult.tokenExpires, loginResult.firstName, loginResult.lastName);
+                    const user = JSON.stringify(loginResult);
+                    window.location.replace(`${ENV.DASHBOARD_URL}?token=${loginResult.token}&value=${user}`);
+                } else {
+                    toast.error('Login failed. Please check your credentials.');
+                }
             } catch (error) {
                 console.log(error instanceof Error ? error.message : 'Something went wrong');
+                toast.error('Login failed. Please check your credentials.');
             }
             actions.setSubmitting(false);
         }
