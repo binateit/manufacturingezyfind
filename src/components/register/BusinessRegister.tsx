@@ -9,8 +9,9 @@ import { businessRegisterInitialValues, BusinessRegisterModel } from "@/core/mod
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
 import { BusinessRegisterValidationSchema } from "@/core/validators/business-register-schema";
 import { formatCurrency } from "@/lib/format";
+import getSubscriptionPlanPrice from "@/lib/subscriptionPlanCalc";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { FormikHelpers, useFormik } from "formik";
+import { useFormik } from "formik";
 import { Button } from "primereact/button";
 import { useMemo, useEffect } from "react";
 import { Card } from "../ui";
@@ -23,24 +24,13 @@ import { faUser, faEnvelope, faLock, faMobile, faBuilding } from "@fortawesome/f
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Dropdown } from "primereact/dropdown";
-import { calculateDiscountedSubscriptionPrice } from "@/lib/subscriptionUtils";
-import { authService } from "@/core/services/authService";
-import { toast } from "react-toastify";
-import { useCookies } from "react-cookie";
-import { DISCOUNTS } from "@/core/constants/discounts";
-import { tokenService } from "@/core/services/token.service";
-import Cryptr from "cryptr";
 
 interface BusinessRegisterProps {
     selectedPackage: Package;
     selectedTenure: TenureItem;
 }
 
-const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
-const cryptr = new Cryptr(secretKey as string);
-
 export default function BusinessRegister({ selectedPackage, selectedTenure }: BusinessRegisterProps) {
-    const [, setCookie, removeCookie] = useCookies(['EzyFind_UID', 'EzyFind_Contract'])
     const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
     const [getCitiesByProvince, { data: cityData, loading: cityLoading }] = useLazyQuery(GET_CITY_BY_PROVINCE);
     const [getSuburbsByCity, { data: suburbData, loading: suburbLoading }] = useLazyQuery(GET_SUBURB_BY_CITY);
@@ -53,16 +43,6 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
     const suburbs = suburbData?.getSuburbByCity?.result ?? [];
     const categories = categoryData?.getMstCategoryByParentId?.result ?? [];
 
-    useEffect(() => {
-        removeCookie('EzyFind_UID', {
-            path: '/',
-            domain: process.env.NEXT_PUBLIC_ROOT_URL?.replace('https://', '.'),
-        })
-        removeCookie('EzyFind_Contract', {
-            path: '/',
-            domain: process.env.NEXT_PUBLIC_ROOT_URL?.replace('https://', '.'),
-        })
-    }, [])
 
     const categoryOptions: SelectOptionNumber[] = useMemo(() =>
         categories.map((c: Category) => ({
@@ -91,91 +71,7 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
     const formik = useFormik<BusinessRegisterModel>({
         initialValues: businessRegisterInitialValues,
         validationSchema: BusinessRegisterValidationSchema,
-        onSubmit: async (values, actions: FormikHelpers<BusinessRegisterModel>) => {
-            actions.setSubmitting(true);
-
-            // Use AuthService to check email and mobile
-            const isEmailExists = await authService.emailCheck(values.email);
-            if (isEmailExists) {
-                actions.setSubmitting(false);
-                formik.setFieldError('email', 'Email Address already exists');
-                return
-            }
-
-            const isMobileExists = await authService.mobileCheck(values.contactNo);
-            if (isMobileExists) {
-                actions.setSubmitting(false);
-                formik.setFieldError('contactNo', 'Mobile number already exists');
-                return;
-            }
-
-            const isCompanyExists = await authService.companyCheck(values.companyName);
-            if (isCompanyExists) {
-                actions.setSubmitting(false);
-                formik.setFieldError('companyName', 'Company Name already exists');
-                return;
-            }
-
-            try {
-                const result = await authService.registerBusiness({
-                    categoryID: Number(values.categoryId),
-                    companyName: values.companyName,
-                    email: values.email,
-                    contactNo: values.contactNo,
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    password: values.password,
-                    provinceID: Number(values.provinceId),
-                    cityID: Number(values.cityId),
-                    suburbID: Number(values.suburbId),
-                    domainUrl: "2",
-                    packageID: selectedPackage.packageID,
-                    discount: DISCOUNTS[selectedTenure.key] || 0
-                }
-                );
-
-                actions.setSubmitting(false);
-
-                if (result?.token) {
-                    tokenService.setLoggedUserDetail(result.token, String(result.tokenExpires), result.firstName ?? '', result.lastName ?? '');
-                    toast.success("Successfully registered!");
-
-                    const redirectUrl = result?.paymentUrl || ENV.DASHBOARD_URL;
-
-                    if (!redirectUrl) {
-                        // Handle missing URL or throw an error
-                        toast.error('No redirect URL found');
-                        return;
-                    }
-
-                    const session = await authService.getSession(1);
-
-                    if (session?.sessionKeyLogin) {
-                        const cookieOptions = {
-                            path: "/",
-                            expires: new Date(Date.now() + 120 * 60 * 1000), // 2 hours
-                            domain: process.env.NEXT_PUBLIC_ROOT_URL?.replace("https://", "."),
-                        };
-
-                        setCookie("EzyFind_UID", cryptr.encrypt(session.sessionKeyLogin), cookieOptions);
-                        setCookie("EzyFind_Contract", cryptr.encrypt("Contract"), cookieOptions);
-                        window.location.assign(redirectUrl);
-                    }
-                    else {
-                        window.location.assign("/");
-                    }
-
-                } else {
-                    toast.error("Registration failed.");
-                }
-            }
-            catch (error) {
-                console.error("An error occurred during registration:", error);
-                actions.setSubmitting(false);
-                toast.error("An error occurred during registration.");
-            }
-
-
+        onSubmit: async () => {
 
         }
     });
@@ -196,7 +92,7 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
         }
     }, [formik.values.cityId]);
 
-    const { price, discountAmount, discountPercent, discountedPrice } = calculateDiscountedSubscriptionPrice(selectedPackage as Package, selectedTenure?.key ?? 0 as number);
+    const { price, discountAmount, discountPercent, discountedPrice } = getSubscriptionPlanPrice(selectedPackage as Package, selectedTenure?.key ?? 0 as number);
     const vatAmount = discountedPrice * 0.15; // Assuming VAT is 15% of the discounted price
     const totalAmount = discountedPrice + vatAmount;
 
@@ -225,15 +121,15 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                     )}
                                 />
                                 <FontAwesomeIcon
-                                    icon={faBuilding}
-                                    className={clsx(
-                                        'absolute top-1/2 right-4 transform -translate-y-1/2',
-                                        formik.touched.companyName && formik.errors.companyName
-                                            ? 'text-red-500'
-                                            : 'text-gray-500'
-                                    )}
-                                />
-
+                                        icon={faBuilding}
+                                        className={clsx(
+                                            'absolute top-1/2 right-4 transform -translate-y-1/2',
+                                            formik.touched.companyName && formik.errors.companyName
+                                                ? 'text-red-500'
+                                                : 'text-gray-500'
+                                        )}
+                                    />
+                                
                             </div>
                         </div>
 
@@ -359,12 +255,12 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                         className='form-control border-r-0 w-[50px] h-10 px-3 text-sm border border-gray-300 bg-gray-100'
                                     />
                                     <input
-                                        {...formik.getFieldProps('contactNo')}
+                                        {...formik.getFieldProps('mobileNumber')}
                                         type='text'
                                         placeholder='Enter mobile number'
                                         className={clsx(
                                             'form-control w-full h-10 px-3 pr-10 text-sm',
-                                            formik.touched.contactNo && formik.errors.contactNo
+                                            formik.touched.mobileNumber && formik.errors.mobileNumber
                                                 ? 'border border-red-500'
                                                 : 'border border-gray-300'
                                         )}
@@ -373,14 +269,14 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                         icon={faMobile}
                                         className={clsx(
                                             'absolute right-4 top-1/2 transform -translate-y-1/2',
-                                            formik.touched.contactNo && formik.errors.contactNo
+                                            formik.touched.mobileNumber && formik.errors.mobileNumber
                                                 ? 'text-red-500'
                                                 : 'text-gray-500'
                                         )}
                                     />
                                 </div>
-                                {formik.touched.contactNo && formik.errors.contactNo && (
-                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.contactNo}</div>
+                                {formik.touched.mobileNumber && formik.errors.mobileNumber && (
+                                    <div className='mt-1 text-sm text-red-600'>{formik.errors.mobileNumber}</div>
                                 )}
                             </div>
                         </div>

@@ -23,7 +23,6 @@ import { Category } from "@/core/models/categories/category";
 import Loading from "../shared/Loading";
 import { PaginationInfo } from "../shared/PaginationInfo";
 import { NoRecordsCard } from "../ui/NoRecordsCard";
-import Head from "next/head";
 
 type FilterState = {
     searchText?: string;
@@ -190,168 +189,129 @@ export default function BusinessList({
         }));
     };
 
-    const businessCount = pagination.count;
-
-    // Generate comma-separated strings for selected filters
-    const selectedCategories = filters.category ? categories.filter((c: Category) => filters.category!.includes(c.categoryId)).map((c: Category) => c.categoryName).join(", ") : "";
-    const selectedProvinces = filters.province ? provinces.filter((p: Province) => filters.province!.includes(Number(p.provinceId))).map((p: Province) => p.provinceName).join(", ") : "";
-    const selectedCities = filters.city ? cities.filter((c: City) => filters.city!.includes(c.cityId)).map((c: City) => c.cityName).join(", ") : "";
-    const selectedSuburbs = filters.suburb ? suburbs.filter((s: Suburb) => filters.suburb!.includes(s.suburbId)).map((s: Suburb) => s.suburbName).join(", ") : "";
-
-    let finalLocation = "South Africa";
-
-    if (filters.suburb != undefined && filters.suburb?.length > 0) {
-        finalLocation = selectedSuburbs;
-    } else if (filters.city != undefined &&filters.city?.length > 0) {
-        finalLocation = selectedCities;
-    } else if (filters.province != undefined &&filters.province?.length > 0) {
-        finalLocation = selectedProvinces;
-    }
-    const countText = businessCount > 0 ? `${businessCount} ` : "";
-    const titleCategoryText = filters.category ? selectedCategories : "Manufacturing";
-    const descCategoryText = filters.category ? selectedCategories : "Manufacturing";
-    const website = "www.ManufacturingEzyFind.co.za";
-
-    // Dynamically generate the title and description
-    const title = `Top ${countText} ${titleCategoryText} companies in ${finalLocation} | ${website}`;
-    const description = `Top ${countText} ${titleCategoryText} companies in ${finalLocation} - Find phone numbers, address, opening hours, reviews & products or services of the top manufacturing Companies ${descCategoryText}`;
-    const keywords = `${countText} ${titleCategoryText} companies in ${finalLocation},manufacturing businesses ${selectedCategories},manufacturing directory,manufacturing listings,phone numbers, address, opening hours, reviews,manufacturing products, manufacturing services,mining businesses`;
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/businesses`;
-
-    
-
     return (
-        <>
-            <Head>
-                <title>{title}</title>
-                <meta name="description" content={description} />
-                <meta name="keywords" content={keywords} />
-                <link rel="canonical" href={canonicalUrl} />
-            </Head>
-            <div className="flex flex-wrap lg:gap-6 lg:flex-nowrap my-10">
+        <div className="flex flex-wrap lg:gap-6 lg:flex-nowrap my-10">
 
-                {/* Left Filter Panel */}
-                <div className="basis-12/12 lg:basis-4/12 xl:basis-3/12">
-                    <div className="py-3 px-5 text-white bg-secondary flex justify-between items-center">
-                        <p className="text-lg">Filter Option</p>
-                    </div>
-                    <div className="border border-gray-300">
-                        {/* Search */}
-                        <div className="border-b border-gray-300">
-                            <div className="bg-white px-4 py-3 flex justify-between items-center cursor-pointer">
-                                <p className="text-md font-semibold">Search Company Name</p>
-                                <FontAwesomeIcon icon={faAngleDown} className="text-lg" />
-                            </div>
-                            <div className="bg-gray-50 px-4 py-5">
-                                <form
-                                    onSubmit={(e) => {
-                                        e.preventDefault();
-                                        const input = e.currentTarget.elements.namedItem("search") as HTMLInputElement;
-                                        handleSearch(input.value);
-                                    }}
-                                >
-                                    <div className="relative">
-                                        <input
-                                            type="search"
-                                            name="search"
-                                            placeholder="Enter Company name"
-                                            defaultValue={filters.searchText}
-                                            className="form-control border border-gray-300 text-sm w-full h-10 px-5"
-                                        />
-                                        <button
-                                            type="submit"
-                                            className="absolute top-[50%] translate-y-[-50%] right-0 h-10 px-4 bg-primary text-white"
-                                        >
-                                            Search
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+            {/* Left Filter Panel */}
+            <div className="basis-12/12 lg:basis-4/12 xl:basis-3/12">
+                <div className="py-3 px-5 text-white bg-secondary flex justify-between items-center">
+                    <p className="text-lg">Filter Option</p>
+                </div>
+                <div className="border border-gray-300">
+                    {/* Search */}
+                    <div className="border-b border-gray-300">
+                        <div className="bg-white px-4 py-3 flex justify-between items-center cursor-pointer">
+                            <p className="text-md font-semibold">Search Company Name</p>
+                            <FontAwesomeIcon icon={faAngleDown} className="text-lg" />
                         </div>
+                        <div className="bg-gray-50 px-4 py-5">
+                            <form
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    const input = e.currentTarget.elements.namedItem("search") as HTMLInputElement;
+                                    handleSearch(input.value);
+                                }}
+                            >
+                                <div className="relative">
+                                    <input
+                                        type="search"
+                                        name="search"
+                                        placeholder="Enter Company name"
+                                        defaultValue={filters.searchText}
+                                        className="form-control border border-gray-300 text-sm w-full h-10 px-5"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="absolute top-[50%] translate-y-[-50%] right-0 h-10 px-4 bg-primary text-white"
+                                    >
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-                        {/* Filters */}
+                    {/* Filters */}
+                    <FilterSection
+                        title="Categories"
+                        data={categories}
+                        selected={filters.category}
+                        onChange={(values) => handleFilterChange("category", values)}
+                        labelKey="categoryName"
+                        valueKey="categoryId"
+                    />
+                    <FilterSection
+                        title="Provinces"
+                        data={provinces}
+                        selected={filters.province}
+                        onChange={(values) => {
+                            handleFilterChange("province", values)
+                            handleFilterChange("city", [])
+                            handleFilterChange("suburb", [])
+                        }}
+                        labelKey="provinceName"
+                        valueKey="provinceId"
+                    />
+                    {filters.province && filters.province?.length > 0 && (
                         <FilterSection
-                            title="Categories"
-                            data={categories}
-                            selected={filters.category}
-                            onChange={(values) => handleFilterChange("category", values)}
-                            labelKey="categoryName"
-                            valueKey="categoryId"
-                        />
-                        <FilterSection
-                            title="Provinces"
-                            data={provinces}
-                            selected={filters.province}
+                            title="Cities"
+                            data={filteredCities}
+                            selected={filters.city}
                             onChange={(values) => {
-                                handleFilterChange("province", values)
-                                handleFilterChange("city", [])
+                                handleFilterChange("city", values)
                                 handleFilterChange("suburb", [])
                             }}
-                            labelKey="provinceName"
-                            valueKey="provinceId"
-                        />
-                        {filters.province && filters.province?.length > 0 && (
-                            <FilterSection
-                                title="Cities"
-                                data={filteredCities}
-                                selected={filters.city}
-                                onChange={(values) => {
-                                    handleFilterChange("city", values)
-                                    handleFilterChange("suburb", [])
-                                }}
-                                labelKey="cityName"
-                                valueKey="cityId"
-                            />
-                        )}
-                        {filters.city && filters.city?.length > 0 && (
-                            <FilterSection
-                                title="Suburbs"
-                                data={filteredSuburbs}
-                                selected={filters.suburb}
-                                onChange={(values) => handleFilterChange("suburb", values)}
-                                labelKey="suburbName"
-                                valueKey="suburbId"
-                            />
-                        )}
-                    </div>
-                </div>
-
-                {/* Right Business Listing */}
-                <div className="basis-12/12 lg:basis-8/12 xl:basis-9/12 mt-5 lg:mt-0">
-                    {pagination && (
-                        <PaginationInfo
-                            currentPage={pagination.currentPage}
-                            pageSize={DEFAULT_PAGE_SIZE}
-                            totalCount={pagination.count}
-                            label={`${titleCategoryText} Businesses in ${finalLocation}`}
+                            labelKey="cityName"
+                            valueKey="cityId"
                         />
                     )}
-
-                    {/* Business Cards */}
-                    {businesses.length === 0 && (<NoRecordsCard />)}
-                    <div className="flex flex-wrap gap-y-5 -mx-[12px]">
-                        {businesses.map((business, index) => (
-                            <BusinessItemCard key={`${business.companyId}-${index}`} business={business} />
-                        ))}
-                    </div>
-
-                    {/* Map & Pagination */}
-                    <BusinessMapListing businesses={businesses} />
-
-
-                    {/* Pagination */}
-                    <div className="flex flex-col md:flex-row mt-10 justify-center">
-                        {pagination && (
-                            <Pagination
-                                currentPage={pagination.currentPage}
-                                totalPages={pagination.totalPages}
-                                onPageChange={handlePageChange}
-                            />
-                        )}
-                    </div>
+                    {filters.city && filters.city?.length > 0 && (
+                        <FilterSection
+                            title="Suburbs"
+                            data={filteredSuburbs}
+                            selected={filters.suburb}
+                            onChange={(values) => handleFilterChange("suburb", values)}
+                            labelKey="suburbName"
+                            valueKey="suburbId"
+                        />
+                    )}
                 </div>
             </div>
-        </>
 
+            {/* Right Business Listing */}
+            <div className="basis-12/12 lg:basis-8/12 xl:basis-9/12 mt-5 lg:mt-0">
+                {pagination && (
+                    <PaginationInfo
+                        currentPage={pagination.currentPage}
+                        pageSize={DEFAULT_PAGE_SIZE}
+                        totalCount={pagination.count}
+                        label="Manufacturing Businesses"
+                    />
+                )}
+
+                {/* Business Cards */}
+                {businesses.length === 0 && (<NoRecordsCard />)}
+                <div className="flex flex-wrap gap-y-5 -mx-[12px]">
+                    {businesses.map((business, index) => (
+                        <BusinessItemCard key={`${business.companyId}-${index}`} business={business} />
+                    ))}
+                </div>
+
+                {/* Map & Pagination */}
+                <BusinessMapListing businesses={businesses} />
+
+
+                {/* Pagination */}
+                <div className="flex flex-col md:flex-row mt-10 justify-center">
+                    {pagination && (
+                        <Pagination
+                            currentPage={pagination.currentPage}
+                            totalPages={pagination.totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    )}
+                </div>
+            </div>
+        </div>
     );
 }

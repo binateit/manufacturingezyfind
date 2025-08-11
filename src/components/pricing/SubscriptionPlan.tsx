@@ -8,7 +8,7 @@ import PackageDetail from "./PackageDetail";
 import { useRouter } from "next/router";
 import { slugify } from "@/lib/slugify";
 import tenureItems from "@/core/constants/tenure";
-import { calculateDiscountedSubscriptionPrice } from "@/lib/subscriptionUtils";
+import getSubscriptionPlanPrice from "@/lib/subscriptionPlanCalc";
 
 
 export function SubscriptionPlan() {
@@ -56,7 +56,7 @@ export function SubscriptionPlan() {
 
       <div className="flex flex-row flex-wrap justify-center gap-y-5 sm:gap-y-15 mt-10 md:mt-8 lg:mt-15 mb-15 px-2 md:px-0">
         {packageList.map((pkg) => {
-          const { price, discountedPrice, discountPercent } = calculateDiscountedSubscriptionPrice(pkg, tenure);
+          const { price, discountedPrice, discountPercent } = getSubscriptionPlanPrice(pkg, tenure);
           const tenureLabel = tenureItems.find((t) => t.key === tenure)?.label ?? "";
 
           return (

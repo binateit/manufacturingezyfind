@@ -6,7 +6,7 @@ export interface BusinessRegisterModel {
     email: string;
     password: string;
     confirmPassword: string;
-    contactNo: string;
+    mobileNumber: string;
     provinceId?: number;
     cityId?: number;
     suburbId?: number;
@@ -21,7 +21,7 @@ export const businessRegisterInitialValues: BusinessRegisterModel = {
     email: '',
     password: '',
     confirmPassword: '',
-    contactNo: '',
+    mobileNumber: '',
     provinceId: undefined,
     cityId: undefined,
     suburbId: undefined,

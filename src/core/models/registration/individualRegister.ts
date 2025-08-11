@@ -6,9 +6,11 @@ export interface IndividualRegister {
     email: string;
     password: string;
     confirmPassword?: string;
-    provinceId?: number;
-    cityId?: number;
-    suburbId?: number;
+    provinceID?: number;
+    cityID?: number;
+    suburbID?: number;
+    domainUrl?:string;
+    track?:number;
     agreeTerms?: boolean;
 }
 
@@ -19,11 +21,22 @@ export const individualRegisterInitialValues: IndividualRegister = {
     email: '',
     contactNo:"",
     password: '',
-    provinceId: undefined,
-    cityId: undefined,
-    suburbId: undefined,
+    provinceID: undefined,
+    cityID: undefined,
+    suburbID: undefined,
+    track:1,
+    domainUrl:"2",
     agreeTerms: false,
 };
+
+
+
+export interface RegisterUserResponseDto {
+    firstName: string | null;
+    lastName: string | null;
+    token: string | null;
+    tokenExpires: string | null;
+}
 
 
 
