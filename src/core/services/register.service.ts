@@ -3,12 +3,12 @@ import { initializeApollo } from "../../lib/apolloClient";
 import { MOBILE_CHECK } from "@/core/graphql/queries/mobileCheck";
 import { REGISTER_USER } from "@/core/graphql/queries/individual-register";
 import { RegisterUserResponseDto, IndividualRegister } from "@/core/models/registration/individualRegister";
-import { EmailCheckDto } from "@/core/models/registration/emailCheckModal";
-import { MobileCheckDto } from "@/core/models/registration/mobileCheckModal";
+import { EmailCheckResponseDto } from "@/core/models/registration/emailCheckModel";
+import { MobileCheckResponseDto } from "@/core/models/registration/mobileCheckModel";
 
 const apolloClient = initializeApollo();
 
-export async function emailChecker(email: string): Promise<EmailCheckDto> {
+export async function emailChecker(email: string): Promise<EmailCheckResponseDto> {
     try {
         const { data } = await apolloClient.query({
             query: EMAIL_CHECK,
@@ -21,7 +21,7 @@ export async function emailChecker(email: string): Promise<EmailCheckDto> {
     }
 }
 
-export async function mobileChecker(mobile: string): Promise<MobileCheckDto> {
+export async function mobileChecker(mobile: string): Promise<MobileCheckResponseDto> {
     try {
         const { data } = await apolloClient.query({
             query: MOBILE_CHECK,
