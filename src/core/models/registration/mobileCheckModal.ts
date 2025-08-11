@@ -1,9 +1,10 @@
-export interface EmailCheckResponseDto {
+export interface MobileCheckDto {
     count: number;
     currentPage: number;
-    message: string;
+    message: string | null;
     nextPage: number;
     prevPage: number;
+    result: string | null;
     success: boolean;
     totalPages: number;
 }
