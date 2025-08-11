@@ -19,6 +19,9 @@ interface Props {
 }
 
 export default function ProductDetailPage({ product }: Props) {
+    const [qty, setQty] = useState(1);
+    const [fromDate, setFromDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
     if (product === null) {
         return <div className="container my-10">Product not found</div>;
     }
@@ -32,9 +35,6 @@ export default function ProductDetailPage({ product }: Props) {
 
     const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/product/${product.productID}/${toSeoSlug(product.productName || '')}.html`;
 
-    const [qty, setQty] = useState(1);
-    const [fromDate, setFromDate] = useState<string>("");
-    const [endDate, setEndDate] = useState<string>("");
 
     const handleAddToCart = async () => {
         try {
