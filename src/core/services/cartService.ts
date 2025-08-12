@@ -4,6 +4,8 @@ import { UPDATE_CART } from "@/core/graphql/mutations/updateCart";
 import { DELETE_CART_BY_ID } from "@/core/graphql/mutations/deleteCart";
 import type { AddToCartInput, UpdateCartInput, CartOperationResult } from "@/core/models/cart/cartMutations";
 import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
+import { ProductBid, ProductBidResult } from "../models/products/productBid";
+import { CREATE_PRD_BID } from "../graphql/mutations/createProductBid";
 
 class CartService {
   private client = initializeApollo();
@@ -109,6 +111,19 @@ class CartService {
       return { success };
     } catch (error) {
       return { success: false, message: (error as Error).message };
+    }
+  }
+
+  async bidOnProduct(prdBid:ProductBid):Promise<ProductBidResult> {
+    try {
+      const response = await this.client.mutate({
+        mutation: CREATE_PRD_BID,
+        variables: { prdBid },
+      })
+      if (!response || !response.data) throw new Error('Cannot create bid')
+      return response.data.createPrdBid
+    } catch (err) {
+      throw err
     }
   }
 }

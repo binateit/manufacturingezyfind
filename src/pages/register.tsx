@@ -64,14 +64,16 @@ const RegisterPage = () => {
 
             // Use AuthService to check email and mobile
             const isEmailExists = await authService.emailCheck(values.email);
-            if (isEmailExists) {
+            
+            if (isEmailExists !== false ) {
                 actions.setSubmitting(false);
                 formik.setFieldError('email', 'Email Address already exists');
                 return
             }
-
+            
             const isMobileExists = await authService.mobileCheck(values.contactNo);
-            if (isMobileExists) {
+            console.log("isEmailExists", isMobileExists);
+            if (isMobileExists !== true) {
                 actions.setSubmitting(false);
                 formik.setFieldError('contactNo', 'Mobile number already exists');
                 return;
@@ -137,15 +139,15 @@ const RegisterPage = () => {
     useEffect(() => {
         if (formik.values.provinceId !== 0) {
             getCitiesByProvince({ variables: { id: formik.values.provinceId } });
-            formik.setFieldValue("cityID", 0);
-            formik.setFieldValue("suburbID", 0);
+            formik.setFieldValue("cityId", 0);
+            formik.setFieldValue("suburbId", 0);
         }
     }, [formik.values.provinceId]);
 
     useEffect(() => {
         if (formik.values.cityId !== 0) {
             getSuburbsByCity({ variables: { id: formik.values.cityId } });
-            formik.setFieldValue("suburbID", 0);
+            formik.setFieldValue("suburbId", 0);
         }
     }, [formik.values.cityId]);
     return (
@@ -304,15 +306,15 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>Province</label>
                                 <Dropdown
                                     loading={provinceLoading}
-                                    name="provinceID"
+                                    name="provinceId"
                                     value={formik.values.provinceId}
                                     options={provinceOptions}
                                     optionLabel="label"
                                     placeholder="Select Province"
                                     onChange={(e) => {
-                                        formik.setFieldValue('provinceID', e.value);
-                                        formik.setFieldValue('cityID', '');
-                                        formik.setFieldValue('suburbID', '');
+                                        formik.setFieldValue('provinceId', e.value);
+                                        formik.setFieldValue('cityId', '');
+                                        formik.setFieldValue('suburbId', '');
                                     }}
                                     className={clsx(
                                         'w-full',
@@ -331,14 +333,14 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>City</label>
                                 <Dropdown
                                     loading={cityLoading}
-                                    name="cityID"
+                                    name="cityId"
                                     value={formik.values.cityId}
                                     options={cityOptions}
                                     optionLabel="label"
                                     placeholder="Select City"
                                     onChange={(e) => {
-                                        formik.setFieldValue('cityID', e.value);
-                                        formik.setFieldValue('suburbID', '');
+                                        formik.setFieldValue('cityId', e.value);
+                                        formik.setFieldValue('suburbId', '');
                                     }}
                                     disabled={!formik.values.provinceId}
                                     className={clsx(
@@ -360,12 +362,12 @@ const RegisterPage = () => {
                                 <label className='mb-2 block'>Suburb</label>
                                 <Dropdown
                                     loading={suburbLoading}
-                                    name="suburbID"
+                                    name="suburbId"
                                     value={formik.values.suburbId}
                                     options={suburbOptions}
                                     optionLabel="label"
                                     placeholder="Select Suburb"
-                                    onChange={(e) => formik.setFieldValue('suburbID', e.value)}
+                                    onChange={(e) => formik.setFieldValue('suburbId', e.value)}
                                     disabled={!formik.values.cityId}
                                     className={clsx(
                                         'w-full',

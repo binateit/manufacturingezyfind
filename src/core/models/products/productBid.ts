@@ -1,6 +1,10 @@
 export interface ProductBid {
   bidId: number;
-  createdDate: string;
+  createdDate: string | null;
   bidAmount: number;
-  userId: number;
+  userId: number | null;
+}
+
+export interface ProductBidResult {
+
 }

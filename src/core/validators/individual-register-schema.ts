@@ -15,9 +15,9 @@ export const individualRegisterValidationSchema = Yup.object({
         .matches(/^\d+$/, 'Mobile Number must contain only digits')
         .min(7, 'Mobile Number must be at least 7 digits')
         .max(15, 'Mobile Number must be at most 15 digits'),
-    provinceID: Yup.number().required('Province is required'),
-    cityID: Yup.number().required('City is required'),
-    suburbID: Yup.number().required('Suburb is required'),
+    provinceId: Yup.number().required('Province is required'),
+    cityId: Yup.number().required('City is required'),
+    suburbId: Yup.number().required('Suburb is required'),
     agreeTerms: Yup.boolean()
         .oneOf([true], 'You must accept the terms and conditions')
         .required('You must accept the terms and conditions')
