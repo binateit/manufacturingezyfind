@@ -11,6 +11,12 @@ export type AppUIContextType = {
   toggleGlobalSearch: () => void;
 
   cartCount?: number;
+
+  // Login modal controls
+  isLoginModalOpen: boolean;
+  openLoginModal: (onSuccess?: () => void) => void;
+  closeLoginModal: () => void;
+  notifyLoginSuccess: () => void;
 };
 
 export const AppUIContext = createContext<AppUIContextType | undefined>(undefined);

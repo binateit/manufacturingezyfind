@@ -12,6 +12,7 @@ import { tokenService } from "@/core/services/token.service";
 import { cartService } from "@/core/services/cartService";
 import { useApolloClient } from "@apollo/client";
 import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
+import { useAppUI } from "@/contexts/AppUIContext";
 
 
 interface PurchaseProductProps {
@@ -22,6 +23,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
   const [orderQuantity, setOrderQuantity] = useState(1);
   const [isWorking, setIsWorking] = useState(false);
   const client = useApolloClient();
+  const { openLoginModal } = useAppUI();
 
   const handleQuantityChange = (value: number) => {
     setOrderQuantity(Math.max(1, value)); // Minimum 1
@@ -62,8 +64,15 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
   };
 
   const buyNow = async () => {
+    // If user is not logged in, open login modal and resume on success
+    if (!tokenService.getUserName()) {
+      openLoginModal(async () => {
+        await addToCart();
+        window.location.assign('/cart');
+      });
+      return;
+    }
     await addToCart();
-    // Redirect to cart/checkout after adding
     window.location.assign('/cart');
   };
 
