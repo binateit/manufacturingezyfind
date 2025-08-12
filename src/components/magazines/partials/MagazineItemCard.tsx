@@ -22,20 +22,25 @@ export const MagazineItemCard = ({ magazine }: Props) => {
                 </div>
                 <div className="relative overflow-hidden mb-4">
                     <div className="aspect-2/1">
-                        <Image
-                            src={magazine.mapEflyersUploadDtos?.[0]?.filePath
-                                ? `${ENV.IMAGE_URL}${magazine.mapEflyersUploadDtos[0].filePath}`
-                                : "/images/no-image.webp"}
-                            fill
-                            loading="lazy"
-                            className="w-full h-full object-contain"
-                            alt={magazine.magazineName ?? "Magazine Image"}
-                        />
+                        <Link
+                            href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}.html`}
+                            className="uppercase text-primary font-semibold mb-1"
+                        >
+                            <Image
+                                src={magazine.mapEflyersUploadDtos?.[0]?.filePath
+                                    ? `${ENV.IMAGE_URL}${magazine.mapEflyersUploadDtos[0].filePath}`
+                                    : "/images/no-image.webp"}
+                                fill
+                                loading="lazy"
+                                className="w-full h-full object-contain"
+                                alt={magazine.magazineName ?? "Magazine Image"}
+                            />
+                        </Link>
                     </div>
                 </div>
 
                 <Link
-                    href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}`}
+                    href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}.html`}
                     className="uppercase text-primary font-semibold mb-1"
                 >
                     {magazine.magazineName}
@@ -47,7 +52,7 @@ export const MagazineItemCard = ({ magazine }: Props) => {
 
                 <div className="flex justify-between mt-auto">
                     <Link
-                        href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}`}
+                        href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}.html`}
                         className="btn bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]"
                     >
                         View Details

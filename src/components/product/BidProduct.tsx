@@ -90,13 +90,13 @@ export default function BidProduct({ product, refetchOnSuccess }: BidProductProp
     <div className="flex flex-col h-full">
       <div className="bg-white shadow-[0px_4px_44px_0px_rgb(0,0,0,0.1)] h-full flex flex-col px-3 py-3">
         {/* Image */}
-        <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
-
-        {/* Title */}
         <Link
-          href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? "")}`}
+          href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? "")}.html`}
           className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors"
         >
+          <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
+
+          {/* Title */}
           {product.productName}
         </Link>
 

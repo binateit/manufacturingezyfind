@@ -32,7 +32,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
   const increment = () => handleQuantityChange(orderQuantity + 1);
   const decrement = () => handleQuantityChange(orderQuantity - 1);
 
-  const productLink = `/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}`;
+  const productLink = `/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}.html`;
 
   const addToCart = async () => {
     try {
@@ -81,10 +81,10 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
     <div className="flex flex-col h-full">
       <div className="product-box px-3 py-3 bg-white w-full h-full shadow-[0px_4px_44px_0px_rgb(0,0,0,0.1)] flex flex-col">
         {/* Image */}
+        <Link href={productLink}>
         <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
 
         {/* Title */}
-        <Link href={productLink}>
           <p className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors">
             {product.productName}
           </p>

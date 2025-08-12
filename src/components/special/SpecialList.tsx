@@ -71,7 +71,7 @@ export default function ProductList({
         size: filters.size ?? DEFAULT_PAGE_SIZE,
     };
 
-    const { data, loading } = useQuery(GET_PRODUCTS, {
+    const { data, loading , refetch } = useQuery(GET_PRODUCTS, {
         variables,
         fetchPolicy: "network-only",
     });
@@ -221,7 +221,7 @@ export default function ProductList({
 
                                 {/* Product Type */}
                                 {product.salesTypeId === 1 && <PurchaseProduct product={product} />}
-                                {product.salesTypeId === 2 && <BidProduct product={product} />}
+                                {product.salesTypeId === 2 && <BidProduct product={product} refetchOnSuccess={refetch} />}
                                 {product.salesTypeId === 3 && <HireProduct product={product} />}
                             </div>
                         </div>

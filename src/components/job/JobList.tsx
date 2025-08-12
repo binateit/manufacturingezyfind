@@ -152,7 +152,7 @@ export default function JobList({
 
                                 {/* Title - fixed height */}
                                 <Link
-                                    href={`/manufacturing/jobs/${job?.postID}/${slugify(job?.title || '')}`}
+                                    href={`/manufacturing/jobs/${job?.postID}/${slugify(job?.title || '')}.html`}
                                     className="text-md uppercase font-semibold text-primary block mb-1 overflow-hidden"
                                     style={{ minHeight: "48px" }} // about 2 lines of text
                                 >
@@ -177,7 +177,7 @@ export default function JobList({
                                     Posted: {formatDate(job.startDate || "")}
                                 </p>
                                 <Link
-                                    href={`/manufacturing/jobs/${job?.postID}/${slugify(job?.title || '')}`}
+                                    href={`/manufacturing/jobs/${job?.postID}/${slugify(job?.title || '')}.html`}
                                     className="bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] uppercase px-4 py-1 hover:bg-white hover:text-[var(--primary-color)] transition-all"
                                 >
                                     View Details

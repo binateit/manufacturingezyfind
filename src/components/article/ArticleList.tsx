@@ -149,7 +149,7 @@ export default function ArticleList({
 
                             <div className="basis-12/12 sm:basis-8/12">
                                 <Link
-                                    href={`/manufacturing/article/${article?.postID}/${slugify(article?.title ?? '')}`}
+                                    href={`/manufacturing/article/${article?.postID}/${slugify(article?.title ?? '')}.html`}
                                     className="text-md font-semibold"
                                 >
                                     {article.title}
@@ -174,7 +174,7 @@ export default function ArticleList({
                                     </div>
                                 </div>
                                 <Link
-                                    href={`/manufacturing/article/${article?.postID}/${slugify(article?.title ?? '')}`}
+                                    href={`/manufacturing/article/${article?.postID}/${slugify(article?.title ?? '')}.html`}
                                     className="mt-2 inline-block text-[10px] sm:text-[12px] bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-3 sm:px-10 py-1"
                                 >
                                     View Details

@@ -24,6 +24,7 @@ import { authService } from "@/core/services/authService";
 import { ENV } from "@/core/config/env";
 import { useCookies } from "react-cookie";
 import Cryptr from "cryptr";
+import DownloadApp from "@/components/shared/DownloadApp";
 
 
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
@@ -64,13 +65,13 @@ const RegisterPage = () => {
 
             // Use AuthService to check email and mobile
             const isEmailExists = await authService.emailCheck(values.email);
-            
-            if (isEmailExists !== false ) {
+
+            if (isEmailExists !== false) {
                 actions.setSubmitting(false);
                 formik.setFieldError('email', 'Email Address already exists');
                 return
             }
-            
+
             const isMobileExists = await authService.mobileCheck(values.contactNo);
             console.log("isEmailExists", isMobileExists);
             if (isMobileExists !== true) {
@@ -461,7 +462,7 @@ const RegisterPage = () => {
                     </form>
                 </Card>
             </div>
-
+            <DownloadApp />
         </>
     )
 }

@@ -24,18 +24,20 @@ export const BusinessItemCard = ({ business }: Props) => {
                 </div>
 
                 <div className="relative overflow-hidden mb-4">
-                    <div className="aspect-2/1">
-                        <Image
-                            src={business.logoPath ? `${ENV.IMAGE_URL}${business.logoPath}` : '/images/no-image.webp'}
-                            fill
-                            loading="lazy"
-                            className="w-full h-full object-contain"
-                            alt={business.companyName}
-                        />
-                    </div>
+                    <Link href={`/manufacturing/business/${business.companyId}/${slugify(business?.companyName || '')}.html`} >
+                        <div className="aspect-2/1">
+                            <Image
+                                src={business.logoPath ? `${ENV.IMAGE_URL}${business.logoPath}` : '/images/no-image.webp'}
+                                fill
+                                loading="lazy"
+                                className="w-full h-full object-contain"
+                                alt={business.companyName}
+                            />
+                        </div>
+                    </Link>
                 </div>
 
-                <Link href={`/manufacturing/business/${business.companyId}/${slugify(business?.companyName || '')}`} className="uppercase text-primary font-semibold mb-1">
+                <Link href={`/manufacturing/business/${business.companyId}/${slugify(business?.companyName || '')}.html`} className="uppercase text-primary font-semibold mb-1">
                     {business.companyName}
                 </Link>
 
@@ -73,7 +75,7 @@ export const BusinessItemCard = ({ business }: Props) => {
 
                 <div className="flex justify-between mt-auto">
                     <Link
-                        href={`/manufacturing/business/${business.companyId}/${slugify(business.companyName)}`}
+                        href={`/manufacturing/business/${business.companyId}/${slugify(business.companyName)}.html`}
                         className="btn bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]"
                     >
                         Read More

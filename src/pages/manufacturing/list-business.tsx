@@ -1,4 +1,5 @@
 import BusinessRegister from "@/components/register/BusinessRegister";
+import DownloadApp from "@/components/shared/DownloadApp";
 import Loading from "@/components/shared/Loading";
 import PageBanner from "@/components/ui/PageBanner";
 import tenureItems, { TenureItem } from "@/core/constants/tenure";
@@ -40,6 +41,8 @@ export default function ListBusinessPage({ packageList }: Props) {
             <div className="container">
                 <BusinessRegister selectedPackage={selectedPackage as Package} selectedTenure={selectedTenure as TenureItem} />
             </div>
+            <DownloadApp />
+
         </>
     );
 }
