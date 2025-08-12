@@ -26,7 +26,7 @@ export default function BidProduct({ product }: BidProductProps) {
   }, [product.prdBid]);
 
   const baseAmount = lastBid?.bidAmount ?? product.unitCost ?? 0;
-  const [bidAmount, setBidAmount] = useState<number>(baseAmount);
+  const [bidAmount, setBidAmount] = useState<number>(baseAmount * 1.1);
 
   const handleIncreaseBid = () => {
     setBidAmount((prev) => parseFloat((prev * 1.1).toFixed(2)));
@@ -53,7 +53,7 @@ export default function BidProduct({ product }: BidProductProps) {
     }
     try {
       const result = await cartService.bidOnProduct({
-        bidId: lastBid?.bidId || 1,
+        bidId: 0,
         userId: null,
         bidAmount: amount || baseAmount,
         createdDate: null,
