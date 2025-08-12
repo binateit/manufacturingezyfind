@@ -13,6 +13,7 @@ import { useState } from "react";
 import { cartService } from "@/core/services/cartService";
 import { tokenService } from "@/core/services/token.service";
 import { toast } from "react-toastify";
+import DownloadApp from "@/components/shared/DownloadApp";
 
 interface Props {
     product: ProductDetails | null;
@@ -33,7 +34,7 @@ export default function ProductDetailPage({ product }: Props) {
         ? `${product.description.slice(0, 100).replace(/<[^>]*>?/gm, '').trim().substring(0, product.description.slice(0, 100).replace(/<[^>]*>?/gm, '').lastIndexOf(' '))}...`
         : 'Manufacturing Products for sale in South Africa';
 
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/product/${product.productID}/${toSeoSlug(product.productName || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/product/${product.productID}/${toSeoSlug(product.productName || '')}`;
 
 
     const handleAddToCart = async () => {
@@ -104,7 +105,7 @@ export default function ProductDetailPage({ product }: Props) {
                 onChangeHireEndDate={setEndDate}
                 onAddToCartClick={handleAddToCart}
             />
-
+            <DownloadApp />
             {/* controls integrated in ProductDetail above */}
         </>
     );
@@ -156,7 +157,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const numericId = parseInt(productId?.[0] || '0');
 
     const apolloClient = initializeApollo();
-    const { data } = await apolloClient.query({
+    const { data , } = await apolloClient.query({
         query: GET_PRODUCT_DETAILS,
         variables: {
             productId: numericId

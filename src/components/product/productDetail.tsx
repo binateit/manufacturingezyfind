@@ -10,6 +10,10 @@ import Button from "../ui/Button";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useEffect, useMemo, useState } from "react";
 import { formatTimeLeft } from "@/lib/formatTimeLeft";
+import { tokenService } from "@/core/services/token.service";
+import { useAppUI } from "@/contexts/AppUIContext";
+import { cartService } from "@/core/services/cartService";
+import { toast } from "react-toastify";
 
 
 interface ProductDetailProps {
@@ -38,13 +42,15 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
     ];
 
     const [timeLeft, setTimeLeft] = useState(0);
+    const { openLoginModal } = useAppUI();
 
     const lastBid = useMemo(() => {
         return product?.prdBid?.slice().sort((a, b) => (b?.bidId ?? 0) - (a?.bidId ?? 0))[0] ?? null;
     }, [product.prdBid]);
 
     const baseAmount = lastBid?.bidAmount ?? product.unitCost ?? 0;
-    const [bidAmount, setBidAmount] = useState<number>(baseAmount);
+    const [bidAmount, setBidAmount] = useState<number>(baseAmount * 1.1);
+    const [isWorking, setIsWorking] = useState(false);
 
     const handleIncreaseBid = () => {
         setBidAmount((prev) => parseFloat((prev * 1.1).toFixed(2)));
@@ -64,6 +70,50 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
         return () => clearInterval(timer);
     }, [product.endDate]);
 
+    useEffect(() => {
+        setBidAmount(baseAmount * 1.1);
+    }, [baseAmount]);
+
+    const handleBidNow = async (amount?: number) => {
+        try {
+            setIsWorking(true);
+            const result = await cartService.bidOnProduct({
+                bidId: 0,
+                bidAmount: amount || baseAmount,
+                productId: product.productID
+            });
+            if (result?.bidId) {
+                toast.success("Successfully bid!");
+
+                product.prdBid = [
+                    {
+                        bidId: result.bidId,
+                        bidAmount: amount || baseAmount,
+                    },
+                    ...(product.prdBid || []),
+                ];
+            } else {
+                toast.error("Failed to Bid")
+            }
+        } catch (err) {
+            console.error("Bid failed:", err);
+            toast.error("Something went wrong while bidding.");
+        } finally {
+            setIsWorking(false);
+        }
+    };
+
+    const bidNow = async (amount?: number) => {
+        if (!tokenService.getUserName()) {
+            openLoginModal(async () => {
+                await handleBidNow(amount);
+
+            });
+            return;
+        }
+        await handleBidNow(amount);
+
+    }
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="container">
@@ -97,8 +147,6 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                             )}
                         </div>
                     </div>
-
-
 
                     <div className="basis-12/12 lg:basis-7/12 2xl:basis-6/12">
                         <h1 className="text-2xl md:text-3xl font-semibold text-primary">{product?.productName}</h1>
@@ -179,9 +227,9 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                             )}
 
                             {product?.salesTypeId === 2 && (
-                                <button className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
+                                <button onClick={() => bidNow(bidAmount)} disabled={isWorking} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
                                     <FontAwesomeIcon icon={faGavel} />
-                                    Bid Now
+                                    {isWorking ? 'Processing...' : 'Bid Now'}
                                 </button>
                             )}
                         </div>

@@ -1,4 +1,5 @@
 
+import DownloadApp from "@/components/shared/DownloadApp";
 import TenderDetail from "@/components/tenders/TenderDetail";
 import { ENV } from "@/core/config/env";
 import { PostCategory } from "@/core/constants/enum";
@@ -23,7 +24,7 @@ export default function TenderDetailPage({ tender }: Props) {
     const title = tender?.titleSEO + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Article'
     const description = tender?.descriptionSEO || 'Manufacturing articles covering all sectors of the manufacturing industy.';
     const keywords = tender?.keywordsSEO || 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${tender?.postID}/${toSeoSlug(tender?.title || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${tender?.postID}/${toSeoSlug(tender?.title || '')}`;
 
     return (
         <>
@@ -45,6 +46,7 @@ export default function TenderDetailPage({ tender }: Props) {
                 )}
             </Head>
             <TenderDetail tender={tender} />
+            <DownloadApp />
         </>
     );
 }

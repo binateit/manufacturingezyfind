@@ -101,7 +101,7 @@ export default function TenderCard({ companyId, companyName }: TenderCardProps) 
 
                                 <div className="basis-12/12 sm:basis-8/12">
                                     <Link
-                                        href={`/manufacturing/tenders/${tender?.postID}/${slugify(tender?.title || '')}.html`}
+                                        href={`/manufacturing/tenders/${tender?.postID}/${slugify(tender?.title || '')}`}
                                         className="text-md font-semibold"
                                     >
                                         {tender.title}
@@ -126,7 +126,7 @@ export default function TenderCard({ companyId, companyName }: TenderCardProps) 
                                         </div>
                                     </div>
                                     <Link
-                                        href={`/manufacturing/tenders/${tender?.postID}/${slugify(tender?.title || '')}.html`}
+                                        href={`/manufacturing/tenders/${tender?.postID}/${slugify(tender?.title || '')}`}
                                         className="mt-2 inline-block text-[10px] sm:text-[12px] bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-3 sm:px-10 py-1"
                                     >
                                         View Details

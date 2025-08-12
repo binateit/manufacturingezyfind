@@ -1,4 +1,5 @@
 import ArticleDetail from "@/components/article/ArticleDetail";
+import DownloadApp from "@/components/shared/DownloadApp";
 import { ENV } from "@/core/config/env";
 import { PostCategory } from "@/core/constants/enum";
 import { GET_POST_DETAILS } from "@/core/graphql/queries/getPostDetail";
@@ -22,7 +23,7 @@ export default function ArticleDetailPage({ article }: Props) {
     const title = article?.titleSEO + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Article'
     const description = article?.descriptionSEO || 'Manufacturing articles covering all sectors of the manufacturing industy.';
     const keywords = article?.keywordsSEO || 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${article?.postID}/${toSeoSlug(article?.title || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${article?.postID}/${toSeoSlug(article?.title || '')}`;
 
     return (
         <>
@@ -45,6 +46,7 @@ export default function ArticleDetailPage({ article }: Props) {
                 )}
             </Head>
             <ArticleDetail article={article} />
+            <DownloadApp />
         </>
     );
 }

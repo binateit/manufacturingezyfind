@@ -1,3 +1,4 @@
+import DownloadApp from "@/components/shared/DownloadApp";
 import Loading from "@/components/shared/Loading";
 import SpecialList from "@/components/special/SpecialList";
 import { ENV } from "@/core/config/env";
@@ -6,6 +7,7 @@ import { ProductItem } from "@/core/models/products/productList";
 import { SearchProductRequest } from "@/core/models/products/productRequest";
 import { initializeApollo } from "@/lib/apolloClient";
 import { getString } from "@/lib/stringUtils";
+import Head from "next/head";
 import { useRouter } from "next/router";
 
 interface ProductPageProps {
@@ -30,8 +32,18 @@ export default function SpecialPage({ products, pagination }: ProductPageProps) 
         text: getString(query.text),
         page: query.page ? parseInt(query.page as string, 10) : 1,
     };
+    const title = 'Find manufacturing specials | www.ManufacturingEzyFind.co.za'
+    const description = 'Find all your products, services and digital download specials to be purchased, auctioned or hired for manufacturing, mining, engineering and construction industries.'
+    const keywords = 'purchase specials, hire specials, auction specials, bid specials, manufacturing specials, mining specials, engineering specials, construction specials'
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name='description' content={description} />
+                <meta name='keywords' content={keywords} />
+            </Head>
             <div className="my-10">
                 <div className="container">
                     <SpecialList
@@ -41,6 +53,7 @@ export default function SpecialPage({ products, pagination }: ProductPageProps) 
                     />
                 </div>
             </div>
+            <DownloadApp />
         </>
     );
 }

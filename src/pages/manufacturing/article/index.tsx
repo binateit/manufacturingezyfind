@@ -1,5 +1,6 @@
 
 import ArticleList from "@/components/article/ArticleList";
+import DownloadApp from "@/components/shared/DownloadApp";
 import { ENV } from "@/core/config/env";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { PostCategory } from "@/core/constants/enum";
@@ -20,15 +21,17 @@ interface ArticlePageProps {
 
 export default function ArticlePage({ articles, pagination }: ArticlePageProps) {
 
-    const title = 'ManufacturingEzyFind | Article'
-    const description = 'Manufacturing articles covering all sectors of the manufacturing industy.';
-    const keywords = 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
+    const title = 'Manufacturing, Mining, Engineering & Construction news and blogs | www.ManufacturingEzyFind.co.za'
+
+    const description = 'Find the latest industry news, blogs and trends happening in the manufacturing, mining, construction and engineering industries.';
+    const keywords = 'manufacturing news, manufacturing blogs, manufacturing industry trends, manufacturing insights, mining news, mining blogs, mining industry trends, mining insights, engineering news, engineering blogs, engineering industry trends, engineering insights, construction news, construction blogs, construction industry trends, construction insights'
     const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article`;
 
     return (
         <>
             <Head>
                 <title>{title}</title>
+                <meta name="title" content={title} />
                 <meta name="description" content={description} />
                 <meta name="keywords" content={keywords} />
                 <link rel="canonical" href={canonicalUrl} />
@@ -41,6 +44,7 @@ export default function ArticlePage({ articles, pagination }: ArticlePageProps) 
                     />
                 </div>
             </div>
+            <DownloadApp />
         </>
     );
 }

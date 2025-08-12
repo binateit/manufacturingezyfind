@@ -43,7 +43,7 @@ export default function TopBar() {
                 </div>
                 <div className='header-cart flex justify-end items-center bg-black gap-5 relative h-9 md:h-12 z-10 skew-right'>
                     <Link href="/cart" className='text-white flex items-center gap-1.5 text-[10px] sm:text-[12px]  lg:text-sm'><FontAwesomeIcon icon={faShoppingCart} className=' text-md' /> Cart({cartCount})</Link>
-                    <a href="#" className='text-white flex items-center gap-1.5 text-[10px] sm:text-[12px]  lg:text-sm'><FontAwesomeIcon icon={faGavel} className=' text-lg' /> My Bid(0)</a>
+                    {/* <a href="#" className='text-white flex items-center gap-1.5 text-[10px] sm:text-[12px]  lg:text-sm'><FontAwesomeIcon icon={faGavel} className=' text-lg' /> My Bid(0)</a> */}
                 </div>
             </div>
         </div>

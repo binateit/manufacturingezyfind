@@ -10,7 +10,6 @@ import { slugify } from "@/lib/slugify";
 import tenureItems from "@/core/constants/tenure";
 import { calculateDiscountedSubscriptionPrice } from "@/lib/subscriptionUtils";
 
-
 export function SubscriptionPlan() {
   const [tenure, setTenure] = useState<number>(1);
   const router = useRouter();
@@ -36,6 +35,7 @@ export function SubscriptionPlan() {
 
   return (
     <div>
+      
       <div className="flex max-[640px]:flex-col max-[500px]:gap-2 flex-row flex-wrap gap-4 justify-center mt-5 md:mt-8 lg:mt-15">
         {tenureItems.map((t) => (
           <div

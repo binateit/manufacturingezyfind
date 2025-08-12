@@ -35,7 +35,7 @@ export const BusinessItemCard = ({ business }: Props) => {
                     </div>
                 </div>
 
-                <Link href={`/manufacturing/business/${business.companyId}/${slugify(business?.companyName || '')}.html`} className="uppercase text-primary font-semibold mb-1">
+                <Link href={`/manufacturing/business/${business.companyId}/${slugify(business?.companyName || '')}`} className="uppercase text-primary font-semibold mb-1">
                     {business.companyName}
                 </Link>
 
@@ -73,7 +73,7 @@ export const BusinessItemCard = ({ business }: Props) => {
 
                 <div className="flex justify-between mt-auto">
                     <Link
-                        href={`/manufacturing/business/${business.companyId}/${slugify(business.companyName)}.html`}
+                        href={`/manufacturing/business/${business.companyId}/${slugify(business.companyName)}`}
                         className="btn bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]"
                     >
                         Read More

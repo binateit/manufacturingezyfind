@@ -26,7 +26,7 @@ export default function ProductCard({ companyId, companyName }: ProductCardProps
         companyId: companyId,
     };
 
-    const { data, loading } = useQuery(GET_PRODUCTS, {
+    const { data, loading , refetch } = useQuery(GET_PRODUCTS, {
         variables,
         fetchPolicy: "network-only",
     });
@@ -111,7 +111,7 @@ export default function ProductCard({ companyId, companyName }: ProductCardProps
                                     <div className="flex justify-between items-center mt-auto gap-2">
                                         {product.salesTypeId == 1 && <PurchaseProduct product={product} />}
 
-                                        {product.salesTypeId === 2 && <BidProduct product={product} />}
+                                        {product.salesTypeId === 2 && <BidProduct product={product} refetchOnSuccess={refetch} />}
 
                                         {product.salesTypeId == 3 && <HireProduct product={product} />}
 

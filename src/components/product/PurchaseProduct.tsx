@@ -32,7 +32,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
   const increment = () => handleQuantityChange(orderQuantity + 1);
   const decrement = () => handleQuantityChange(orderQuantity - 1);
 
-  const productLink = `/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}.html`;
+  const productLink = `/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}`;
 
   const addToCart = async () => {
     try {
@@ -126,7 +126,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
             disabled={isWorking}
             className="bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] text-sm flex items-center gap-1"
           >
-            {isWorking ? 'Processing…' : 'Buy Now'}
+            {product?.unitCost || product?.unitCost === 0 && product.typeID !==2 ? 'Buy Now' : 'Download Now'}
           </Button>
           <Button
             onClick={addToCart}

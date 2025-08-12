@@ -1,4 +1,5 @@
 import BusinessList from '@/components/business/BusinessList';
+import DownloadApp from '@/components/shared/DownloadApp';
 import Loading from '@/components/shared/Loading';
 import { ENV } from '@/core/config/env';
 import { GET_BUSINESS_LIST } from '@/core/graphql/queries/getBusinessList';
@@ -43,6 +44,7 @@ export default function BusinessesPage({ businesses, pagination }: Props) {
                     />
                 </div>
             </div>
+            <DownloadApp />
         </>
     );
 }

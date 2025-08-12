@@ -5,8 +5,7 @@ export const CREATE_PRD_BID = gql`
         createPrdBid(prdBid: $prdBid) {
         bidAmount
         bidId
-        createdDate
-        userId
+        productId
     }
 }
 `;

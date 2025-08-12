@@ -26,30 +26,30 @@ class CartService {
         },
         optimisticResponse: optimistic
           ? {
-              postPrdShoppingCartOptimized: {
-                __typename: 'ResponsePrdShoppingCartTotalDto',
-                success: true,
-                message: 'Optimistic add',
-                result: {
-                  __typename: 'PrdShoppingCartTotalDtoType',
-                  totalAmount: (optimistic.unitCost || 0) * quantity,
-                  vatAmount: 0,
-                  amountExlVat: 0,
-                  prdShoppingCartDto: [
-                    {
-                      __typename: 'PrdShoppingCartDtoType',
-                      recordID: -1,
-                      productID: productId,
-                      productName: optimistic.productName || '',
-                      productImage: optimistic.productImage || '',
-                      quantity,
-                      totalPrice: (optimistic.unitCost || 0) * quantity,
-                      unitCost: optimistic.unitCost || 0,
-                    },
-                  ],
-                },
+            postPrdShoppingCartOptimized: {
+              __typename: 'ResponsePrdShoppingCartTotalDto',
+              success: true,
+              message: 'Optimistic add',
+              result: {
+                __typename: 'PrdShoppingCartTotalDtoType',
+                totalAmount: (optimistic.unitCost || 0) * quantity,
+                vatAmount: 0,
+                amountExlVat: 0,
+                prdShoppingCartDto: [
+                  {
+                    __typename: 'PrdShoppingCartDtoType',
+                    recordID: -1,
+                    productID: productId,
+                    productName: optimistic.productName || '',
+                    productImage: optimistic.productImage || '',
+                    quantity,
+                    totalPrice: (optimistic.unitCost || 0) * quantity,
+                    unitCost: optimistic.unitCost || 0,
+                  },
+                ],
               },
-            }
+            },
+          }
           : undefined,
         refetchQueries: [{ query: GET_CART_LIST, variables: { page: 1, size: 10 } }],
         awaitRefetchQueries: true,
@@ -114,16 +114,17 @@ class CartService {
     }
   }
 
-  async bidOnProduct(prdBid:ProductBid):Promise<ProductBidResult> {
+  async bidOnProduct(prdBid: ProductBid): Promise<ProductBidResult> {
     try {
       const response = await this.client.mutate({
         mutation: CREATE_PRD_BID,
         variables: { prdBid },
+        fetchPolicy: "no-cache",
       })
       if (!response || !response.data) throw new Error('Cannot create bid')
-      return response.data.createPrdBid
+      return response?.data?.createPrdBid
     } catch (err) {
-      throw err
+      throw new Error((err as Error).message);
     }
   }
 }

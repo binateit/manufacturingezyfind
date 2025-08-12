@@ -12,21 +12,24 @@ import { slugify } from "@/lib/slugify";
 import { cartService } from "@/core/services/cartService";
 import { toast } from "react-toastify";
 import { tokenService } from "@/core/services/token.service";
+import { useAppUI } from "@/contexts/AppUIContext";
 
 interface BidProductProps {
   product: ProductItem;
+  refetchOnSuccess: () => void;
 }
 
-export default function BidProduct({ product }: BidProductProps) {
+export default function BidProduct({ product, refetchOnSuccess }: BidProductProps) {
   const [timeLeft, setTimeLeft] = useState(0);
-  const token = tokenService.isGuest()
-  
+  const { openLoginModal } = useAppUI();
+
   const lastBid = useMemo(() => {
     return product.prdBid?.slice().sort((a, b) => (b?.bidId ?? 0) - (a?.bidId ?? 0))[0] ?? null;
   }, [product.prdBid]);
 
   const baseAmount = lastBid?.bidAmount ?? product.unitCost ?? 0;
   const [bidAmount, setBidAmount] = useState<number>(baseAmount * 1.1);
+  const [isWorking, setIsWorking] = useState(false);
 
   const handleIncreaseBid = () => {
     setBidAmount((prev) => parseFloat((prev * 1.1).toFixed(2)));
@@ -46,26 +49,42 @@ export default function BidProduct({ product }: BidProductProps) {
     return () => clearInterval(timer);
   }, [product.endDate]);
 
+  useEffect(() => {
+    setBidAmount(baseAmount * 1.1);
+  }, [baseAmount]);
+
   const handleBidNow = async (amount?: number) => {
-    if (token) {
-      window.location.href = `/login?from=${window.location.pathname}`;
-      return;
-    }
     try {
+      setIsWorking(true);
       const result = await cartService.bidOnProduct({
         bidId: 0,
-        userId: null,
         bidAmount: amount || baseAmount,
-        createdDate: null,
+        productId: product.productID
       });
-      if (result) {
-        toast("Successfully bid!");
+      if (result?.bidId) {
+        toast.success("Successfully bid!");
+      } else {
+        toast.error("Failed to Bid")
       }
     } catch (err) {
       console.error("Bid failed:", err);
       toast.error("Something went wrong while bidding.");
+    } finally {
+      setIsWorking(false);
     }
   };
+
+  const bidNow = async (amount?: number) => {
+    if (!tokenService.getUserName()) {
+      openLoginModal(async () => {
+        await handleBidNow(amount);
+        refetchOnSuccess();
+      });
+      return;
+    }
+    await handleBidNow(amount);
+    refetchOnSuccess();
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -75,7 +94,7 @@ export default function BidProduct({ product }: BidProductProps) {
 
         {/* Title */}
         <Link
-          href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? "")}.html`}
+          href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? "")}`}
           className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors"
         >
           {product.productName}
@@ -113,9 +132,9 @@ export default function BidProduct({ product }: BidProductProps) {
 
         {/* Action */}
         <div className="flex justify-between items-center mt-auto">
-          <Button className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]" onClick={() => handleBidNow(bidAmount)}>
+          <Button className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]" onClick={() => bidNow(bidAmount)} disabled={isWorking}>
             <FontAwesomeIcon icon={faGavel} />
-            Bid Now
+            {isWorking ? 'Processing...' : 'Bid Now'}
           </Button>
         </div>
       </div>

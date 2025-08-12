@@ -5,10 +5,22 @@ import Button from '@/components/ui/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faHeadset, faMapMarkerAlt, faMobile, faPhoneVolume, faStickyNote, faUser } from '@fortawesome/free-solid-svg-icons';
 import PageBanner from '@/components/ui/PageBanner';
+import Head from 'next/head';
+import DownloadApp from '@/components/shared/DownloadApp';
 
 export default function ContactPage() {
+    const title = 'Contact us | www.ManufacturingEzyFind.co.za'
+    const description = 'Contact us via email or phone for all your manufacturing B2B Marketplace AI leads generation and needs'
+    const keywords = 'Contact www.ManufacturingEzyFind.co.za manufacturing B2B marketplace and leads generation system.'
+
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name='description' content={description} />
+                <meta name='keywords' content={keywords} />
+            </Head>
             <PageBanner
                 backgroundImage='/images/contact_us_banner.webp'
                 title='Contact Us'
@@ -171,6 +183,7 @@ export default function ContactPage() {
                     className='mb-15'>
                 </iframe>
             </div>
+            <DownloadApp />
         </>
     )
 }

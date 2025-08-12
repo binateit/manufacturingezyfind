@@ -1,4 +1,5 @@
 import MagazineDetail from "@/components/magazines/MagazineDetail";
+import DownloadApp from "@/components/shared/DownloadApp";
 import PageBanner from "@/components/ui/PageBanner";
 import { ENV } from "@/core/config/env";
 import { GET_MAGAZINES_DETAILS } from "@/core/graphql/queries/getMagazineDetail";
@@ -22,7 +23,7 @@ export default function MagazineDetailPage({ magazine }: Props) {
     }
     const title = magazine?.magazineName + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Digital Catalogue'
     const description = magazine?.eFlyerDescription || 'Manufacturing digital catalogue covering all sectors of the manufacturing industy.';
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/digital/${magazine?.eflyerId}/${toSeoSlug(magazine?.magazineName || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/digital/${magazine?.eflyerId}/${toSeoSlug(magazine?.magazineName || '')}`;
 
     return (
         <>
@@ -35,6 +36,7 @@ export default function MagazineDetailPage({ magazine }: Props) {
             </Head>
             <PageBanner title={magazine.magazineName || 'Digital Catalogue'} backgroundImage='/images/manufacturing.webp' />
             <MagazineDetail magazine={magazine} />
+            <DownloadApp />
         </>
     );
 }

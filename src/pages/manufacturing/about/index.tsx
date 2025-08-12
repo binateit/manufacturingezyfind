@@ -4,11 +4,22 @@ import Image from 'next/image'
 import React from 'react'
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import PageBanner from '@/components/ui/PageBanner';
+import Head from 'next/head';
+import DownloadApp from '@/components/shared/DownloadApp';
 
 export default function AboutPage() {
+    const title = 'About us | www.ManufacturingEzyFind.co.za'
+    const description = 'Obtain a detail description on how manufacturing B2B Marketplace AI leads generation can assist your manufacturing, mining, engineering and construction business.'
+    const keywords = 'About www.ManufacturingEzyFind.co.za manufacturing B2B marketplace and leads generation system.'
 
     return (
         <>
+            <Head>
+                <title>{title}</title>
+                <meta name="title" content={title} />
+                <meta name='description' content={description} />
+                <meta name='keywords' content={keywords} />
+            </Head>
             <PageBanner
                 backgroundImage='/images/manufacturing-about.webp'
                 title='About'
@@ -610,7 +621,7 @@ export default function AboutPage() {
                     </div>
                 </div>
             </div>
-
+            <DownloadApp />
         </>
     )
 }

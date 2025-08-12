@@ -1,4 +1,5 @@
 import BusinessDetail from "@/components/business/BusinessDetail";
+import DownloadApp from "@/components/shared/DownloadApp";
 import { ENV } from "@/core/config/env";
 import { GET_BUSINESS_DETAILS } from "@/core/graphql/queries/getBusinessDetail";
 import { GET_BUSINESS_LIST } from "@/core/graphql/queries/getBusinessList";
@@ -25,7 +26,7 @@ export default function BusinessDetailPage({ business }: Props) {
             business.compDescription.slice(0, 100).replace(/<[^>]*>?/gm, '').lastIndexOf(' '))}...` : ''} 
             manufacturing companies in South Africa. Find a South African manufacturing company near me.`;
     const keywords = `${business?.companyName ? `${business.companyName} - ` : ''}${business?.compProvinceName ? `${business.compProvinceName} ` : ''}manufacturing companies ${business?.compCityName ? `${business.compCityName} / ` : ''}${business?.suburbName ? `${business.suburbName} ` : ''}South Africa`
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/business/${business?.companyID}/${toSeoSlug(business?.companyName || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/business/${business?.companyID}/${toSeoSlug(business?.companyName || '')}`;
 
     return (
         <>
@@ -38,6 +39,7 @@ export default function BusinessDetailPage({ business }: Props) {
 
         </Head>
             <BusinessDetail business={business} />
+            <DownloadApp />
         </>
     );
 }

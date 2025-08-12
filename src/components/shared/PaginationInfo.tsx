@@ -9,7 +9,7 @@ export function PaginationInfo({
   currentPage,
   pageSize,
   totalCount,
-  label = "items",
+  label ,
 }: PaginationInfoProps) {
   if (totalCount === 0) return null;
 

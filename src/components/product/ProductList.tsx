@@ -19,6 +19,7 @@ import BidProduct from "./BidProduct";
 import HireProduct from "./HireProduct";
 import { PaginationInfo } from "../shared/PaginationInfo";
 import { NoRecordsCard } from "../ui/NoRecordsCard";
+import DownloadApp from "../shared/DownloadApp";
 
 type FilterState = {
     searchText?: string;
@@ -64,6 +65,25 @@ export default function ProductList({
 
     const categories = categoryRes?.getMstCategoryByParentId?.result ?? [];
 
+    const getSelectedCategoryNames = (
+        selected: number[] | number | undefined,
+        allCategories: Category[]
+    ): string[] => {
+        if (selected === undefined) return [];
+
+        const selectedIds = Array.isArray(selected) ? selected : [selected];
+
+        return allCategories
+            .filter((cat) => selectedIds.includes(cat.categoryId))
+            .map((cat) => cat.categoryName);
+    };
+    
+    const selectedCategoryNames = getSelectedCategoryNames(filters.category, categories);
+
+    const categoryLabel: string = selectedCategoryNames.length > 0
+        ? `${selectedCategoryNames.join(", ")} Products`
+        : "Products";
+
     const variables: SearchProductRequest = {
         domainCategoryIds: filters.category?.join(",") || String(ENV.CATEGORY_ID),
         salesTypeId: filters.saleType || null,
@@ -72,7 +92,7 @@ export default function ProductList({
         size: filters.size ?? DEFAULT_PAGE_SIZE,
     };
 
-    const { data, loading } = useQuery(GET_PRODUCTS, {
+    const { data, loading, refetch } = useQuery(GET_PRODUCTS, {
         variables,
         fetchPolicy: "network-only",
     });
@@ -160,124 +180,126 @@ export default function ProductList({
     };
 
     return (
-        <div className="flex flex-wrap lg:gap-6 lg:flex-nowrap my-10">
+        <>
+            <div className="flex flex-wrap lg:gap-6 lg:flex-nowrap my-10">
 
-            {/* Left Filter Panel */}
-            <div className="basis-12/12 lg:basis-4/12 xl:basis-3/12">
-                <div className="py-3 px-5 text-white bg-secondary flex justify-between items-center">
-                    <p className="text-lg">Filter Option</p>
-                </div>
-                <div className="border border-gray-300">
-                    {/* Search */}
-                    <div className="border-b border-gray-300">
-                        <div className="bg-white px-4 py-3 flex justify-between items-center cursor-pointer">
-                            <p className="text-md font-semibold">Search Product</p>
-                            <FontAwesomeIcon icon={faAngleDown} className="text-lg" />
-                        </div>
-                        <div className="bg-gray-50 px-4 py-5">
-                            <form
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    const input = e.currentTarget.elements.namedItem("search") as HTMLInputElement;
-                                    handleSearch(input.value);
-                                }}
-                            >
-                                <div className="relative">
-                                    <input
-                                        type="search"
-                                        name="search"
-                                        placeholder="Enter Product name"
-                                        defaultValue={filters.searchText}
-                                        className="form-control border border-gray-300 text-sm w-full h-10 px-5"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="absolute top-[50%] translate-y-[-50%] right-0 h-10 px-4 bg-primary text-white"
-                                    >
-                                        Search
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                {/* Left Filter Panel */}
+                <div className="basis-12/12 lg:basis-4/12 xl:basis-3/12">
+                    <div className="py-3 px-5 text-white bg-secondary flex justify-between items-center">
+                        <p className="text-lg">Filter Option</p>
                     </div>
-
-                    {/* Filters */}
-                    <FilterSection
-                        title="Categories"
-                        data={categories}
-                        selected={filters.category}
-                        onChange={(values) => handleFilterChange("category", values)}
-                        labelKey="categoryName"
-                        valueKey="categoryId"
-                    />
-                    <FilterSection
-                        title="Scope"
-                        data={SCOPES}
-                        selected={filters.scope ? [filters.scope] : []}
-                        onChange={(values) => handleFilterChange("scope", values[0])}
-                        labelKey="scopeName"
-                        valueKey="scopeId"
-                        mode="single"
-                    />
-                    <FilterSection
-                        title="Sales Type"
-                        data={SALES_TYPES}
-                        selected={filters.saleType ? [filters.saleType] : []}
-                        onChange={(values) => handleFilterChange("saleType", values[0])}
-                        labelKey="saleTypeName"
-                        valueKey="saleTypeId"
-                        mode="single"
-                    />
-                </div>
-            </div>
-
-            {/* Right Business Listing */}
-            <div className="basis-12/12 lg:basis-8/12 xl:basis-9/12 mt-5 lg:mt-0">
-
-                {pagination && (
-                    <PaginationInfo
-                        currentPage={pagination.currentPage}
-                        pageSize={DEFAULT_PAGE_SIZE}
-                        totalCount={pagination.count}
-                        label="Products"
-                    />
-                )}
-
-                {/* Product Cards */}
-                {products.length === 0 && (<NoRecordsCard />)}
-                <div className="flex flex-wrap gap-y-5 -mx-[12px]">
-                    {products.map((product, index) => (
-                        <div className="basis-12/12 min-[550px]:basis-6/12 xl:basis-4/12 px-[12px] h-full" key={index}>
-                            <div className="flex flex-col h-full relative">
-                                {/* date box */}
-                                <div className="w-[100px] text-center uppercase absolute max-[451px]:-right-5 -right-4 top-10 z-10">
-                                    <div className="bg-primary text-white py-1 px-2 relative">
-                                        <span className="text-[12px] font-semibold">
-                                            {formatDate(product.endDate || "")}
-                                        </span>
+                    <div className="border border-gray-300">
+                        {/* Search */}
+                        <div className="border-b border-gray-300">
+                            <div className="bg-white px-4 py-3 flex justify-between items-center cursor-pointer">
+                                <p className="text-md font-semibold">Search Product</p>
+                                <FontAwesomeIcon icon={faAngleDown} className="text-lg" />
+                            </div>
+                            <div className="bg-gray-50 px-4 py-5">
+                                <form
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const input = e.currentTarget.elements.namedItem("search") as HTMLInputElement;
+                                        handleSearch(input.value);
+                                    }}
+                                >
+                                    <div className="relative">
+                                        <input
+                                            type="search"
+                                            name="search"
+                                            placeholder="Enter Product name"
+                                            defaultValue={filters.searchText}
+                                            className="form-control border border-gray-300 text-sm w-full h-10 px-5"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="absolute top-[50%] translate-y-[-50%] right-0 h-10 px-4 bg-primary text-white"
+                                        >
+                                            Search
+                                        </button>
                                     </div>
-                                </div>
-
-                                {/* Product Type */}
-                                {product.salesTypeId === 1 && <PurchaseProduct product={product} />}
-                                {product.salesTypeId === 2 && <BidProduct product={product} />}
-                                {product.salesTypeId === 3 && <HireProduct product={product} />}
+                                </form>
                             </div>
                         </div>
-                    ))}
+
+                        {/* Filters */}
+                        <FilterSection
+                            title="Categories"
+                            data={categories}
+                            selected={filters.category}
+                            onChange={(values) => handleFilterChange("category", values)}
+                            labelKey="categoryName"
+                            valueKey="categoryId"
+                        />
+                        <FilterSection
+                            title="Scope"
+                            data={SCOPES}
+                            selected={filters.scope ? [filters.scope] : []}
+                            onChange={(values) => handleFilterChange("scope", values[0])}
+                            labelKey="scopeName"
+                            valueKey="scopeId"
+                            mode="single"
+                        />
+                        <FilterSection
+                            title="Sales Type"
+                            data={SALES_TYPES}
+                            selected={filters.saleType ? [filters.saleType] : []}
+                            onChange={(values) => handleFilterChange("saleType", values[0])}
+                            labelKey="saleTypeName"
+                            valueKey="saleTypeId"
+                            mode="single"
+                        />
+                    </div>
                 </div>
 
-                {/* Pagination */}
-                <div className="flex flex-col md:flex-row mt-10 justify-center">
+                {/* Right Business Listing */}
+                <div className="basis-12/12 lg:basis-8/12 xl:basis-9/12 mt-5 lg:mt-0">
+
                     {pagination && (
-                        <Pagination
+                        <PaginationInfo
                             currentPage={pagination.currentPage}
-                            totalPages={pagination.totalPages}
-                            onPageChange={handlePageChange}
+                            pageSize={DEFAULT_PAGE_SIZE}
+                            totalCount={pagination.count}
+                            label={categoryLabel}
                         />
                     )}
+
+                    {/* Product Cards */}
+                    {products.length === 0 && (<NoRecordsCard />)}
+                    <div className="flex flex-wrap gap-y-5 -mx-[12px]">
+                        {products.map((product, index) => (
+                            <div className="basis-12/12 min-[550px]:basis-6/12 xl:basis-4/12 px-[12px] h-full" key={index}>
+                                <div className="flex flex-col h-full relative">
+                                    {/* date box */}
+                                    <div className="w-[100px] text-center uppercase absolute max-[451px]:-right-5 -right-4 top-10 z-10">
+                                        <div className="bg-primary text-white py-1 px-2 relative">
+                                            <span className="text-[12px] font-semibold">
+                                                {formatDate(product.endDate || "")}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Product Type */}
+                                    {product.salesTypeId === 1 && <PurchaseProduct product={product} />}
+                                    {product.salesTypeId === 2 && <BidProduct product={product} refetchOnSuccess={refetch} />}
+                                    {product.salesTypeId === 3 && <HireProduct product={product} />}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    <div className="flex flex-col md:flex-row mt-10 justify-center">
+                        {pagination && (
+                            <Pagination
+                                currentPage={pagination.currentPage}
+                                totalPages={pagination.totalPages}
+                                onPageChange={handlePageChange}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }

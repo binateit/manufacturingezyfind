@@ -1,5 +1,6 @@
 
 import JobDetail from "@/components/job/JobDetail";
+import DownloadApp from "@/components/shared/DownloadApp";
 import { ENV } from "@/core/config/env";
 import { PostCategory } from "@/core/constants/enum";
 import { GET_POST_DETAILS } from "@/core/graphql/queries/getPostDetail";
@@ -24,7 +25,7 @@ export default function JobDetailPage({ job }: Props) {
     const title = job?.titleSEO + ' | www.ManufacturingEzyFind.co.za' || 'ManufacturingEzyFind | Jobs'
     const description = job?.descriptionSEO || 'Manufacturing jobs covering all sectors of the manufacturing industy.';
     const keywords = job?.keywordsSEO || 'manufacturing articles,metal,textiles,manufacturing businesses in south africa,chemicals,mining,oil and gas,automotive,agriculture,ICT and Electronics'
-    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${job?.postID}/${toSeoSlug(job?.title || '')}.html`;
+    const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/article/${job?.postID}/${toSeoSlug(job?.title || '')}`;
 
     return (
         <>
@@ -46,6 +47,7 @@ export default function JobDetailPage({ job }: Props) {
                 )}
             </Head>
             <JobDetail job={job} />
+            <DownloadApp />
         </>
     );
 }

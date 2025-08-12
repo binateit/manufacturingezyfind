@@ -35,7 +35,7 @@ export const MagazineItemCard = ({ magazine }: Props) => {
                 </div>
 
                 <Link
-                    href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}.html`}
+                    href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}`}
                     className="uppercase text-primary font-semibold mb-1"
                 >
                     {magazine.magazineName}
@@ -47,7 +47,7 @@ export const MagazineItemCard = ({ magazine }: Props) => {
 
                 <div className="flex justify-between mt-auto">
                     <Link
-                        href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}.html`}
+                        href={`/manufacturing/digital/${magazine?.eflyerId}/${slugify(magazine?.magazineName ?? '')}`}
                         className="btn bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]"
                     >
                         View Details

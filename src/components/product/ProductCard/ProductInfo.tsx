@@ -11,7 +11,7 @@ interface ProductInfoProps {
 export default function ProductInfo({ productID, productName, unitCost }: ProductInfoProps) {
   return (
     <>
-      <Link href={`/manufacturing/product/${productID}/${slugify(productName ?? '')}.html`}>
+      <Link href={`/manufacturing/product/${productID}/${slugify(productName ?? '')}`}>
         <p className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors">
           {productName}
         </p>
