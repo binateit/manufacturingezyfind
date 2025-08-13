@@ -15,8 +15,8 @@ export interface UpdateCartInput {
   recordId?: number;
   quantity?: number;
   productId?: number | null;
-  fromDate?: any | null;
-  endDate?: any | null;
+  fromDate?: Date;
+  endDate?: Date ;
 }
 
 export interface DeleteCartInput {

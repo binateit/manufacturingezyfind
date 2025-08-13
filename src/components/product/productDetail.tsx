@@ -116,7 +116,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
             } else {
                 toast.error("Failed to Hire");
             }
-        } catch (error) {
+        } catch {
             toast.error("Something went wrong");
         } finally {
             setIsWorking(false);

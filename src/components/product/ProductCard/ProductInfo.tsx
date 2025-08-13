@@ -6,7 +6,7 @@ interface ProductInfoProps {
   unitCost: number;
 }
 
-export default function ProductInfo({ productID, productName, unitCost }: ProductInfoProps) {
+export default function ProductInfo({  productName, unitCost }: ProductInfoProps) {
   return (
     <>
 

@@ -16,7 +16,7 @@ import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
 
 interface HireProductProps {
   product: ProductItem;
-  refetchOnSuccess: () => void;
+  refetchOnSuccess?: () => void;
 }
 
 export default function HireProduct({ product, refetchOnSuccess }: HireProductProps) {
@@ -84,7 +84,7 @@ export default function HireProduct({ product, refetchOnSuccess }: HireProductPr
       } else {
         toast.error("Failed to Hire");
       }
-    } catch (error) {
+    } catch  {
       toast.error("Something went wrong");
     } finally {
       setIsWorking(false);
@@ -100,10 +100,11 @@ export default function HireProduct({ product, refetchOnSuccess }: HireProductPr
       return;
     }
     await handleHireNow();
-    refetchOnSuccess();
+    if (refetchOnSuccess) {
+      refetchOnSuccess();
+    }
     await addToCart();
     window.location.assign('/cart');
-
   }
   return (
     <div className="flex flex-col h-full">
