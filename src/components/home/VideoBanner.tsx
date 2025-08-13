@@ -21,9 +21,11 @@ const VideoBanner: FC = () => {
                     />
                     {/* Button only visible on hover */}
                     <button
+                        title="Play Now" aria-label="Play Now"
                         onClick={() => setPlayVideo(true)}
                         className="absolute inset-0 flex items-center justify-center 
                         bg-black/0 hover:bg-black/40 md:group-hover:bg-black/40 
+                        
                         transition-colors duration-300">
                         <div
                             className="opacity-100 md:opacity-0 md:group-hover:opacity-100 

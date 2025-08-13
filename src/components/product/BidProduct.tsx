@@ -16,7 +16,7 @@ import { useAppUI } from "@/contexts/AppUIContext";
 
 interface BidProductProps {
   product: ProductItem;
-  refetchOnSuccess: () => void;
+  refetchOnSuccess?: () => void;
 }
 
 export default function BidProduct({ product, refetchOnSuccess }: BidProductProps) {
@@ -78,12 +78,18 @@ export default function BidProduct({ product, refetchOnSuccess }: BidProductProp
     if (!tokenService.getUserName()) {
       openLoginModal(async () => {
         await handleBidNow(amount);
-        refetchOnSuccess();
+        if (refetchOnSuccess) {
+          refetchOnSuccess();
+        }
       });
       return;
     }
-    await handleBidNow(amount);
-    refetchOnSuccess();
+    else {
+      await handleBidNow(amount);
+      if (refetchOnSuccess) {
+        refetchOnSuccess();
+      }
+    }
   }
 
   return (

@@ -7,10 +7,10 @@ import RatingWidget from "../widgets/Rating";
 import { RatingKeyType, ReviewKeyType } from "@/core/constants/enum";
 import CategoryWidget from "../widgets/Category";
 import ReviewWidget from "../widgets/Review";
-import SpecialCard from "./partials/SpecialCard";
-import MagazineCard from "./partials/MagazineCard";
-import ProductCard from "./partials/ProductCard";
-import TenderCard from "./partials/TenderCard";
+import SpecialCard from "../widgets/SpecialCard";
+import MagazineCard from "../widgets/MagazineCard";
+import ProductCard from "../widgets/ProductCard";
+import TenderCard from "../widgets/TenderCard";
 
 interface BusinessDetailProps {
     business: BusinessDetails;

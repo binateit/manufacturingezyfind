@@ -17,6 +17,7 @@ interface CategorySelectionProps {
     handleNext: () => void;
     handlePrev: () => void;
     initialValues: ItemCategoryFormData;
+    formClassName?: string;
 }
 
 export default function CategorySelection({
@@ -24,6 +25,7 @@ export default function CategorySelection({
     handleNext,
     handlePrev,
     initialValues,
+    formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: CategorySelectionProps) {
 
     const { data: categoryData, loading } = useQuery(GET_CATEGORY_BY_PARENTID, {
@@ -63,7 +65,7 @@ export default function CategorySelection({
     return (
         <form
             onSubmit={(e) => e.preventDefault()}
-            className="h-[415px] xl:h-full p-4 xl:p-2 2xl:p-3 border border-gray-300"
+            className={clsx("p-4 xl:p-2 2xl:p-3", formClassName)}
         >
             <div className="h-full flex flex-col">
                 <div>

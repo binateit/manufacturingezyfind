@@ -85,7 +85,7 @@ export const dropdown: DropdownPassThroughOptions = {
     className: 'p-2 text-gray-400'
   },
   panel: {
-    className: 'max-h-[300px] overflow-y-auto scroll-smooth z-[9999] shadow-md border border-gray-300 bg-white'
+    className: 'max-h-[300px] overflow-y-auto scroll-smooth z-index-9999 shadow-md border border-gray-300 bg-white'
   }
   //transition: TRANSITIONS
 };

@@ -3,6 +3,7 @@ import VideoBanner from "@/components/home/VideoBanner";
 import { useAppUI } from "@/contexts/AppUIContext";
 import { useInView } from "react-intersection-observer";
 import RequestItemForm from "@/components/requestItem/RequestItemForm";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -50,12 +51,14 @@ export default function HomePage() {
           <VideoBanner />
         </div>
         <div className="basis-12/12 md:basis-6/12 lg:order-2 xl:basis-3/16 xl:order-1 relative top-0">
-          <RequestItemForm />
+          <RequestItemForm formClassName="h-[415px] xl:h-full border border-gray-300" />
         </div>
         <div className="basis-12/12 md:basis-6/12 lg:order-3 xl:basis-4/16 xl:order-3 mt-2 md:mt-0 md:px-1 md:pt-1 max-md:mb-5 overflow-hidden max-md:mx-[15px]">
           <MoreLinks />
         </div>
       </div>
+      {/* Delayed popup modal version (6s after load) */}
+      {typeof window !== 'undefined' && <RequestItemFormPopup />}
       <div className="bg-gray-50 py-15">
         <div className="container">
           <div className="md:w-8/11 xl:w-4/5 m-auto">
@@ -245,4 +248,9 @@ export default function HomePage() {
       }
     </>)
 }
+
+// Lazy-load popup to avoid SSR issues and show after 6s
+const RequestItemFormPopup = dynamic(() => import("@/components/requestItem/RequestItemFormPopup"), {
+  ssr: false,
+});
 

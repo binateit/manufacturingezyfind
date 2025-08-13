@@ -3,18 +3,21 @@ import { FC, useCallback } from "react";
 import { ItemDetailsFormData } from "@/core/models/requestItem/request-item.model";
 import { ItemRequiredSchema } from "@/core/validators/request-item.schema";
 import Button from "../ui/Button";
+import clsx from "clsx";
 
 
 interface ItemRequiredProps {
     onUpdate: (data: ItemDetailsFormData) => void;
     handleNext: () => void;
     initialValues: ItemDetailsFormData;
+    formClassName?: string;
 }
 
 export const ItemRequired: FC<ItemRequiredProps> = ({
     onUpdate,
     handleNext,
     initialValues,
+    formClassName = "h-[415px] xl:h-full border border-gray-300",
 }) => {
     const formik = useFormik({
         initialValues,
@@ -48,7 +51,7 @@ export const ItemRequired: FC<ItemRequiredProps> = ({
     return (
         <form
             onSubmit={(e) => e.preventDefault()}
-            className="h-[415px] xl:h-full md:mt-0 p-4 xl:p-2 2xl:p-3 border border-gray-300"
+            className={clsx("p-4 xl:p-2 2xl:p-3", formClassName)}
         >
             <div className="h-full flex flex-col">
                 <div>

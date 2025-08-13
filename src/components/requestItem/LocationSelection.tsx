@@ -21,13 +21,15 @@ interface LocationSelectionProps {
   handleNext: () => void;
   handlePrev: () => void;
   initialValues: LocationSelectionFormData;
+  formClassName?: string;
 }
 
 export default function LocationSelection({
   onUpdate,
   handleNext,
   handlePrev,
-  initialValues
+  initialValues,
+  formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: LocationSelectionProps) {
   const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
   const [getCitiesByProvince, { data: cityData, loading: cityLoading }] = useLazyQuery(GET_CITY_BY_PROVINCE);
@@ -39,7 +41,7 @@ export default function LocationSelection({
   const provinces = provinceData?.getProvince?.result ?? [];
   const cities = cityData?.getCityByProvince?.result ?? [];
   const suburbs = suburbData?.getSuburbByCity?.result ?? [];
-  
+
 
   const provinceOptions: SelectOptionNumber[] = useMemo(() =>
     provinces.map((p: Province) => ({
@@ -116,7 +118,8 @@ export default function LocationSelection({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()} className="h-[415px] xl:h-full p-4 xl:p-2 2xl:p-3 border border-gray-300">
+    <form onSubmit={(e) => e.preventDefault()}
+      className={clsx("p-4 xl:p-2 2xl:p-3", formClassName)}>
       <div className="h-full flex flex-col">
         <p className="text-md xl:text-sm 2xl:text-lg font-semibold">Select Location</p>
         <p className="text-sm xl:text-xs 2xl:text-sm text-[var(--primary-color)] mb-3 font-normal">Please choose</p>

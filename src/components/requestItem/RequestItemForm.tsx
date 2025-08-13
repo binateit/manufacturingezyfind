@@ -9,11 +9,13 @@ import LocationSelection from "./LocationSelection";
 import FileSelection from "./FileSelection";
 import Register from "./Register";
 
-
+interface RequestItemFormProps {
+  formClassName?: string;
+}
 
 const initialFormState: RequestItemFormData = {};
 
-export default function RequestItemForm() {
+export default function RequestItemForm({ formClassName }: RequestItemFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<RequestItemFormData>(initialFormState);
 
@@ -39,6 +41,7 @@ export default function RequestItemForm() {
       key="step-1"
       onUpdate={handleUpdate}
       handleNext={handleNext}
+      formClassName={formClassName}
       initialValues={{
         item: formData.item || "",
         description: formData.description || "",
@@ -49,6 +52,7 @@ export default function RequestItemForm() {
       onUpdate={handleUpdate}
       handleNext={handleNext}
       handlePrev={handlePrev}
+      formClassName={formClassName}
       initialValues={{ categoryId: formData.categoryId }}
     />,
     <LocationSelection
@@ -56,6 +60,7 @@ export default function RequestItemForm() {
       onUpdate={handleUpdate}
       handleNext={handleNext}
       handlePrev={handlePrev}
+      formClassName={formClassName}
       initialValues={{
         provinceId: formData.provinceId,
         cityId: formData.cityId,
@@ -67,6 +72,7 @@ export default function RequestItemForm() {
       onUpdate={handleUpdate}
       handleNext={handleNext}
       handlePrev={handlePrev}
+      formClassName={formClassName}
       initialValues={{ upload: formData.upload || [] }}
     />,
     <Register
@@ -74,6 +80,7 @@ export default function RequestItemForm() {
       onUpdate={handleUpdate}
       handleSubmit={() => {}}
       handlePrev={handlePrev}
+      formClassName={formClassName}
       initialValues={{
         name: formData.name,
         password: formData.password,

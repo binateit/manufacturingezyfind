@@ -1,7 +1,7 @@
 import { useAppUI } from "@/contexts/AppUIContext";
 import { tokenService } from "@/core/services/token.service";
 import { useEffect, useState } from "react";
-import { faGavel, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 

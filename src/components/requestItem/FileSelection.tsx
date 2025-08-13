@@ -11,6 +11,7 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import { FileUploadFormData } from "@/core/models/requestItem/request-item.model";
 import Button from "../ui/Button";
+import clsx from "clsx";
 
 
 const MAX_FILE_COUNT = 15;
@@ -27,6 +28,7 @@ interface FileSelectionProps {
   handleNext: () => void;
   handlePrev: () => void;
   initialValues: FileUploadFormData;
+  formClassName?: string;
 }
 
 export default function FileSelection({
@@ -34,6 +36,7 @@ export default function FileSelection({
   handleNext,
   handlePrev,
   initialValues,
+  formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: FileSelectionProps) {
   const [files, setFiles] = useState<File[]>(initialValues.upload || []);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -111,7 +114,7 @@ export default function FileSelection({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="h-[415px] xl:h-full p-4 xl:p-2 2xl:p-3 border border-gray-300"
+      className={clsx("p-4 xl:p-2 2xl:p-3", formClassName)}
     >
       <div className="flex flex-col h-full">
         <div>

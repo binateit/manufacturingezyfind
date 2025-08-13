@@ -1,5 +1,7 @@
 "use client"
 import { Card } from "@/components/ui";
+import GoogleLoginButton from "@/components/shared/GoogleLoginButton";
+import FacebookLoginButton from "@/components/shared/FacebookLoginButton";
 import { ENV } from "@/core/config/env";
 import { initialLoginValues, Login } from "@/core/models/auth/login";
 import { authService } from "@/core/services/authService";
@@ -10,7 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { FormikHelpers, useFormik } from "formik";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { toast } from "react-toastify";
 
 export type LoginFormProps = {
@@ -21,9 +22,8 @@ export type LoginFormProps = {
 
 export default function LoginForm({ onSuccess, title = "Log in", dense = false }: LoginFormProps) {
   const [loadingProvider, setLoadingProvider] = useState<"google" | "facebook" | null>(null);
-  const [googleReady, setGoogleReady] = useState(false);
-  const [facebookReady, setFacebookReady] = useState(false);
-  const googleButtonRef = useRef<HTMLDivElement | null>(null);
+  const googleWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [googleWidth, setGoogleWidth] = useState<number | undefined>(undefined);
 
   // Unified handler for SSO flows
   const handleSsoLogin = async (authorizationValue: string) => {
@@ -51,99 +51,27 @@ export default function LoginForm({ onSuccess, title = "Log in", dense = false }
     }
   };
 
-  // Load Google and FB SDKs on mount
+  // Social buttons now handled via reusable components
   useEffect(() => {
-    // Google Identity Services
-    const loadGoogle = () => {
-      const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        try {
-          const g = window.google;
-          if (!g?.accounts?.id || !ENV.GOOGLE_CLIENTID) return;
-          g.accounts.id.initialize({
-            client_id: ENV.GOOGLE_CLIENTID,
-            callback: (response: { credential?: string }) => {
-              if (response?.credential) {
-                setLoadingProvider("google");
-                // Pass Google ID token via Authorization header
-                handleSsoLogin(`Bearer ${response.credential}`);
-              }
-            },
-          });
-          if (googleButtonRef.current) {
-            g.accounts.id.renderButton(googleButtonRef.current, {
-              theme: "outline",
-              size: "large",
-              text: "continue_with",
-              width: 320,
-            });
-          }
-          setGoogleReady(true);
-        } catch {
-          setGoogleReady(false);
-        }
-      };
-      document.body.appendChild(script);
+    const element = googleWrapperRef.current;
+    if (!element) return;
+
+    const compute = () => {
+      const containerWidth = element.clientWidth;
+      // Clamp to GIS allowed range roughly [200, 400]
+      const desired = Math.max(220, Math.min(380, containerWidth));
+      setGoogleWidth(Math.floor(desired));
     };
 
-    // Facebook SDK
-    const loadFacebook = () => {
-      if (!ENV.FACEBOOK_APPID) return;
-      // If already present, skip
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((window as any).FB) {
-        setFacebookReady(true);
-        return;
-      }
-      (window as unknown as { fbAsyncInit?: () => void }).fbAsyncInit = function () {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const FB = (window as any).FB;
-        FB.init({
-          appId: ENV.FACEBOOK_APPID,
-          cookie: true,
-          xfbml: false,
-          version: "v19.0",
-        });
-        setFacebookReady(true);
-      };
-      const script = document.createElement("script");
-      script.async = true;
-      script.defer = true;
-      script.crossOrigin = "anonymous";
-      script.src = "https://connect.facebook.net/en_US/sdk.js";
-      document.body.appendChild(script);
+    compute();
+    const ro = new ResizeObserver(compute);
+    ro.observe(element);
+    window.addEventListener('resize', compute);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', compute);
     };
-
-    loadGoogle();
-    loadFacebook();
-    // handleSsoLogin is stable in this component; intentionally not added to deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleFacebookLogin = () => {
-    try {
-      const FB = window.FB;
-      if (!FB) {
-        toast.error("Facebook is not ready. Please try again.");
-        return;
-      }
-      setLoadingProvider("facebook");
-      FB.login((response) => {
-        if (response?.authResponse?.accessToken) {
-          const accessToken = response.authResponse.accessToken as string;
-          handleSsoLogin(`Bearer ${accessToken}`);
-        } else {
-          setLoadingProvider(null);
-        }
-      }, { scope: "public_profile,email" });
-    } catch {
-      setLoadingProvider(null);
-      toast.error("Facebook login failed. Please try again.");
-    }
-  };
   const formik = useFormik({
     initialValues: initialLoginValues,
     validationSchema: LoginValidationSchema,
@@ -226,25 +154,43 @@ export default function LoginForm({ onSuccess, title = "Log in", dense = false }
         </div>
 
         {/* Social sign-in */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Google button container rendered by GIS */}
-          <div className="w-full flex justify-center sm:justify-start">
-            <div ref={googleButtonRef} className="inline-flex" aria-disabled={!googleReady} />
+        <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch">
+          <div className="w-full flex justify-center sm:justify-start" ref={googleWrapperRef}>
+            <GoogleLoginButton
+              onSuccess={(res) => {
+                if (res.credential) {
+                  setLoadingProvider("google");
+                  handleSsoLogin(`Bearer ${res.credential}`);
+                } else {
+                  toast.error("Google did not return a credential");
+                }
+              }}
+              onError={(reason) => toast.error(reason)}
+              theme="outline"
+              size="large"
+              text="continue_with"
+              width={googleWidth}
+            />
           </div>
 
-          {/* Facebook button */}
-          <button
-            type="button"
-            onClick={handleFacebookLogin}
-            disabled={!facebookReady || loadingProvider === 'facebook'}
+          <FacebookLoginButton
             className={clsx(
-              "py-2 px-4 border border-gray-200 text-sm flex items-center justify-center gap-2 w-full transition-all delay-100",
-              !facebookReady ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-50"
+              "h-10 py-2 px-4 border border-gray-200 text-sm flex items-center justify-center gap-2 w-full transition-all delay-100 hover:bg-gray-50"
             )}
-          >
-            <Image src={'/images/facebook-icon.webp'} width={20} height={20} alt='facebook-icon' />
-            {loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
-          </button>
+            style={{ width: "100%", maxWidth: googleWidth ? `${googleWidth}px` : undefined }}
+            text={loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
+            onSuccess={(res) => {
+              const accessToken = (res as unknown as { accessToken?: string }).accessToken;
+              if (accessToken) {
+                setLoadingProvider("facebook");
+                handleSsoLogin(`Bearer ${accessToken}`);
+              } else {
+                toast.error("Facebook did not return an access token");
+              }
+            }}
+            onError={(reason) => toast.error(reason)}
+            scope="public_profile,email"
+          />
         </div>
       </form>
     </Card>

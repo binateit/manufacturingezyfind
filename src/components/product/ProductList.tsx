@@ -19,7 +19,7 @@ import BidProduct from "./BidProduct";
 import HireProduct from "./HireProduct";
 import { PaginationInfo } from "../shared/PaginationInfo";
 import { NoRecordsCard } from "../ui/NoRecordsCard";
-import DownloadApp from "../shared/DownloadApp";
+
 
 type FilterState = {
     searchText?: string;

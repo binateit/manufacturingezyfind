@@ -5,6 +5,7 @@ import Button from "../ui/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserRegistrationFormData } from "@/core/models/requestItem/request-item.model";
+import clsx from "clsx";
 
 
 const validationSchema = Yup.object({
@@ -26,13 +27,15 @@ interface RegisterProps {
     handlePrev: () => void;
     handleSubmit: (data: UserRegistrationFormData) => void;
     initialValues: UserRegistrationFormData;
+    formClassName?: string;
 }
 
 export default function Register({
     onUpdate,
     handlePrev,
     handleSubmit,
-    initialValues
+    initialValues,
+    formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: RegisterProps) {
     const [showPassword, setShowPassword] = useState(false);
 
@@ -58,7 +61,8 @@ export default function Register({
     const togglePasswordVisibility = () => setShowPassword(prev => !prev);
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} className="h-[415px] xl:h-full p-4 border border-gray-300">
+        <form onSubmit={(e) => e.preventDefault()} 
+        className={clsx("p-4", formClassName)}>
             <div className="flex flex-col h-full">
                 <p className="text-md font-semibold">Register</p>
                 <p className="text-sm text-[var(--primary-color)] mb-3 font-normal">Fill input fields</p>
