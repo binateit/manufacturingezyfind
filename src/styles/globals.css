@@ -237,6 +237,10 @@ select:invalid {
     display: inline-block !important;
 }
 
+.z-index-9999 {
+    z-index: 9999 !important;
+}
+
 @theme {
     --animate-wiggle: wiggle 1s ease-in-out infinite;
 

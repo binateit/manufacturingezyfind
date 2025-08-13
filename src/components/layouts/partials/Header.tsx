@@ -69,7 +69,7 @@ export default function Header() {
                     onChange={(e) =>
                       setGlobalFilter((prev) => ({ ...prev, keyword: e.target.value }))
                     }></input>
-                  <button className='pl-3 pr-3 cursor-pointer border-l border-gray-300' onClick={handleSearch}>
+                  <button className='pl-3 pr-3 cursor-pointer border-l border-gray-300' title="Search" aria-label="Search" onClick={handleSearch}>
                     <FontAwesomeIcon icon={faSearch} className='text-sm text-primary' />
                   </button>
                 </div>
