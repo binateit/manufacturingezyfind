@@ -15,6 +15,9 @@ import { MOBILE_CHECK } from "../graphql/queries/checkMobileExists";
 import { UserRegistrationInput } from "../models/auth/userRegistrationInput";
 import { LoginResult } from "../models/auth/loginResultModel";
 import { SSO_LOGIN } from "../graphql/queries/SSOLoginQuery";
+import { ItemRequestInputType } from "../models/auth/itemRequestInput";
+import { ItemRequestResult } from "../models/auth/itemRequestResult";
+import { ITEM_REQUEST } from "../graphql/mutations/itemRequestQuery";
 
 
 // Initialize Apollo Client
@@ -208,6 +211,19 @@ class AuthService {
             const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
             console.error("SSO Login Error:", errorMessage); // Optionally log the error for debugging
             throw new Error(errorMessage);
+        }
+    }
+
+    async postItemRequest(input: ItemRequestInputType, files: File[] | null): Promise<ItemRequestResult> {
+        try {
+            const response = await apolloClient.mutate({
+                mutation: ITEM_REQUEST,
+                variables: { mstItemRequest:input, files: files ?? [] },
+            })
+            if (!response || !response.data) throw new Error("Cannot register")
+            return response.data.postMstItemRequest
+        } catch (err) {
+            throw err
         }
     }
 }

@@ -8,6 +8,9 @@ import CategorySelection from "./CategorySelection";
 import LocationSelection from "./LocationSelection";
 import FileSelection from "./FileSelection";
 import Register from "./Register";
+import { authService } from "@/core/services/authService";
+import { tokenService } from "@/core/services/token.service";
+import { detectMobileOS } from "@/lib/utils";
 
 interface RequestItemFormProps {
   formClassName?: string;
@@ -34,7 +37,71 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
     []
   );
 
-//   const { handleSubmit } = useRequestFormHandlers({ formData, login, setCurrentStep });
+  const postRequest = async (data: RequestItemFormData) => {
+    try {
+      const result = await authService.postItemRequest({
+        itemRequestTitle: data.item,
+        itemRequestDescription: data.description,
+        categoryId: data.categoryId,
+        suburbId: data.suburbId,
+        provinceId: data.provinceId,
+        cityId: data.cityId,
+      }, data.upload || []);
+      return result?.success ?? false;
+    } catch (error) {
+      console.error("Failed to submit item request", error);
+      return false;
+    }
+  };
+  
+  const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
+    const data = { ...formData, ...finalData };
+    const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
+
+    try {
+      const isEmailExists = await authService.emailCheck(data.email ?? '');
+      if (isEmailExists === true) {
+        const loginData = await authService.login(token);
+        if (loginData && loginData?.token) {
+          tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
+
+          if (await postRequest(data)) setCurrentStep(6);
+        }
+        return;
+      }
+
+      const isMobileExists = await authService.mobileCheck(data.mobile ?? '');
+      if (isMobileExists !== true) {
+        console.warn("Mobile already exists or invalid.");
+        return;
+      }
+
+      const registerResult = await authService.registerUser({
+        email: data.email ?? "",
+        contactNo: data.mobile ?? "",
+        userName: data.name ?? "",
+        password: data.password ?? "",
+        firstName: data.name ?? "",
+        lastName: "",
+        provinceID: data.provinceId ?? 0,
+        cityID: data.cityId ?? 0,
+        suburbID: data.suburbId ?? 0,
+        domainUrl: "2",
+        track: 1
+      }, detectMobileOS() === "Unknown" ? 1 : 0);
+
+      if (registerResult?.token) {
+        const loginData = await authService.login(token);
+        if (loginData && loginData?.token) {
+          tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
+
+          if (await postRequest(data)) setCurrentStep(6);
+        }
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+    }
+  };
 
   const steps = [
     <ItemRequired
@@ -78,7 +145,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
     <Register
       key="step-5"
       onUpdate={handleUpdate}
-      handleSubmit={() => {}}
+      handleSubmit={handleSubmit}
       handlePrev={handlePrev}
       formClassName={formClassName}
       initialValues={{
