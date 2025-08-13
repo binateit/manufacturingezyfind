@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { FilterSection } from "../ui/FilterSection";
 import { GET_CATEGORY_BY_PARENTID } from "@/core/graphql/queries/getCategories";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { DEFAULT_PAGE_SIZE, SALES_TYPES, SalesType, Scope, SCOPES } from "@/core/constants";
 import { Pagination } from "../shared/Pagination";
 import { Category } from "@/core/models/categories/category";
@@ -84,16 +84,17 @@ export default function ProductList({
         ? `${selectedCategoryNames.join(", ")} Products`
         : "Products";
 
-    const variables: SearchProductRequest = {
-        domainCategoryIds: filters.category?.join(",") || String(ENV.CATEGORY_ID),
-        salesTypeId: filters.saleType || null,
-        scopeId: filters.scope || null,
-        page: filters.page,
-        size: filters.size ?? DEFAULT_PAGE_SIZE,
-    };
+    const buildVariables = (state: FilterState): SearchProductRequest => ({
+        domainCategoryIds: state.category?.join(",") || String(ENV.CATEGORY_ID),
+        salesTypeId: state.saleType || null,
+        scopeId: state.scope || null,
+        page: state.page,
+        size: state.size ?? DEFAULT_PAGE_SIZE,
+    });
 
-    const { data, loading, refetch } = useQuery(GET_PRODUCTS, {
-        variables,
+    const hasInitial = (initialProducts?.length ?? 0) > 0;
+
+    const [fetchProducts, { data, loading, refetch }] = useLazyQuery(GET_PRODUCTS, {
         fetchPolicy: "network-only",
     });
 
@@ -153,30 +154,44 @@ export default function ProductList({
         }
     }, [data]);
 
-    if (loading) return <Loading />;
+    // Show loader only when actively fetching without initial data
+    const showLoading = loading && !hasInitial;
+    if (showLoading) return <Loading />;
 
     const handleFilterChange = (field: keyof FilterState, value: number[] | number) => {
-
-        setFilters((prev) => ({
-            ...prev,
-            [field]: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                [field]: value as never,
+                page: 1,
+            };
+            // Trigger fetch only on user interaction
+            fetchProducts({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handleSearch = (value: string) => {
-        setFilters((prev) => ({
-            ...prev,
-            searchText: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                searchText: value,
+                page: 1,
+            };
+            fetchProducts({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handlePageChange = (newPage: number) => {
-        setFilters((prev) => ({
-            ...prev,
-            page: newPage,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                page: newPage,
+            };
+            fetchProducts({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     return (
