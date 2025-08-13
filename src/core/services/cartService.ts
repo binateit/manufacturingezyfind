@@ -6,6 +6,10 @@ import type { AddToCartInput, UpdateCartInput, CartOperationResult } from "@/cor
 import { GET_CART_LIST } from "@/core/graphql/queries/getCartList";
 import { ProductBid, ProductBidResult } from "../models/products/productBid";
 import { CREATE_PRD_BID } from "../graphql/mutations/createProductBid";
+import { ProductHire, ProductHireResult } from "../models/products/productHire";
+import { CREATE_PRD_HIRE } from "../graphql/mutations/createProductHire";
+import { PurchaseShoppingCartResponseDto } from "../models/products/productPurchase";
+import { PURCHASE_SHOPPING_CART } from "../graphql/queries/purchaseShoppingCart";
 
 class CartService {
   private client = initializeApollo();
@@ -63,7 +67,7 @@ class CartService {
   }
 
   async updateCart(input: UpdateCartInput): Promise<CartOperationResult> {
-    const { recordId, quantity } = input;
+    const { recordId, quantity , productId , fromDate , endDate } = input;
     try {
       const { data } = await this.client.mutate({
         mutation: UPDATE_CART,
@@ -71,25 +75,15 @@ class CartService {
           prdShoppingCart: {
             recordId,
             quantity,
+            productId,
+            fromDate,
+            endDate,
           },
         },
-        optimisticResponse: {
-          updatePrdShoppingCart: {
-            __typename: 'PrdShoppingCartType',
-            recordId,
-            productId: null,
-            quantity,
-            sessionId: null,
-            userId: null,
-            dateCreated: null,
-          },
-        },
-        refetchQueries: [{ query: GET_CART_LIST, variables: { page: 1, size: 10 } }],
-        awaitRefetchQueries: true,
-      });
-
-      const updated = data?.updatePrdShoppingCart;
-      return { success: Boolean(updated?.recordId) };
+        
+      });      
+      const updated = data?.postPrdShoppingCartOptimized;
+      return { success: Boolean(updated?.success) };
     } catch (error) {
       return { success: false, message: (error as Error).message };
     }
@@ -114,11 +108,11 @@ class CartService {
     }
   }
 
-  async bidOnProduct(prdBid: ProductBid): Promise<ProductBidResult> {
+  async bidOnProduct(input: ProductBid): Promise<ProductBidResult> {
     try {
       const response = await this.client.mutate({
         mutation: CREATE_PRD_BID,
-        variables: { prdBid },
+        variables: { input },
         fetchPolicy: "no-cache",
       })
       if (!response || !response.data) throw new Error('Cannot create bid')
@@ -127,6 +121,35 @@ class CartService {
       throw new Error((err as Error).message);
     }
   }
+
+  async hireProduct(input: ProductHire): Promise<ProductHireResult> {
+    try {
+      const response = await this.client.mutate({
+        mutation: CREATE_PRD_HIRE,
+        variables: { prdHire: input },
+        fetchPolicy: 'no-cache'
+      })
+      if (!response || !response.data) throw new Error('Cannot Hire')
+      return response?.data?.createPrdHire
+    } catch (error) {
+      throw new Error((error as Error).message)
+    }
+  }
+
+  async purchaseShoppingCart(id: number): Promise<PurchaseShoppingCartResponseDto> {
+    try {
+      const response = await this.client.query({
+        query: PURCHASE_SHOPPING_CART,
+        variables:{id},
+        fetchPolicy:"no-cache"
+      })
+      if (!response || !response.data)
+        throw new Error('Cannot purchase')
+      return response.data.purchaseShoppingCartAsync
+    } catch (err) {
+        throw new Error((err as Error).message)
+    }
+  } 
 }
 
 export const cartService = new CartService();

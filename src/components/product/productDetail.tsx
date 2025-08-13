@@ -43,6 +43,23 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
 
     const [timeLeft, setTimeLeft] = useState(0);
     const { openLoginModal } = useAppUI();
+    const [diffDays, setDiffDays] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (hireFromDate && hireEndDate) {
+            const start = new Date(hireFromDate);
+            const end = new Date(hireEndDate);
+            if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+                const timeDiff = end.getTime() - start.getTime();
+                const days = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+                setDiffDays(days > 0 ? days : null);
+            } else {
+                setDiffDays(null);
+            }
+        } else {
+            setDiffDays(null);
+        }
+    }, [hireFromDate, hireEndDate]);
 
     const lastBid = useMemo(() => {
         return product?.prdBid?.slice().sort((a, b) => (b?.bidId ?? 0) - (a?.bidId ?? 0))[0] ?? null;
@@ -73,6 +90,47 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
     useEffect(() => {
         setBidAmount(baseAmount * 1.1);
     }, [baseAmount]);
+
+    const handleHireNow = async () => {
+        if (
+            !hireFromDate ||
+            !hireEndDate ||
+            isNaN(Date.parse(hireFromDate)) ||
+            isNaN(Date.parse(hireEndDate))
+        ) {
+            toast.error("Please select valid start and end dates");
+            return;
+        }
+        try {
+            setIsWorking(true);
+            const formattedFromDate = new Date(hireFromDate).toISOString();
+            const formattedToDate = new Date(hireEndDate).toISOString();
+            const result = await cartService.hireProduct({
+                hireId: 0,
+                fromDate: formattedFromDate,
+                toDate: formattedToDate,
+                productId: product.productID
+            });
+            if (result?.hireId) {
+                toast.success("Successfully Hired");
+            } else {
+                toast.error("Failed to Hire");
+            }
+        } catch (error) {
+            toast.error("Something went wrong");
+        } finally {
+            setIsWorking(false);
+        }
+    }
+    const hireNow = async () => {
+        if (!tokenService.getUserName()) {
+            openLoginModal(async () => {
+                await handleHireNow();
+            });
+            return;
+        }
+        await handleHireNow();
+    }
 
     const handleBidNow = async (amount?: number) => {
         try {
@@ -211,6 +269,11 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                 <div className="flex gap-5 mb-4">
                                     <input type='date' value={hireFromDate} onChange={(e) => onChangeHireFromDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
                                     <input type='date' value={hireEndDate} onChange={(e) => onChangeHireEndDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
+                                {diffDays ? (
+                                    <div className="">
+                                        {`Days: ${diffDays}; Total:${formatCurrency(product.unitCost * diffDays)}`}
+                                    </div>
+                                ) : null}
                                 </div>
                             </div>)}
                         <div className="flex gap-4 mt-5">
@@ -221,7 +284,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                 </button>
                             )}
                             {product?.salesTypeId === 3 && (
-                                <button className="px-5 py-2 font-medium rounded border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition-all duration-200">
+                                <button className="px-5 py-2 font-medium rounded border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition-all duration-200" onClick={hireNow}>
                                     Hire Now
                                 </button>
                             )}

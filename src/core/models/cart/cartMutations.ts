@@ -12,8 +12,11 @@ export interface AddToCartInput {
 }
 
 export interface UpdateCartInput {
-  recordId: number;
-  quantity: number;
+  recordId?: number;
+  quantity?: number;
+  productId?: number | null;
+  fromDate?: any | null;
+  endDate?: any | null;
 }
 
 export interface DeleteCartInput {

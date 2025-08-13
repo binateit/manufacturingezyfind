@@ -15,17 +15,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { cartService } from "@/core/services/cartService";
 import { toast } from "react-toastify";
+import { slugify } from "@/lib/slugify";
+import { tokenService } from "@/core/services/token.service";
+import { useAppUI } from "@/contexts/AppUIContext";
 
 export default function CartPage() {
     const client = useApolloClient();
     const [loadingStates, setLoadingStates] = useState<{ [key: number]: boolean }>({});
+    const [globalLoadingState, setGlobalLoadingState] = useState<boolean>(false);
+
     const { data, loading } = useQuery(GET_CART_LIST, {
         variables: { page: 1, size: 10 }
     });
-
-    if (loading) return <Loading />;
-
+    const { openLoginModal } = useAppUI();
     const cartItems = data?.getPrdShoppingCart?.result?.prdShoppingCartDto || [];
+
     const setItemLoading = (id: number, value: boolean) => {
         setLoadingStates(prev => ({ ...prev, [id]: value }));
     };
@@ -34,11 +38,12 @@ export default function CartPage() {
         const id = item.recordID ?? 0;
         const nextQty = (item.quantity ?? 0) + 1;
         setItemLoading(id, true);
-        const res = await cartService.updateCart({ recordId: id, quantity: nextQty });
+        const res = await cartService.updateCart({ recordId: id, quantity: nextQty, productId: item.productID, fromDate: new Date(item.fromDate), endDate: new Date(item.endDate) });
+
         setItemLoading(id, false);
         if (res.success) {
             toast.success('Quantity updated');
-            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch { }
         } else {
             toast.error(res.message || 'Failed to update');
         }
@@ -48,11 +53,11 @@ export default function CartPage() {
         const id = item.recordID ?? 0;
         const nextQty = Math.max(1, (item.quantity ?? 1) - 1);
         setItemLoading(id, true);
-        const res = await cartService.updateCart({ recordId: id, quantity: nextQty });
+        const res = await cartService.updateCart({ recordId: id, quantity: nextQty, productId: item.productID, fromDate: new Date(item.fromDate), endDate: new Date(item.endDate) });
         setItemLoading(id, false);
         if (res.success) {
             toast.success('Quantity updated');
-            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch { }
         } else {
             toast.error(res.message || 'Failed to update');
         }
@@ -65,13 +70,70 @@ export default function CartPage() {
         setItemLoading(id, false);
         if (res.success) {
             toast.success('Item removed');
-            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch {}
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch { }
         } else {
             toast.error(res.message || 'Failed to remove');
         }
     };
+
+    const handleEmptyCart = async () => {
+        setGlobalLoadingState(true);
+        try {
+            for (const item of cartItems) {
+                await removeItem(item);
+            }
+        } finally {
+            setGlobalLoadingState(false);
+        }
+    };
+
     const totalAmount = data?.getPrdShoppingCart?.result?.totalAmount || 0;
     const vatAmount = data?.getPrdShoppingCart?.result?.vatAmount || 0;
+
+    const changeStartDate = async (item: PrdShoppingCartDto, data: string) => {
+        const result = await cartService.updateCart({ recordId: item.recordID, quantity: item.quantity, productId: item.productID, fromDate: new Date(data), endDate: new Date(item.endDate) })
+        if (result.success) {
+            toast.success('Quantity updated');
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch { }
+        } else {
+            toast.error(result.message || 'Failed to update');
+        }
+    }
+    const changeEndDate = async (item: PrdShoppingCartDto, data: string) => {
+        const result = await cartService.updateCart({ recordId: item.recordID, quantity: item.quantity, productId: item.productID, fromDate: new Date(item.fromDate), endDate: new Date(data) })
+        if (result.success) {
+            toast.success('Quantity updated');
+            try { await client.refetchQueries({ include: [GET_CART_LIST] }); } catch { }
+        } else {
+            toast.error(result.message || 'Failed to update');
+        }
+    }
+
+    const handlePayNow = async () => {
+        const result = await cartService.purchaseShoppingCart(1)
+        if (result?.success) {
+            toast.success("SuccessFully Purchases");
+        }
+        if (result?.result?.paymentUrl) {
+            window.location.assign(result?.result?.paymentUrl)
+        } else {
+            window.location.assign("/")
+        }
+    }
+
+    const payNow = async () => {
+        if (!tokenService.getUserName()) {
+            openLoginModal(async () => {
+                await handlePayNow();
+            });
+            return;
+        }
+        await handlePayNow();
+    }
+
+    if (globalLoadingState) return <Loading />
+
+    if (loading) return <Loading />;
 
     return (
         <>
@@ -84,13 +146,14 @@ export default function CartPage() {
                                 Continue Shopping
                             </Link>
                             <p className="text-white">You have {cartItems.length} items in your cart</p>
-                            <button className="btn bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)]" >
+                            <button className="btn bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)]" onClick={handleEmptyCart}>
                                 Empty Cart
                             </button>
                         </div>
                         {cartItems.length === 0 && <NoRecordsCard />}
                         <div className="bg-white border border-gray-300">
                             {cartItems.map((item: PrdShoppingCartDto, index: number) => (
+
                                 <div key={index} className="flex border-b border-gray-300 px-4 gap-5 mt-5 pb-5 relative">
 
                                     {loadingStates[item.recordID ?? 0] && (
@@ -100,17 +163,40 @@ export default function CartPage() {
                                     )}
 
                                     <div className="basis-3/12 bg-white card-shadow border border-gray-300 relative">
-                                        <Image src={item.productImage ? `${ENV.IMAGE_URL}${item.productImage}` : '/images/no-image.webp'} height={466} width={595} className="w-full object-fit h-full" alt={item.productName || ""} />
+                                        <Link href={`/manufacturing/product/${item?.productID}/${slugify(item?.productName ?? "")}.html`}>
+                                            <Image src={item.productImage ? `${ENV.IMAGE_URL}${item.productImage}` : '/images/no-image.webp'} height={466} width={595} className="w-full object-fit h-full" alt={item.productName || ""} />
+                                        </Link>
                                     </div>
                                     <div className="basis-9/12 relative">
-                                        <p className="text-lg mb-4 font-semibold">{item.productName}</p>
+                                        <Link href={`/manufacturing/product/${item?.productID}/${slugify(item?.productName ?? "")}.html`}>
+                                            <p className="text-lg mb-4 font-semibold">{item.productName}</p>
+                                        </Link>
                                         <p className="text-sm mb-2">
                                             {item.description ? (item.description.length > 150 ? item.description.slice(0, 150) + '...' : item.description) : 'No description available'}
                                         </p>
                                         <p className="text-lg font-semibold mb-2">{formatCurrency(item.totalPrice ?? 0)}</p>
+                                        {item.prdProduct.salesTypeId === 3 && <>
+                                            <div className="flex gap-5 mb-4">
+                                                <input
+                                                    type="date"
+                                                    value={item.fromDate}
+                                                    onChange={(e) => changeStartDate(item, e.target.value)}
+                                                    className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
+                                                    placeholder="Start Date"
+                                                />
+                                                <input
+                                                    type="date"
+                                                    value={item.endDate}
+                                                    onChange={(e) => changeEndDate(item, e.target.value)}
+                                                    className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
+                                                    placeholder="End Date"
+                                                />
+                                            </div>
+                                        </>
+                                        }
                                         <p className="uppercase mb-2">Quantity</p>
                                         <div className="flex gap-4">
-                                        <div className="quntity-input-box relative">
+                                            <div className="quntity-input-box relative">
                                                 <input readOnly type="number" value={item.quantity ?? 0}
                                                     className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
                                                 <button onClick={() => decrement(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60">
@@ -163,7 +249,7 @@ export default function CartPage() {
                                 <p className='font-semibold'>{formatCurrency(totalAmount)}</p>
                             </div>
                             <div className="flex justify-center mt-20">
-                                <Button className="px-4 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer">
+                                <Button className="px-4 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer" onClick={payNow}>
                                     Proceed to Checkout
                                 </Button>
                             </div>

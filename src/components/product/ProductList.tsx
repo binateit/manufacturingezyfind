@@ -282,7 +282,7 @@ export default function ProductList({
                                     {/* Product Type */}
                                     {product.salesTypeId === 1 && <PurchaseProduct product={product} />}
                                     {product.salesTypeId === 2 && <BidProduct product={product} refetchOnSuccess={refetch} />}
-                                    {product.salesTypeId === 3 && <HireProduct product={product} />}
+                                    {product.salesTypeId === 3 && <HireProduct product={product} refetchOnSuccess={refetch} />}
                                 </div>
                             </div>
                         ))}
