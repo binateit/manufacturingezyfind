@@ -25,6 +25,7 @@ import { ENV } from "@/core/config/env";
 import { useCookies } from "react-cookie";
 import Cryptr from "cryptr";
 import DownloadApp from "@/components/shared/DownloadApp";
+import Image from "next/image";
 
 
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
@@ -448,7 +449,7 @@ const RegisterPage = () => {
                             </button>
 
                             <p className='text-gray-500 my-4'>Already Have An Account? <Link href='/login' className='text-primary'>Login</Link></p>
-                            {/* <p className='text-md'>Sign in with one-click with your social accounts.</p>
+                            <p className='text-md'>Sign in with one-click with your social accounts.</p>
                             <div className='flex flex-col sm:flex-row justify-between mt-5 gap-4'>
                                 <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 items-center w-full transition-all delay-100 hover:bg-gray-50 '>
                                     <Image src={'/images/facebook-icon.webp'} width={26} height={26} alt='facebook-icon' /> Sign in with Facebook
@@ -456,7 +457,7 @@ const RegisterPage = () => {
                                 <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 w-full transition-all delay-100 hover:bg-gray-50 '>
                                     <Image src={'/images/google-icon.webp'} width={26} height={26} alt='google-icon' /> Sign in with Google
                                 </a>
-                            </div> */}
+                            </div>
 
                         </div>
                     </form>

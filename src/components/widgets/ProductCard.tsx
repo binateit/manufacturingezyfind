@@ -12,18 +12,19 @@ import { useQuery } from "@apollo/client";
 import Slider, { Settings } from "react-slick";
 
 export interface ProductCardProps {
-    companyId: number;
-    companyName: string; // Optional, in case you want to display the company name
+    title: string;
+    companyId?: number;
+    categoryId?: number;
 }
 
-export default function ProductCard({ companyId, companyName }: ProductCardProps) {
+export default function ProductCard({ title, companyId, categoryId }: ProductCardProps) {
     const variables: SearchProductRequest = {
-        domainCategoryIds: String(ENV.CATEGORY_ID),
+        domainCategoryIds: String(categoryId || ENV.CATEGORY_ID),
         scopeId: null,
         salesTypeId: null,
         page: 1,
         size: DEFAULT_PAGE_SIZE,
-        companyId: companyId,
+        companyId: companyId || undefined,
     };
 
     const { data, loading , refetch } = useQuery(GET_PRODUCTS, {
@@ -85,7 +86,7 @@ export default function ProductCard({ companyId, companyName }: ProductCardProps
         <div>
             <div className='sm:flex items-center justify-between mt-10 sm:mt-6 '>
                 <p className='text-primary text-center sm:text-left uppercase text-xl sm:text-2xl font-semibold mb-2 sm:mb-5 sm:w-[80%]'>
-                    Products By {companyName}
+                    {title}
                 </p>
             </div>
             <Slider {...sliderSetting}>

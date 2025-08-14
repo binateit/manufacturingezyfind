@@ -14,6 +14,7 @@ import { tokenService } from "@/core/services/token.service";
 import { useAppUI } from "@/contexts/AppUIContext";
 import { cartService } from "@/core/services/cartService";
 import { toast } from "react-toastify";
+import ProductCard from "../widgets/ProductCard";
 
 
 interface ProductDetailProps {
@@ -393,6 +394,9 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                             </div>
                         </TabPanel>
                     </TabView>
+                </div>
+                <div className="mb-20">
+                    <ProductCard title={`More Similar Products`} categoryId={product?.categoryID} />
                 </div>
             </div>
 
