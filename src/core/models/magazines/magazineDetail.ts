@@ -1,16 +1,16 @@
 import { MagazineUpload } from "./magazineUpload";
 
 export interface MagazineDetails {
-  eflyerId: string;
+  eflyerId: number;
   magazineName: string;
   eFlyerDescription: string;
-  categoryID: string;
+  categoryID: number;
   categoryName: string;
   startDate: string;
   endDate: string;
   statusId: string;
   statusName: string;
-  companyId: string;
+  companyId: number;
   companyName: string;
   companyDescription: string;
   isMenu: boolean;

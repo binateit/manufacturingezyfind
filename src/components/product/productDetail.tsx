@@ -15,6 +15,8 @@ import { useAppUI } from "@/contexts/AppUIContext";
 import { cartService } from "@/core/services/cartService";
 import { toast } from "react-toastify";
 import ProductCard from "../widgets/ProductCard";
+import ReviewWidget from "../widgets/Review";
+import { ReviewKeyType } from "@/core/constants/enum";
 
 
 interface ProductDetailProps {
@@ -390,6 +392,14 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                     <li className='mb-1 text-sm'><span className='text-black'>Weight: {product?.weight}</span></li>
 
                                 </ul>
+
+                            </div>
+                        </TabPanel>
+                        <TabPanel header="Review">
+                            <div className='card-shadow p-5'>
+                                <p className='text-lg text-primary font-semibold mb-2'>Review</p>
+                            
+                            <ReviewWidget keyType={ReviewKeyType.Product} key={product?.productID || 0} keyName={product?.productName} />
 
                             </div>
                         </TabPanel>

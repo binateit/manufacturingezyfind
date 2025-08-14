@@ -5,6 +5,10 @@ import Link from "next/link";
 import { MagazineDetails } from "@/core/models/magazines/magazineDetail";
 import { Galleria } from "primereact/galleria";
 import { TabView, TabPanel } from "primereact/tabview";
+import { ReviewKeyType } from "@/core/constants/enum";
+import product from "@/pages/manufacturing/product";
+import ReviewWidget from "../widgets/Review";
+import ProductCard from "../widgets/ProductCard";
 
 interface MagazineDetailProps {
     magazine: MagazineDetails;
@@ -103,9 +107,17 @@ export default function MagazineDetail({ magazine }: MagazineDetailProps) {
 
                         </div>
                     </TabPanel>
+                    <TabPanel header="Review">
+                        <div className='card-shadow p-5'>
+                            <p className='text-lg text-primary font-semibold mb-2'>Review</p>
+                            <ReviewWidget keyType={ReviewKeyType.Eflyer} key={magazine.eflyerId || 0} keyName={magazine.magazineName} />
+                        </div>
+                    </TabPanel>
                 </TabView>
             </div>
-
+            <div className="mb-20">
+                <ProductCard title={`More Similar Products`} categoryId={magazine?.categoryID} />
+            </div>
         </div>
     );
 }

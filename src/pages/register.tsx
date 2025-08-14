@@ -10,7 +10,7 @@ import { SelectOptionNumber } from "@/core/models/shared/selectOption";
 import { individualRegisterValidationSchema } from "@/core/validators/individual-register-schema";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { FormikHelpers, useFormik } from "formik";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faEnvelope, faLock, faMobile, faUser } from "@fortawesome/free-solid-svg-icons";
 import clsx from "clsx";
@@ -26,6 +26,8 @@ import { useCookies } from "react-cookie";
 import Cryptr from "cryptr";
 import DownloadApp from "@/components/shared/DownloadApp";
 import Image from "next/image";
+import FacebookLoginButton from "@/components/shared/FacebookLoginButton";
+import GoogleLoginButton from "@/components/shared/GoogleLoginButton";
 
 
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
@@ -36,6 +38,10 @@ const RegisterPage = () => {
     const { data: provinceData, loading: provinceLoading } = useQuery(GET_PROVINCE);
     const [getCitiesByProvince, { data: cityData, loading: cityLoading }] = useLazyQuery(GET_CITY_BY_PROVINCE);
     const [getSuburbsByCity, { data: suburbData, loading: suburbLoading }] = useLazyQuery(GET_SUBURB_BY_CITY);
+    const [loadingProvider, setLoadingProvider] = useState<"google" | "facebook" | null>(null);
+    const googleWrapperRef = useRef<HTMLDivElement | null>(null);
+    const [googleWidth, setGoogleWidth] = useState<number | undefined>(undefined);
+
     const provinces = provinceData?.getProvince?.result ?? [];
     const cities = cityData?.getCityByProvince?.result ?? [];
     const suburbs = suburbData?.getSuburbByCity?.result ?? [];
@@ -137,6 +143,26 @@ const RegisterPage = () => {
 
     });
 
+    useEffect(() => {
+        const element = googleWrapperRef.current;
+        if (!element) return;
+
+        const compute = () => {
+            const containerWidth = element.clientWidth;
+            // Clamp to GIS allowed range roughly [200, 400]
+            const desired = Math.max(220, Math.min(380, containerWidth));
+            setGoogleWidth(Math.floor(desired));
+        };
+
+        compute();
+        const ro = new ResizeObserver(compute);
+        ro.observe(element);
+        window.addEventListener('resize', compute);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', compute);
+        };
+    }, []);
 
     useEffect(() => {
         if (formik.values.provinceId !== 0) {
@@ -449,14 +475,44 @@ const RegisterPage = () => {
                             </button>
 
                             <p className='text-gray-500 my-4'>Already Have An Account? <Link href='/login' className='text-primary'>Login</Link></p>
-                            <p className='text-md'>Sign in with one-click with your social accounts.</p>
-                            <div className='flex flex-col sm:flex-row justify-between mt-5 gap-4'>
-                                <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 items-center w-full transition-all delay-100 hover:bg-gray-50 '>
-                                    <Image src={'/images/facebook-icon.webp'} width={26} height={26} alt='facebook-icon' /> Sign in with Facebook
-                                </a>
-                                <a href='#' className='py-2 px-4 border border-gray-200 text-sm flex gap-2 w-full transition-all delay-100 hover:bg-gray-50 '>
-                                    <Image src={'/images/google-icon.webp'} width={26} height={26} alt='google-icon' /> Sign in with Google
-                                </a>
+                            <p className='text-md'>Sign up with one-click with your social accounts.</p>
+                            <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch mt-5">
+                                <div className="w-full flex justify-center sm:justify-start" ref={googleWrapperRef}>
+                                    <GoogleLoginButton
+                                        onSuccess={(res) => {
+                                            if (res.credential) {
+                                                setLoadingProvider("google");
+                                                // handleSsoLogin(`Bearer ${res.credential}`);
+                                            } else {
+                                                toast.error("Google did not return a credential");
+                                            }
+                                        }}
+                                        onError={(reason) => toast.error(reason)}
+                                        theme="outline"
+                                        size="large"
+                                        text="continue_with"
+                                        width={googleWidth}
+                                    />
+                                </div>
+
+                                <FacebookLoginButton
+                                    className={clsx(
+                                        "h-10 py-2 px-4 border border-gray-200 text-sm flex items-center justify-center gap-2 w-full transition-all delay-100 hover:bg-gray-50"
+                                    )}
+                                    style={{ width: "100%", maxWidth: googleWidth ? `${googleWidth}px` : undefined }}
+                                    text={loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
+                                    onSuccess={(res) => {
+                                        const accessToken = (res as unknown as { accessToken?: string }).accessToken;
+                                        if (accessToken) {
+                                            setLoadingProvider("facebook");
+                                            // handleSsoLogin(`Bearer ${accessToken}`);
+                                        } else {
+                                            toast.error("Facebook did not return an access token");
+                                        }
+                                    }}
+                                    onError={(reason) => toast.error(reason)}
+                                    scope="public_profile,email"
+                                />
                             </div>
 
                         </div>

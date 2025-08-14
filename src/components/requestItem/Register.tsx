@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../ui/Button";
@@ -6,6 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { UserRegistrationFormData } from "@/core/models/requestItem/request-item.model";
 import clsx from "clsx";
+import FacebookLoginButton from "../shared/FacebookLoginButton";
+import GoogleLoginButton from "../shared/GoogleLoginButton";
+import { toast } from "react-toastify";
 
 
 const validationSchema = Yup.object({
@@ -38,7 +41,29 @@ export default function Register({
     formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: RegisterProps) {
     const [showPassword, setShowPassword] = useState(false);
+    const [loadingProvider, setLoadingProvider] = useState<"google" | "facebook" | null>(null);
+    const googleWrapperRef = useRef<HTMLDivElement | null>(null);
+    const [googleWidth, setGoogleWidth] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        const element = googleWrapperRef.current;
+        if (!element) return;
 
+        const compute = () => {
+            const containerWidth = element.clientWidth;
+            // Clamp to GIS allowed range roughly [200, 400]
+            const desired = Math.max(220, Math.min(380, containerWidth));
+            setGoogleWidth(Math.floor(desired));
+        };
+
+        compute();
+        const ro = new ResizeObserver(compute);
+        ro.observe(element);
+        window.addEventListener('resize', compute);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', compute);
+        };
+    }, []);
     const formik = useFormik({
         initialValues,
         validationSchema,
@@ -130,6 +155,46 @@ export default function Register({
                 </div>
 
                 {/* Buttons */}
+                <div className="flex justify-between mt-auto">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch">
+                        <div className="w-full flex justify-center sm:justify-start" ref={googleWrapperRef}>
+                            <GoogleLoginButton
+                                onSuccess={(res) => {
+                                    if (res.credential) {
+                                        setLoadingProvider("google");
+                                        // handleSsoLogin(`Bearer ${res.credential}`);
+                                    } else {
+                                        toast.error("Google did not return a credential");
+                                    }
+                                }}
+                                onError={(reason) => toast.error(reason)}
+                                theme="outline"
+                                size="large"
+                                text="continue_with"
+                                width={googleWidth}
+                            />
+                        </div>
+
+                        <FacebookLoginButton
+                            className={clsx(
+                                "h-10 py-2 px-4 border border-gray-200 text-sm flex items-center justify-center gap-2 w-full transition-all delay-100 hover:bg-gray-50"
+                            )}
+                            style={{ width: "100%", maxWidth: googleWidth ? `${googleWidth}px` : undefined }}
+                            text={loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
+                            onSuccess={(res) => {
+                                const accessToken = (res as unknown as { accessToken?: string }).accessToken;
+                                if (accessToken) {
+                                    setLoadingProvider("facebook");
+                                    // handleSsoLogin(`Bearer ${accessToken}`);
+                                } else {
+                                    toast.error("Facebook did not return an access token");
+                                }
+                            }}
+                            onError={(reason) => toast.error(reason)}
+                            scope="public_profile,email"
+                        />
+                    </div>
+                </div>
                 <div className="flex justify-between mt-auto">
                     <Button
                         onClick={handlePrev}

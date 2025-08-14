@@ -63,7 +63,6 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
   const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
     const data = { ...formData, ...finalData };
     const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
-    console.log("daya",data);
     
     try {
       const isEmailExists = await authService.emailCheck(data.email ?? '');

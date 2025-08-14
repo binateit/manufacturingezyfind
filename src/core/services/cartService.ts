@@ -108,11 +108,11 @@ class CartService {
     }
   }
 
-  async bidOnProduct(input: ProductBid): Promise<ProductBidResult> {
+  async bidOnProduct(prdBid: ProductBid): Promise<ProductBidResult> {
     try {
       const response = await this.client.mutate({
         mutation: CREATE_PRD_BID,
-        variables: { input },
+        variables: { prdBid },
         fetchPolicy: "no-cache",
       })
       if (!response || !response.data) throw new Error('Cannot create bid')

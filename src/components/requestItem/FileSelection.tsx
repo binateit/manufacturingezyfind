@@ -19,8 +19,7 @@ const MAX_FILE_SIZE_MB = 20;
 
 const validationSchema = Yup.object({
   upload: Yup.array()
-    .min(1, "Please upload at least one file.")
-    .required("Files are required"),
+    
 });
 
 interface FileSelectionProps {
