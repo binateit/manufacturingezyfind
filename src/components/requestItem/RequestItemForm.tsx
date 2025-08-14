@@ -11,6 +11,7 @@ import Register from "./Register";
 import { authService } from "@/core/services/authService";
 import { tokenService } from "@/core/services/token.service";
 import { detectMobileOS } from "@/lib/utils";
+import { toast } from "react-toastify";
 
 interface RequestItemFormProps {
   formClassName?: string;
@@ -38,6 +39,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
   );
 
   const postRequest = async (data: RequestItemFormData) => {
+    
     try {
       const result = await authService.postItemRequest({
         itemRequestTitle: data.item,
@@ -46,7 +48,11 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
         suburbId: data.suburbId,
         provinceId: data.provinceId,
         cityId: data.cityId,
-      }, data.upload || []);
+      });
+      if(result?.success) {
+        setCurrentStep(1)
+        toast.success("Successfully submitted the item request")
+      }
       return result?.success ?? false;
     } catch (error) {
       console.error("Failed to submit item request", error);
@@ -57,7 +63,8 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
   const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
     const data = { ...formData, ...finalData };
     const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
-
+    console.log("daya",data);
+    
     try {
       const isEmailExists = await authService.emailCheck(data.email ?? '');
       if (isEmailExists === true) {

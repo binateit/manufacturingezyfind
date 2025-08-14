@@ -13,7 +13,7 @@ export const ITEM_REQUEST = gql`
         message
         nextPage
         prevPage
-        result
+        # result
         success
         totalPages
         }

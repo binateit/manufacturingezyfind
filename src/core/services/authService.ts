@@ -114,9 +114,8 @@ class AuthService {
         try {
             const { data } = await apolloClient.mutate({
                 mutation: REGISTER_USER,
-                variables: { userDto, platform },
-            })
-
+                variables: { userDto , platform },
+            })            
             // Return the result with the necessary fields if registration is successful
             if (data?.registerUser?.success) {
                 const result = data.registerUser.result;
@@ -214,11 +213,11 @@ class AuthService {
         }
     }
 
-    async postItemRequest(input: ItemRequestInputType, files: File[] | null): Promise<ItemRequestResult> {
+    async postItemRequest(input: ItemRequestInputType, files?: File[] | null): Promise<ItemRequestResult> {
         try {
             const response = await apolloClient.mutate({
                 mutation: ITEM_REQUEST,
-                variables: { mstItemRequest:input, files: files ?? [] },
+                variables: { mstItemRequest:input, files },
             })
             if (!response || !response.data) throw new Error("Cannot register")
             return response.data.postMstItemRequest
