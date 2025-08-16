@@ -25,7 +25,6 @@ import { ENV } from "@/core/config/env";
 import { useCookies } from "react-cookie";
 import Cryptr from "cryptr";
 import DownloadApp from "@/components/shared/DownloadApp";
-import Image from "next/image";
 import FacebookLoginButton from "@/components/shared/FacebookLoginButton";
 import GoogleLoginButton from "@/components/shared/GoogleLoginButton";
 

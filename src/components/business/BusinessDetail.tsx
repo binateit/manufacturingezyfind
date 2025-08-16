@@ -40,7 +40,7 @@ export default function BusinessDetail({ business }: BusinessDetailProps) {
                     ></div>
 
                     <SpecialCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
-                    <MagazineCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
+                    <MagazineCard companyId={business?.companyId || -1} title={`E-Flyers / E-Catalogue by By ${business?.companyName || ''}`} />
                     <ProductCard title={`Products By ${business?.companyName || ''}`} companyId={business?.companyId || -1} />
                     <TenderCard companyId={business?.companyId || -1} companyName={business?.companyName || ''} />
 

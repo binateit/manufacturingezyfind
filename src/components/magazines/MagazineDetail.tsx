@@ -6,9 +6,8 @@ import { MagazineDetails } from "@/core/models/magazines/magazineDetail";
 import { Galleria } from "primereact/galleria";
 import { TabView, TabPanel } from "primereact/tabview";
 import { ReviewKeyType } from "@/core/constants/enum";
-import product from "@/pages/manufacturing/product";
 import ReviewWidget from "../widgets/Review";
-import ProductCard from "../widgets/ProductCard";
+import MagazineCard from "../widgets/MagazineCard";
 
 interface MagazineDetailProps {
     magazine: MagazineDetails;
@@ -116,7 +115,7 @@ export default function MagazineDetail({ magazine }: MagazineDetailProps) {
                 </TabView>
             </div>
             <div className="mb-20">
-                <ProductCard title={`More Similar Products`} categoryId={magazine?.categoryID} />
+                <MagazineCard title={`More Similar Magazines`} categoryId={magazine?.categoryID} />
             </div>
         </div>
     );

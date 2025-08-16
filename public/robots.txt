@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://manufacturingezyfind.com/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+Disallow: /_vercel/
+
+# Allow important pages
+Allow: /manufacturing/
+Allow: /manufacturing/businesses/
+Allow: /manufacturing/products/
+Allow: /manufacturing/jobs/
+Allow: /manufacturing/tenders/
+Allow: /manufacturing/articles/
+Allow: /manufacturing/about/
+Allow: /manufacturing/contact/
+Allow: /pricing
+Allow: /login
+Allow: /register
+
+# Crawl delay (optional)
+Crawl-delay: 1

@@ -11,18 +11,19 @@ import Link from "next/link";
 import Slider, { Settings } from "react-slick";
 
 export interface MagazineCardProps {
-    companyId: number;
-    companyName: string; // Optional, in case you want to display the company name
+    title: string;
+    companyId?: number;
+    categoryId?: number;
 }
 
-export default function MagazineCard({ companyId, companyName }: MagazineCardProps) {
+export default function MagazineCard({ title, companyId, categoryId }: MagazineCardProps) {
 
     const variables: SearchMagazineRequest = {
         statusIds: "1",
         page: 1,
         size: 12,
-        companyIds: String(companyId),
-        categoryIds: String(ENV.CATEGORY_ID)
+        companyIds: companyId ? String(companyId) : undefined,
+        categoryIds: String(categoryId || ENV.CATEGORY_ID)
     };
 
     const { data, loading } = useQuery(GET_MAGAZINES_LIST, {
@@ -84,7 +85,7 @@ export default function MagazineCard({ companyId, companyName }: MagazineCardPro
         <div>
             <div className='sm:flex items-center justify-between mt-10 sm:mt-6 '>
                 <p className='text-primary text-center sm:text-left uppercase text-xl sm:text-2xl font-semibold mb-2 sm:mb-5 sm:w-[80%]'>
-                    E-Flyers / E-Catalogue by By {companyName}
+                    {title}
                 </p>
             </div>
             <Slider {...sliderSetting}>

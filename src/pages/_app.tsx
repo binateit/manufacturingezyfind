@@ -4,9 +4,6 @@ import TailwindProvider from "@/providers/TailwindProvider";
 import type { AppProps } from "next/app";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import "@fontsource/poppins/300.css";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/600.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import RootLayout from "@/components/layouts/RootLayout";
@@ -16,6 +13,17 @@ import { useApollo } from "@/lib/useApollo";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CookiesProvider } from 'react-cookie';
+import { GoogleTagManager } from '@next/third-parties/google'
+import { ENV } from "@/core/config/env";
+import { Poppins } from 'next/font/google'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '600'],
+  display: 'swap',
+  adjustFontFallback: true,   // keeps layout steady
+  preload: true
+})
 
 config.autoAddCss = false;
 
@@ -25,29 +33,32 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      {/* Global ToastContainer for toast notifications */}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000} // Automatically close toast after 5 seconds
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ApolloProvider client={apolloClient}>
-        <AppUIProvider>
-          <TailwindProvider>
-            <CookiesProvider>
-              <RootLayout>
-                <Component {...pageProps} />
-              </RootLayout>
-            </CookiesProvider>
-          </TailwindProvider>
-        </AppUIProvider>
-      </ApolloProvider>
+      <div className={poppins.className}>
+        {/* Global ToastContainer for toast notifications */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000} // Automatically close toast after 5 seconds
+          hideProgressBar={false}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <ApolloProvider client={apolloClient}>
+          <AppUIProvider>
+            <TailwindProvider>
+              <CookiesProvider>
+                <RootLayout>
+                  <Component {...pageProps} />
+                  <GoogleTagManager gtmId={ENV.GTM_ID} />
+                </RootLayout>
+              </CookiesProvider>
+            </TailwindProvider>
+          </AppUIProvider>
+        </ApolloProvider>
+      </div>
     </>
   );
 }

@@ -30,4 +30,5 @@ export const ENV = {
   SIX_MONTH_DISCOUNT: Number(process.env.NEXT_PUBLIC_SIX_MONTH_DISCOUNT || 10),
   TWELVE_MONTH_DISCOUNT: Number(process.env.NEXT_PUBLIC_TWELVE_MONTH_DISCOUNT || 15),
   VAT_PERCENT: Number(process.env.NEXT_PUBLIC_VAT_PERCENT || 15),
+  GTM_ID: process.env.NEXT_PUBLIC_GTM_ID!
 };

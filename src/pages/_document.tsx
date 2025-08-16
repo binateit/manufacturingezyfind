@@ -1,5 +1,7 @@
 import { ENV } from "@/core/config/env";
 import { Html, Head, Main, NextScript } from "next/document";
+
+
 export default function Document() {
   return (
     <Html lang="en">
@@ -17,6 +19,7 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preload" as="image" href="/images/logo.webp" type="image/webp" />
+
       </Head>
       <body>
         <Main />

@@ -1,14 +1,10 @@
 import MoreLinks from "@/components/home/MoreLink";
 import VideoBanner from "@/components/home/VideoBanner";
-import { useAppUI } from "@/contexts/AppUIContext";
 import { useInView } from "react-intersection-observer";
 import RequestItemForm from "@/components/requestItem/RequestItemForm";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "@/components/ui/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import StatsCounter from "@/components/widgets/StatsCounter";
 import Testimonials from "@/components/widgets/Testimonials";
 import PartnerLogosSlider from "@/components/widgets/PartnerLogosSlider";
@@ -20,7 +16,7 @@ import { ENV } from "@/core/config/env";
 import DownloadApp from "@/components/shared/DownloadApp";
 
 export default function HomePage() {
-  const { toggleRegisterModal } = useAppUI()
+
   const { ref, inView } = useInView({
     triggerOnce: true, // Load only once
     threshold: 0.1, // Trigger when 10% visible
@@ -34,18 +30,18 @@ export default function HomePage() {
 
   return (
     <>
-    <Head>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="keywords" content={keywords} />
-      <link rel="canonical" href={canonicalUrl} />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:url" content="https://www.manufacturingezyfind.co.za/" />
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-    </Head>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content="https://www.manufacturingezyfind.co.za/" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+      </Head>
       <div className="flex flex-col md:flex-row md:flex-wrap xl:flex-row">
         <div className="basis-12/12 md:basis-12/12 lg:order-1 xl:basis-9/16 xl:order-2 relative overflow-hidden mt-0">
           <VideoBanner />
@@ -57,8 +53,7 @@ export default function HomePage() {
           <MoreLinks />
         </div>
       </div>
-      {/* Delayed popup modal version (6s after load) */}
-      {typeof window !== 'undefined' && <RequestItemFormPopup />}
+
       <div className="bg-gray-50 py-15">
         <div className="container">
           <div className="md:w-8/11 xl:w-4/5 m-auto">
@@ -217,7 +212,7 @@ export default function HomePage() {
             <Testimonials />
           </div>
 
-          <div className="h-auto xl:h-[525px] overflow-hidden relative">
+          {/* <div className="h-auto xl:h-[525px] overflow-hidden relative">
             <div className="overflow-hidden">
               <Image src={'/images/middle-banner.webp'} width={1920} height={525} alt="middle-banner" className="w-full" />
               <div className="max-md:block w-full md:w-6/12 md:absolute md:top-0 md:right-0 h-full before:h-full md:before:absolute md:before:bg-[rgb(134,22,34,0.9)] before:top-0 2xl:before:-right-23 before:w-[1000px] md:before:-skew-x-5 max-md:before flex items-center">
@@ -230,7 +225,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="container">
             <h3 className="sm:text-3xl md:text-4xl/10 font-bold mb-10 text-center uppercase">Do you own a business?</h3>
@@ -244,6 +239,8 @@ export default function HomePage() {
           <div className="py-10 md:py-15">
             <PartnerLogosSlider />
           </div>
+          {/* Delayed popup modal version (6s after load) */}
+          {typeof window !== 'undefined' && <RequestItemFormPopup />}
         </>
       }
     </>)

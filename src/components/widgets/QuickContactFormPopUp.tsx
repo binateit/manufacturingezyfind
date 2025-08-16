@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,7 +10,7 @@ interface QuickContactFormProps {
     title: string;
 }
 
-const QuickContactFormPopUp = ({ companyId, companyName, title }: QuickContactFormProps) => {
+const QuickContactFormPopUp = ({  }: QuickContactFormProps) => {
     const [open, setOpen] = useState(false);
     if (!open) return null;
 
