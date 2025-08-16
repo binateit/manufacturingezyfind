@@ -29,7 +29,7 @@ const MoreLinkItem = ({
     label,
 }: MoreLinkItemProps) => (
     <Link href={href} className="flex items-center gap-2 text-sm mb-2.5">
-        <FontAwesomeIcon icon={icon} className="w-6 h-6 text-blue-600" />
+        <FontAwesomeIcon icon={icon} className="w-6 h-6 text-[var(--primary-color)]" />
         {label}
     </Link>
 );
