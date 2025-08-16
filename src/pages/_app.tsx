@@ -52,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <CookiesProvider>
                 <RootLayout>
                   <Component {...pageProps} />
-                  <GoogleTagManager gtmId={ENV.GTM_ID} />
+                  <GoogleTagManager gtmId={ENV.GOOGLE_TAG_MANAGER_KEY} />
                 </RootLayout>
               </CookiesProvider>
             </TailwindProvider>
