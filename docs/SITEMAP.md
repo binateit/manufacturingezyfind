@@ -139,9 +139,9 @@ Validate your generated sitemap using:
 - [Bing Webmaster Tools](https://www.bing.com/webmasters)
 - Online XML validators
 
-## Build Hook Integration
+## Build Integration
 
-The sitemap generation is now integrated into the Next.js build process via `next.config.ts`. This means:
+The sitemap generation is now integrated into the build process via package.json scripts. This means:
 
 - **Automatic**: Sitemap and robots.txt are generated after every build
 - **No extra steps**: Just run `npm run build` as usual
@@ -154,7 +154,7 @@ The sitemap generation is now integrated into the Next.js build process via `nex
 scripts/
 ├── generate-sitemap.js          # Basic sitemap generator
 ├── generate-sitemap-advanced.js # Advanced generator with configuration
-next.config.ts                   # Build hook integration
+package.json                     # Build script integration
 public/
 ├── sitemap.xml                  # Generated sitemap
 └── robots.txt                   # Generated robots.txt
