@@ -14,10 +14,11 @@ import {
   faBuilding,
   faIndustry
 } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 type MoreLinkItemProps = {
   href: string | UrlObject;
-  icon: any;
+  icon: IconProp;
   label: string;
 };
 
