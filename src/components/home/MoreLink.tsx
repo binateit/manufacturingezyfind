@@ -1,24 +1,34 @@
-import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
 import { UrlObject } from "url";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faFire, 
+  faClock, 
+  faStar, 
+  faSearch, 
+  faUsers, 
+  faEye, 
+  faHandshake, 
+  faDownload,
+  faBuilding,
+  faIndustry
+} from "@fortawesome/free-solid-svg-icons";
 
 type MoreLinkItemProps = {
   href: string | UrlObject;
-  src: string;
-  alt: string;
+  icon: any;
   label: string;
 };
 
 // Reusable Link Item component
 const MoreLinkItem = ({
     href,
-    src,
-    alt,
+    icon,
     label,
 }: MoreLinkItemProps) => (
     <Link href={href} className="flex items-center gap-2 text-sm mb-2.5">
-        <Image src={src} width={30} height={30} alt={alt} />
+        <FontAwesomeIcon icon={icon} className="w-6 h-6 text-blue-600" />
         {label}
     </Link>
 );
@@ -41,32 +51,27 @@ const slides = [
         items: [
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "special" } },
-                src: "/images/whats-hot.webp",
-                alt: "Hot Products On Sale",
+                icon: faFire,
                 label: "What's Hot",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "featured" } },
-                src: "/images/endingsoon.webp",
-                alt: "Products Specials Ending Soon",
+                icon: faClock,
                 label: "Ending Soon",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "featured" } },
-                src: "/images/new.webp",
-                alt: "New Products And Services Listed",
+                icon: faStar,
                 label: "What's New",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "normal" } },
-                src: "/images/top-searches.webp",
-                alt: "Top Searched Products",
+                icon: faSearch,
                 label: "Top Searches",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "special" } },
-                src: "/images/recent-buys.webp",
-                alt: "Recent Sole Products and Services",
+                icon: faUsers,
                 label: "Recent Buyers",
             },
         ],
@@ -76,14 +81,12 @@ const slides = [
         items: [
             {
                 href: { pathname: "/manufacturing/businesses" },
-                src: "/images/whats-hot.webp",
-                alt: "Most Viewed Manufacturing Businesses",
+                icon: faEye,
                 label: "Most Viewed",
             },
             {
                 href: { pathname: "/manufacturing/businesses" },
-                src: "/images/endingsoon.webp",
-                alt: "Businesses With Most Interactions",
+                icon: faHandshake,
                 label: "Most interactive",
             },
         ],
@@ -93,20 +96,17 @@ const slides = [
         items: [
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "normal" } },
-                src: "/images/whats-hot.webp",
-                alt: "Most Viewed Digital Products",
+                icon: faBuilding,
                 label: "Most Viewed",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "featured" } },
-                src: "/images/endingsoon.webp",
-                alt: "Frequent downloaded Digital Products",
+                icon: faIndustry,
                 label: "Frequent downloaded",
             },
             {
                 href: { pathname: "/manufacturing/product", query: { scope: "special" } },
-                src: "/images/top-searches.webp",
-                alt: "Most downloaded Digital Products",
+                icon: faDownload,
                 label: "Most downloaded",
             },
         ],
