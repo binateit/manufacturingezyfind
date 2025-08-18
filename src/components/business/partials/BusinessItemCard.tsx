@@ -94,6 +94,7 @@ export const BusinessItemCard = ({ business }: Props) => {
                 </div>
                 {selectedBusiness && (
                     <QuickContactFormPopUp
+                        companyName={business.companyName}
                         open={!!selectedBusiness}
                         setOpen={() => setSelectedBusiness(null)}
                         companyId={business.companyId}

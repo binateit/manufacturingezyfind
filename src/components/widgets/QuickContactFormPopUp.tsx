@@ -6,6 +6,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import QuickContactForm from "../customer-enquiry/QuickContactForm";
 
 interface QuickContactFormProps {
+    companyName?: string;
     companyId: number;
     title: string;
     formClassName?: string;
@@ -13,7 +14,7 @@ interface QuickContactFormProps {
     setOpen: (value: boolean) => void;
 }
 
-const QuickContactFormPopUp = ({ companyId, title, formClassName, open, setOpen }: QuickContactFormProps) => {
+const QuickContactFormPopUp = ({ companyName, companyId, title, formClassName, open, setOpen }: QuickContactFormProps) => {
     if (!open) return null;
 
     return (
@@ -33,7 +34,7 @@ const QuickContactFormPopUp = ({ companyId, title, formClassName, open, setOpen 
                 </div>
 
                 <div className="p-4 md:p-6 overflow-y-auto flex-1 request-item-form-modal">
-                    <QuickContactForm companyId={companyId} formClassName={formClassName} />
+                    <QuickContactForm companyName={companyName} companyId={companyId} formClassName={formClassName} />
                 </div>
 
                 <style jsx>

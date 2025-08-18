@@ -31,6 +31,7 @@ const validationSchema = Yup.object({
 interface RegisterProps {
     onUpdate: (data: UserRegistrationFormData) => void;
     handlePrev: () => void;
+    displayName?: boolean;
     onComplete: (result: boolean, finalData: RequestItemFormData) => void;
     initialValues: UserRegistrationFormData;
     formClassName?: string;
@@ -40,6 +41,7 @@ export default function Register({
     onUpdate,
     handlePrev,
     onComplete,
+    displayName,
     initialValues,
     formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: RegisterProps) {
@@ -141,14 +143,14 @@ export default function Register({
     const togglePasswordVisibility = () => setShowPassword(prev => !prev);
 
     return (
-        <form onSubmit={(e) => e.preventDefault()} 
-        className={clsx("p-4", formClassName)}>
+        <form onSubmit={(e) => e.preventDefault()}
+            className={clsx("p-4", formClassName)}>
             <div className="flex flex-col h-full">
                 <p className="text-md font-semibold">Register</p>
                 <p className="text-sm text-[var(--primary-color)] mb-3 font-normal">Fill input fields</p>
 
                 {/* Name */}
-                <div className="mb-3">
+                {displayName && (<div className="mb-3">
                     <label className={labelClass}>Name</label>
                     <input
                         type="text"
@@ -157,28 +159,9 @@ export default function Register({
                         placeholder="Enter Name"
                     />
                     {errorText("name")}
-                </div>
+                </div>)}
 
-                {/* Password with toggle */}
-                <div className="mb-3">
-                    <label className={labelClass}>Password</label>
-                    <div className="relative">
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            {...formik.getFieldProps("password")}
-                            className={`${inputClass} pr-10`}
-                            placeholder="Enter Password"
-                        />
-                        <button
-                            type="button"
-                            onClick={togglePasswordVisibility}
-                            className="absolute top-1 right-2 text-gray-500"
-                        >
-                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                        </button>
-                    </div>
-                    {errorText("password")}
-                </div>
+
 
                 {/* Email */}
                 <div className="mb-3">
@@ -209,6 +192,26 @@ export default function Register({
                     {errorText("mobile")}
                 </div>
 
+                {/* Password with toggle */}
+                <div className="mb-3">
+                    <label className={labelClass}>Password</label>
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            {...formik.getFieldProps("password")}
+                            className={`${inputClass} pr-10`}
+                            placeholder="Enter Password"
+                        />
+                        <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute top-1 right-2 text-gray-500"
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        </button>
+                    </div>
+                    {errorText("password")}
+                </div>
                 {/* Buttons */}
                 <div className="flex justify-between mt-auto">
                     <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch">
