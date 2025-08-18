@@ -4,11 +4,14 @@ import * as Yup from "yup";
 import Button from "../ui/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { UserRegistrationFormData } from "@/core/models/requestItem/request-item.model";
+import { RequestItemFormData, UserRegistrationFormData } from "@/core/models/requestItem/request-item.model";
 import clsx from "clsx";
 import FacebookLoginButton from "../shared/FacebookLoginButton";
 import GoogleLoginButton from "../shared/GoogleLoginButton";
 import { toast } from "react-toastify";
+import { authService } from "@/core/services/authService";
+import { tokenService } from "@/core/services/token.service";
+import { detectMobileOS } from "@/lib/utils";
 
 
 const validationSchema = Yup.object({
@@ -28,7 +31,7 @@ const validationSchema = Yup.object({
 interface RegisterProps {
     onUpdate: (data: UserRegistrationFormData) => void;
     handlePrev: () => void;
-    handleSubmit: (data: UserRegistrationFormData) => void;
+    onComplete: (result: boolean, finalData: RequestItemFormData) => void;
     initialValues: UserRegistrationFormData;
     formClassName?: string;
 }
@@ -36,7 +39,7 @@ interface RegisterProps {
 export default function Register({
     onUpdate,
     handlePrev,
-    handleSubmit,
+    onComplete,
     initialValues,
     formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: RegisterProps) {
@@ -64,12 +67,64 @@ export default function Register({
             window.removeEventListener('resize', compute);
         };
     }, []);
+    const handleSubmit = async (data: RequestItemFormData) => {
+        const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
+
+        try {
+            const isEmailExists = await authService.emailCheck(data.email ?? '');
+            if (isEmailExists === true) {
+                const loginData = await authService.login(token);
+                if (loginData?.token) {
+                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
+                    onComplete(true, data);
+                    return;
+                }
+                onComplete(false, data);
+                return;
+            }
+
+            const isMobileExists = await authService.mobileCheck(data.mobile ?? '');
+            if (isMobileExists !== true) {
+                console.warn("Mobile already exists or invalid.");
+                onComplete(false, data);
+                return;
+            }
+
+            const registerResult = await authService.registerUser({
+                email: data.email ?? "",
+                contactNo: data.mobile ?? "",
+                userName: data.name ?? "",
+                password: data.password ?? "",
+                firstName: data.name ?? "",
+                lastName: "",
+                provinceID: data.provinceId ?? 0,
+                cityID: data.cityId ?? 0,
+                suburbID: data.suburbId ?? 0,
+                domainUrl: "2",
+                track: 1
+            }, detectMobileOS() === "Unknown" ? 1 : 0);
+
+            if (registerResult?.token) {
+                const loginData = await authService.login(token);
+                if (loginData?.token) {
+                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
+                    onComplete(true, data);
+                    return;
+                }
+            }
+
+            onComplete(false, data);
+        } catch (error) {
+            console.error("Submission Error:", error);
+            onComplete(false, data);
+        }
+    };
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             onUpdate(values);
-            handleSubmit(values);
+            await handleSubmit(values);
         },
         validateOnChange: true,
         validateOnBlur: true,

@@ -9,8 +9,6 @@ import LocationSelection from "./LocationSelection";
 import FileSelection from "./FileSelection";
 import Register from "./Register";
 import { authService } from "@/core/services/authService";
-import { tokenService } from "@/core/services/token.service";
-import { detectMobileOS } from "@/lib/utils";
 import { toast } from "react-toastify";
 
 interface RequestItemFormProps {
@@ -38,8 +36,31 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
     []
   );
 
+  // const fileToBase64 = (file: File): Promise<string> => {
+  //     return new Promise((resolve, reject) => {
+  //         const reader = new FileReader();
+  //         reader.onload = () => {
+  //             resolve(reader.result as string);
+  //         };
+  //         reader.onerror = reject;
+  //         reader.readAsDataURL(file);
+  //     });
+  // };
+
   const postRequest = async (data: RequestItemFormData) => {
-    
+    // const files = data.upload
+    //   ? await Promise.all(
+    //     data.upload.map(async (file) => {
+    //       const base64 = await fileToBase64(file);
+    //       return {
+    //         thumbNailImagePath: base64,
+    //         fileName: file.name,
+    //         fileType: file.type,
+    //       };
+    //     })
+    //   )
+    //   : [];
+
     try {
       const result = await authService.postItemRequest({
         itemRequestTitle: data.item,
@@ -49,7 +70,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
         provinceId: data.provinceId,
         cityId: data.cityId,
       });
-      if(result?.success) {
+      if (result?.success) {
         setCurrentStep(1)
         toast.success("Successfully submitted the item request")
       }
@@ -59,55 +80,14 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
       return false;
     }
   };
-  
-  const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
-    const data = { ...formData, ...finalData };
-    const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
-    
-    try {
-      const isEmailExists = await authService.emailCheck(data.email ?? '');
-      if (isEmailExists === true) {
-        const loginData = await authService.login(token);
-        if (loginData && loginData?.token) {
-          tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
 
-          if (await postRequest(data)) setCurrentStep(6);
-        }
-        return;
-      }
-
-      const isMobileExists = await authService.mobileCheck(data.mobile ?? '');
-      if (isMobileExists !== true) {
-        console.warn("Mobile already exists or invalid.");
-        return;
-      }
-
-      const registerResult = await authService.registerUser({
-        email: data.email ?? "",
-        contactNo: data.mobile ?? "",
-        userName: data.name ?? "",
-        password: data.password ?? "",
-        firstName: data.name ?? "",
-        lastName: "",
-        provinceID: data.provinceId ?? 0,
-        cityID: data.cityId ?? 0,
-        suburbID: data.suburbId ?? 0,
-        domainUrl: "2",
-        track: 1
-      }, detectMobileOS() === "Unknown" ? 1 : 0);
-
-      if (registerResult?.token) {
-        const loginData = await authService.login(token);
-        if (loginData && loginData?.token) {
-          tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
-
-          if (await postRequest(data)) setCurrentStep(6);
-        }
-      }
-    } catch (error) {
-      console.error("Submission Error:", error);
+  const handleRegisterComplete = async (result: boolean, finalData: RequestItemFormData) => {
+    if (result) {
+      const success = await postRequest(finalData);
+      if (success) setCurrentStep(6);
     }
   };
+
 
   const steps = [
     <ItemRequired
@@ -151,7 +131,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
     <Register
       key="step-5"
       onUpdate={handleUpdate}
-      handleSubmit={handleSubmit}
+      onComplete={handleRegisterComplete}
       handlePrev={handlePrev}
       formClassName={formClassName}
       initialValues={{

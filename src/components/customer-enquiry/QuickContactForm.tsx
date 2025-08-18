@@ -2,12 +2,9 @@ import { RequestItemFormData } from "@/core/models/requestItem/request-item.mode
 import { useState, useCallback, useMemo } from "react";
 import Register from "../requestItem/Register";
 import { toast } from "react-toastify";
-import { authService } from "@/core/services/authService";
-import { tokenService } from "@/core/services/token.service";
-import { detectMobileOS } from "@/lib/utils";
 import Button from "../ui/Button";
 import CustomerEnquiry from "./CustomerEnquiry";
-import { customerEnquiryService } from "@/core/services/customerEnquiryService";
+import { customerEnquiryService } from "@/core/services/EnquiryService";
 
 interface QuickContactFormProps {
     companyId: number;
@@ -33,18 +30,18 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
         []
     );
 
-    const postRequest = async (data: RequestItemFormData) => {
-
+    const postRequest = async () => {
         try {
             const result = await customerEnquiryService.addCustomerEnquiry({
-                enquiryTitle: data.item,
-                enquiryDescription: data.description,
+                enquiryTitle: formData.item,
+                enquiryDescription: formData.description,
                 companyId: companyId,
             });
+
             if (result?.success) {
-                setCurrentStep(1)
-                toast.success(result?.message)
+                toast.success(result?.message);
             }
+
             return result?.success ?? false;
         } catch (error) {
             console.error("Failed to submit item request", error);
@@ -52,59 +49,20 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
         }
     };
 
+
     const resetForm = () => {
         setFormData(initialFormState);
         setCurrentStep(1);
     };
 
-    const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
-        const data = { ...formData, ...finalData };
-        const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
-
-        try {
-            const isEmailExists = await authService.emailCheck(data.email ?? '');
-            if (isEmailExists === true) {
-                const loginData = await authService.login(token);
-                if (loginData && loginData?.token) {
-                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
-
-                    if (await postRequest(data)) setCurrentStep(3);
-                }
-                return;
-            }
-
-            const isMobileExists = await authService.mobileCheck(data.mobile ?? '');
-            if (isMobileExists !== true) {
-                console.warn("Mobile already exists or invalid.");
-                return;
-            }
-
-            const registerResult = await authService.registerUser({
-                email: data.email ?? "",
-                contactNo: data.mobile ?? "",
-                userName: data.name ?? "",
-                password: data.password ?? "",
-                firstName: data.name ?? "",
-                lastName: "",
-                provinceID: data.provinceId ?? 0,
-                cityID: data.cityId ?? 0,
-                suburbID: data.suburbId ?? 0,
-                domainUrl: "2",
-                track: 1
-            }, detectMobileOS() === "Unknown" ? 1 : 0);
-
-            if (registerResult?.token) {
-                const loginData = await authService.login(token);
-                if (loginData && loginData?.token) {
-                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
-
-                    if (await postRequest(data)) setCurrentStep(3);
-                }
-            }
-        } catch (error) {
-            console.error("Submission Error:", error);
+    const handleRegisterComplete = async (result: boolean) => {
+        if (result) {
+            const success = await postRequest();
+            if (success) setCurrentStep(3);
         }
     };
+
+
 
     const steps = useMemo(() => [
         <CustomerEnquiry
@@ -120,7 +78,7 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
         <Register
             key="step-2"
             onUpdate={handleUpdate}
-            handleSubmit={handleSubmit}
+            onComplete={handleRegisterComplete} 
             handlePrev={handlePrev}
             formClassName={formClassName}
             initialValues={{

@@ -3,12 +3,9 @@ import { useCallback, useMemo, useState } from "react";
 import Button from "../ui/Button";
 import Register from "../requestItem/Register";
 import JobTitleDescription from "./JobTitleDescription";
-import { tokenService } from "@/core/services/token.service";
-import { authService } from "@/core/services/authService";
-import { detectMobileOS } from "@/lib/utils";
 import { toast } from "react-toastify";
-import { jobService } from "@/core/services/jobService";
 import FileSelection from "../requestItem/FileSelection";
+import { customerEnquiryService } from "@/core/services/EnquiryService";
 
 interface ApplyJobFormProps {
     postTitle: string;
@@ -34,20 +31,37 @@ const ApplyJobForm = ({ postTitle, postId, formClassName }: ApplyJobFormProps) =
         },
         []
     );
+    // const fileToBase64 = (file: File): Promise<string> => {
+    //     return new Promise((resolve, reject) => {
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             resolve(reader.result as string);
+    //         };
+    //         reader.onerror = reject;
+    //         reader.readAsDataURL(file);
+    //     });
+    // };
 
     const postRequest = async (data: RequestItemFormData) => {
 
         try {
-            const result = await jobService.applyJob({
-                title: data.item,
-                description: data.description,
+            // const base64Files = formData.upload
+            //     ? await Promise.all(formData.upload.map(fileToBase64))
+            //     : [];
+
+            // const postReplyAttachments = base64Files.map((base64) => ({
+            //     thumbNailImagePath: base64,
+            //     postReplyAttachmentId: 0
+            // }));
+            const result = await customerEnquiryService.applyJob({
+                title: formData.item,
+                description: formData.description,
                 postId: postId,
                 titleCategoryId: data.categoryId,
-                // postReplyAttachments: data?.upload?.length ? data.upload.map((image) => ({thumbNailImagePath: image})) : null
+                // postReplyAttachments: postReplyAttachments.length ? postReplyAttachments : null,
             });
             if (result?.success) {
-                setCurrentStep(1)
-                toast.success(result?.message)
+                toast.success(result?.message || "Successfully Applied")
             }
             return result?.success ?? false;
         } catch (error) {
@@ -61,52 +75,10 @@ const ApplyJobForm = ({ postTitle, postId, formClassName }: ApplyJobFormProps) =
         setCurrentStep(1);
     };
 
-    const handleSubmit = async (finalData: Partial<RequestItemFormData>) => {
-        const data = { ...formData, ...finalData };
-        const token = "Basic " + window.btoa(`${data.email}:${data.password}`);
-
-        try {
-            const isEmailExists = await authService.emailCheck(data.email ?? '');
-            if (isEmailExists === true) {
-                const loginData = await authService.login(token);
-                if (loginData && loginData?.token) {
-                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
-
-                    if (await postRequest(data)) setCurrentStep(3);
-                }
-                return;
-            }
-
-            const isMobileExists = await authService.mobileCheck(data.mobile ?? '');
-            if (isMobileExists !== true) {
-                console.warn("Mobile already exists or invalid.");
-                return;
-            }
-
-            const registerResult = await authService.registerUser({
-                email: data.email ?? "",
-                contactNo: data.mobile ?? "",
-                userName: data.name ?? "",
-                password: data.password ?? "",
-                firstName: data.name ?? "",
-                lastName: "",
-                provinceID: data.provinceId ?? 0,
-                cityID: data.cityId ?? 0,
-                suburbID: data.suburbId ?? 0,
-                domainUrl: "2",
-                track: 1
-            }, detectMobileOS() === "Unknown" ? 1 : 0);
-
-            if (registerResult?.token) {
-                const loginData = await authService.login(token);
-                if (loginData && loginData?.token) {
-                    tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
-
-                    if (await postRequest(data)) setCurrentStep(4);
-                }
-            }
-        } catch (error) {
-            console.error("Submission Error:", error);
+    const handleRegisterComplete = async (result: boolean, finalData: RequestItemFormData) => {
+        if (result) {
+            const success = await postRequest(finalData);
+            if (success) setCurrentStep(4);
         }
     };
 
@@ -132,7 +104,7 @@ const ApplyJobForm = ({ postTitle, postId, formClassName }: ApplyJobFormProps) =
         <Register
             key="step-3"
             onUpdate={handleUpdate}
-            handleSubmit={handleSubmit}
+            onComplete={handleRegisterComplete}
             handlePrev={handlePrev}
             formClassName={formClassName}
             initialValues={{
