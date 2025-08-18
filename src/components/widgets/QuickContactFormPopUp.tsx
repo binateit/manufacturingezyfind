@@ -1,17 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import QuickContactForm from "../customer-enquiry/QuickContactForm";
 
 interface QuickContactFormProps {
     companyId: number;
-    companyName: string;
     title: string;
+    formClassName?: string;
+    open: boolean;
+    setOpen: (value: boolean) => void;
 }
 
-const QuickContactFormPopUp = ({  }: QuickContactFormProps) => {
-    const [open, setOpen] = useState(false);
+const QuickContactFormPopUp = ({ companyId, title, formClassName, open, setOpen }: QuickContactFormProps) => {
     if (!open) return null;
 
     return (
@@ -27,24 +29,26 @@ const QuickContactFormPopUp = ({  }: QuickContactFormProps) => {
                 </button>
 
                 <div className="h-10 md:h-12 bg-[var(--primary-color)] text-white text-md flex items-center pl-4 font-semibold flex-shrink-0">
-
+                    {title}
                 </div>
 
                 <div className="p-4 md:p-6 overflow-y-auto flex-1 request-item-form-modal">
-                
+                    <QuickContactForm companyId={companyId} formClassName={formClassName} />
                 </div>
 
-                <style jsx>{`
-          /* Neutralize absolute/offset styles inside modal for proper layout */
-          .request-item-form-modal :global(> div) {
-            position: static !important;
-            top: 0 !important;
-            height: auto !important;
-          }
-          .request-item-form-modal :global(.triangle) {
-            display: none !important;
-          }
-        `}</style>
+                <style jsx>
+                    {`
+                /* Neutralize absolute/offset styles inside modal for proper layout */
+                .request-item-form-modal :global(> div) {
+                position: static !important;
+                top: 0 !important;
+                height: auto !important;
+                }
+                .request-item-form-modal :global(.triangle) {
+                display: none !important;
+                }
+                `}
+                </style>
             </div>
         </div>
     );

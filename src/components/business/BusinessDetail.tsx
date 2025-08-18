@@ -11,12 +11,16 @@ import SpecialCard from "../widgets/SpecialCard";
 import MagazineCard from "../widgets/MagazineCard";
 import ProductCard from "../widgets/ProductCard";
 import TenderCard from "../widgets/TenderCard";
+import { useState } from "react";
+import QuickContactFormPopUp from "../widgets/QuickContactFormPopUp";
 
 interface BusinessDetailProps {
     business: BusinessDetails;
 }
 
 export default function BusinessDetail({ business }: BusinessDetailProps) {
+    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
+
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="container">
@@ -77,10 +81,18 @@ export default function BusinessDetail({ business }: BusinessDetailProps) {
                             <li><span className='text-black text-sm'>Public Holiday : 09:00am - 01:00pm</span></li>
                         </ul>
 
-                        <a href='#' className='btn w-full block text-center mt-10 bg-[var(--primary-color)] border border-[var(--primary-color)] text-white transition-all hover:bg-white hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]'>Contact Us First 30min Free Consultation</a>
+                        <div  className='btn w-full block text-center mt-10 bg-[var(--primary-color)] border border-[var(--primary-color)] text-white transition-all hover:bg-white hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]' onClick={() => setQuestionModalShow(true)}>Contact Us First 30min Free Consultation</div>
                         <a href='#' className='block text-center text-primary mt-2 text-sm'>T&apos;s & C&apos;s Apply</a>
                     </div>
-
+                    {questionModalShow && (
+                        <QuickContactFormPopUp
+                            open={questionModalShow}
+                            setOpen={setQuestionModalShow}
+                            companyId={business.companyId}
+                            title="Contact Us"
+                            formClassName="h-full border border-gray-300"
+                        />
+                    )}
                     <div className='mt-10'>
                         <iframe src={`https://www.google.com/maps?q=${encodeURIComponent(business?.compStreetAddress || '')}&output=embed`} width="100%" height="450" className='aspect-square' loading="lazy" ></iframe>
                     </div>

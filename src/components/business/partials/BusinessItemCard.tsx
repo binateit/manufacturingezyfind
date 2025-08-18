@@ -6,12 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { ENV } from "@/core/config/env";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
+import QuickContactFormPopUp from "@/components/widgets/QuickContactFormPopUp";
 
 interface Props {
     business: BusinessItem;
 }
 
 export const BusinessItemCard = ({ business }: Props) => {
+    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
+
     return (
         <div className="basis-12/12 min-[550px]:basis-6/12 xl:basis-4/12 px-[12px]">
             <div className="relative px-3 py-3 product-box bg-white w-full shadow h-full flex flex-col">
@@ -80,7 +85,19 @@ export const BusinessItemCard = ({ business }: Props) => {
                     >
                         Read More
                     </Link>
+                    <Button className="bg-white text-sm border-1 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white flex" onClick={() => setQuestionModalShow(true)}>
+                    Contact Us
+                    </Button>
                 </div>
+                {questionModalShow && (
+                    <QuickContactFormPopUp
+                        open={questionModalShow}
+                        setOpen={setQuestionModalShow}
+                        companyId={business.companyId}
+                        title="Contact Us"
+                        formClassName="h-full border border-gray-300"
+                    />
+                )}
             </div>
         </div>
     );

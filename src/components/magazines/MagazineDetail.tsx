@@ -8,13 +8,17 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { ReviewKeyType } from "@/core/constants/enum";
 import ReviewWidget from "../widgets/Review";
 import MagazineCard from "../widgets/MagazineCard";
+import QuickContactFormPopUp from "../widgets/QuickContactFormPopUp";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart, faInfo, faShare } from "@fortawesome/free-solid-svg-icons";
 
 interface MagazineDetailProps {
     magazine: MagazineDetails;
 }
 
 export default function MagazineDetail({ magazine }: MagazineDetailProps) {
-
+    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
     const images = magazine?.mapEflyersUploadDtos?.filter(dto =>
         dto.filePath &&
         (dto.filePath.toLowerCase().endsWith('.jpg') ||
@@ -77,6 +81,51 @@ export default function MagazineDetail({ magazine }: MagazineDetailProps) {
                     <p className="text-2xl md:text-3xl text-primary font-semibold">
                         {magazine.magazineName}
                     </p>
+                    <div className="flex justify-between items-center mt-10">
+                        <p>Ends {formatDate(magazine?.endDate || "")}</p>
+                        <div className="flex gap-4">
+                            <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+                                <span className="text-sm font-light">Add to cart</span>
+                            </a>
+                            <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+
+                                <button className=" h-[35px] w-[35px]text-white cursor-pointer ">
+                                    <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
+                                </button>
+                                <span className="text-sm font-light">Favourite</span>
+                            </a>
+                            <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+                                <FontAwesomeIcon icon={faShare} />
+                                Share
+                            </a>
+                        </div>
+                    </div>
+                    <div className="bg-white card-shadow border border-gray-300 p-5 mt-2">
+                        <div className="flex flex-wrap xl:flex-nowrap justify-center xl:justify-normal gap-x-8 items-center">
+                            <Image src="/images/company.png" height={47} width={49} alt="Company" />
+                            <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/star-icon.webp')] before:-left-5 before:top-0">97.50%</p>
+                            <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/veryfied-icon.webp')] before:-left-5 before:top-0">
+                                Verified By : <span className="uppercase font-semibold">EzyFind</span>
+                            </p>
+                            <div className="w-full xl:w-auto py-3 px-4 border border-gray-300 flex gap-2 justify-center items-center card-shadow ml-auto">
+                                <span className="btn-seller cursor-pointer"
+                                    onClick={() => setQuestionModalShow(true)}>
+
+                                    <FontAwesomeIcon icon={faInfo} className="text-primary" />
+                                    Ask the similar questions
+                                </span>
+                            </div>
+                            {questionModalShow && (
+                                <QuickContactFormPopUp
+                                    open={questionModalShow}
+                                    setOpen={setQuestionModalShow}
+                                    companyId={magazine.companyId}
+                                    title="Ask the Seller"
+                                    formClassName="h-full border border-gray-300"
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
 

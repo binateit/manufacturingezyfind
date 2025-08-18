@@ -4,7 +4,7 @@ export interface BusinessDetails {
   bEEStatusID: number | null;
   callType: number | null;
   categoryIds: string | null;
-  companyId: number | null;
+  companyId: number ;
   companyName: string | null;
   companyPercentage: number | null;
   companyStatus: string | null;
@@ -25,7 +25,7 @@ export interface BusinessDetails {
   compSuburb: string | null;
   compSuburbID: number | null;
   suburbName: string | null;
-  companyID: number | null;
+  companyID: number ;
   compWebSite: string | null;
   directorsCount: number | null;
   documentPath: string | null;

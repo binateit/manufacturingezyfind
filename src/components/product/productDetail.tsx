@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import ProductCard from "../widgets/ProductCard";
 import ReviewWidget from "../widgets/Review";
 import { ReviewKeyType } from "@/core/constants/enum";
+import QuickContactFormPopUp from "../widgets/QuickContactFormPopUp";
 
 
 interface ProductDetailProps {
@@ -47,6 +48,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
     const [timeLeft, setTimeLeft] = useState(0);
     const { openLoginModal } = useAppUI();
     const [diffDays, setDiffDays] = useState<number | null>(null);
+    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
 
     useEffect(() => {
         if (hireFromDate && hireEndDate) {
@@ -272,11 +274,11 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                 <div className="flex gap-5 mb-4">
                                     <input type='date' value={hireFromDate} onChange={(e) => onChangeHireFromDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
                                     <input type='date' value={hireEndDate} onChange={(e) => onChangeHireEndDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
-                                {diffDays ? (
-                                    <div className="">
-                                        {`Days: ${diffDays}; Total:${formatCurrency(product.unitCost * diffDays)}`}
-                                    </div>
-                                ) : null}
+                                    {diffDays ? (
+                                        <div className="">
+                                            {`Days: ${diffDays}; Total:${formatCurrency(product.unitCost * diffDays)}`}
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>)}
                         <div className="flex gap-4 mt-5">
@@ -326,9 +328,22 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                     Verified By : <span className="uppercase font-semibold">EzyFind</span>
                                 </p>
                                 <div className="w-full xl:w-auto py-3 px-4 border border-gray-300 flex gap-2 justify-center items-center card-shadow ml-auto">
-                                    <FontAwesomeIcon icon={faInfo} className="text-primary" />
-                                    Ask the similar questions
+                                    <span className="btn-seller cursor-pointer"
+                                        onClick={() => setQuestionModalShow(true)}>
+
+                                        <FontAwesomeIcon icon={faInfo} className="text-primary" />
+                                        Ask the similar questions
+                                    </span>
                                 </div>
+                                {questionModalShow && (
+                                    <QuickContactFormPopUp
+                                        open={questionModalShow}
+                                        setOpen={setQuestionModalShow}
+                                        companyId={product.companyID}
+                                        title="Ask the Seller"
+                                        formClassName="h-full border border-gray-300"
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -398,8 +413,8 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         <TabPanel header="Review">
                             <div className='card-shadow p-5'>
                                 <p className='text-lg text-primary font-semibold mb-2'>Review</p>
-                            
-                            <ReviewWidget keyType={ReviewKeyType.Product} key={product?.productID || 0} keyName={product?.productName} />
+
+                                <ReviewWidget keyType={ReviewKeyType.Product} key={product?.productID || 0} keyName={product?.productName} />
 
                             </div>
                         </TabPanel>
