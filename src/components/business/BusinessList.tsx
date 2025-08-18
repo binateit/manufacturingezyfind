@@ -12,7 +12,7 @@ import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
 import { GET_SUBURB } from "@/core/graphql/queries/getSuburbs";
 import { City } from "@/core/models/locations/city";
 import { Suburb } from "@/core/models/locations/suburb";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { GET_BUSINESS_LIST } from "@/core/graphql/queries/getBusinessList";
 import { DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { BusinessItemCard } from "./partials/BusinessItemCard";
@@ -85,21 +85,21 @@ export default function BusinessList({
         filters.city?.includes(suburb.cityId)
     );
 
-    const variables: SearchBusinessRequest = {
+    const buildVariables = (state: FilterState): SearchBusinessRequest => ({
         statusIds: "1",
-        companyName: filters.searchText,
-        categoryIds: filters.category?.join(",") || String(ENV.CATEGORY_ID),
-        provinceIds: filters.province?.join(",") || '',
-        cityIds: filters.city?.join(",") || '',
-        suburbIds: filters.suburb?.join(",") || '',
-        page: filters.page,
-        size: filters.size ?? DEFAULT_PAGE_SIZE,
-    };
+        companyName: state.searchText,
+        categoryIds: state.category?.join(",") || String(ENV.CATEGORY_ID),
+        provinceIds: state.province?.join(",") || '',
+        cityIds: state.city?.join(",") || '',
+        suburbIds: state.suburb?.join(",") || '',
+        page: state.page,
+        size: state.size ?? DEFAULT_PAGE_SIZE,
+    });
 
-    const { data, loading } = useQuery(GET_BUSINESS_LIST, {
-        variables,
+    const [fetchBusinessList, { data, loading }] = useLazyQuery(GET_BUSINESS_LIST, {
         fetchPolicy: "network-only",
     });
+
 
     useEffect(() => {
         // Only run if data is available
@@ -168,26 +168,38 @@ export default function BusinessList({
     if (loading) return <Loading />;
 
     const handleFilterChange = (field: keyof FilterState, value: number[]) => {
-        setFilters((prev) => ({
-            ...prev,
-            [field]: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                [field]: value,
+                page: 1,
+            };
+            fetchBusinessList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handleSearch = (value: string) => {
-        setFilters((prev) => ({
-            ...prev,
-            searchText: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                searchText: value,
+                page: 1,
+            };
+            fetchBusinessList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handlePageChange = (newPage: number) => {
-        setFilters((prev) => ({
-            ...prev,
-            page: newPage,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                page: newPage,
+            }
+            fetchBusinessList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const businessCount = pagination.count;
@@ -202,9 +214,9 @@ export default function BusinessList({
 
     if (filters.suburb != undefined && filters.suburb?.length > 0) {
         finalLocation = selectedSuburbs;
-    } else if (filters.city != undefined &&filters.city?.length > 0) {
+    } else if (filters.city != undefined && filters.city?.length > 0) {
         finalLocation = selectedCities;
-    } else if (filters.province != undefined &&filters.province?.length > 0) {
+    } else if (filters.province != undefined && filters.province?.length > 0) {
         finalLocation = selectedProvinces;
     }
     const countText = businessCount > 0 ? `${businessCount} ` : "";
@@ -218,7 +230,7 @@ export default function BusinessList({
     const keywords = `${countText} ${titleCategoryText} companies in ${finalLocation},manufacturing businesses ${selectedCategories},manufacturing directory,manufacturing listings,phone numbers, address, opening hours, reviews,manufacturing products, manufacturing services,mining businesses`;
     const canonicalUrl = `${ENV.DOMAIN_URL}/manufacturing/businesses`;
 
-    
+
 
     return (
         <>

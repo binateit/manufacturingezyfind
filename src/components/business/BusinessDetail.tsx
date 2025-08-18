@@ -19,8 +19,11 @@ interface BusinessDetailProps {
 }
 
 export default function BusinessDetail({ business }: BusinessDetailProps) {
-    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
+    const [selectedBusiness, setSelectedBusiness] = useState<BusinessDetails | null>(null);
 
+    const handleClick = (business: BusinessDetails) => {
+        setSelectedBusiness(business);
+    }
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="container">
@@ -81,13 +84,13 @@ export default function BusinessDetail({ business }: BusinessDetailProps) {
                             <li><span className='text-black text-sm'>Public Holiday : 09:00am - 01:00pm</span></li>
                         </ul>
 
-                        <div  className='btn w-full block text-center mt-10 bg-[var(--primary-color)] border border-[var(--primary-color)] text-white transition-all hover:bg-white hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]' onClick={() => setQuestionModalShow(true)}>Contact Us First 30min Free Consultation</div>
+                        <div className='btn w-full block text-center mt-10 bg-[var(--primary-color)] border border-[var(--primary-color)] text-white transition-all hover:bg-white hover:text-[var(--primary-color)] hover:border-[var(--primary-color)]' onClick={() => handleClick(business)}>Contact Us First 30min Free Consultation</div>
                         <a href='#' className='block text-center text-primary mt-2 text-sm'>T&apos;s & C&apos;s Apply</a>
                     </div>
-                    {questionModalShow && (
+                    {selectedBusiness && (
                         <QuickContactFormPopUp
-                            open={questionModalShow}
-                            setOpen={setQuestionModalShow}
+                            open={!!selectedBusiness}
+                            setOpen={() => setSelectedBusiness(null)}
                             companyId={business.companyId}
                             title="Contact Us"
                             formClassName="h-full border border-gray-300"

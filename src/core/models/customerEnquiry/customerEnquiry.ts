@@ -5,7 +5,6 @@ export interface CustomerEnquiryInputType {
     enquiryTitle?: string | null;
     enquiryDescription?: string | null;
     companyId?: number | null;
-    companyName?:string | null;
 }
 
 

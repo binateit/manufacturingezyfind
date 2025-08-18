@@ -7,7 +7,7 @@ import { GET_PROVINCE } from "@/core/graphql/queries/getProvinces";
 import { GET_SUBURB } from "@/core/graphql/queries/getSuburbs";
 import { City } from "@/core/models/locations/city";
 import { Suburb } from "@/core/models/locations/suburb";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { Pagination } from "../shared/Pagination";
 import Loading from "../shared/Loading";
@@ -60,17 +60,16 @@ export default function MagazineList({
         filters.city?.includes(suburb.cityId)
     );
 
-    const variables: SearchMagazineRequest = {
+    const buildVariables = (state: FilterState): SearchMagazineRequest => ({
         statusIds: "2",
-        provinceIds: filters.province?.join(",") || '',
-        cityIds: filters.city?.join(",") || '',
-        suburbIds: filters.suburb?.join(",") || '',
-        page: filters.page,
-        size: filters.size ?? DEFAULT_PAGE_SIZE,
-    };
+        provinceIds: state.province?.join(",") || '',
+        cityIds: state.city?.join(",") || '',
+        suburbIds: state.suburb?.join(",") || '',
+        page: state.page,
+        size: state.size ?? DEFAULT_PAGE_SIZE,
+    });
 
-    const { data, loading } = useQuery(GET_MAGAZINES_LIST, {
-        variables,
+    const [fetchMagazineList, { data, loading }] = useLazyQuery(GET_MAGAZINES_LIST, {
         fetchPolicy: "network-only",
     });
 
@@ -87,19 +86,28 @@ export default function MagazineList({
 
     if (loading) return <Loading />;
 
-    const handleFilterChange = (field: keyof FilterState, value: number[]) => {
-        setFilters((prev) => ({
-            ...prev,
-            [field]: value,
-            page: 1,
-        }));
+    const handleFilterChange = (field: keyof FilterState, value: number[] | number) => {
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                [field]: value as never,
+                page: 1,
+            };
+            // Trigger fetch only on user interaction
+            fetchMagazineList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handlePageChange = (newPage: number) => {
-        setFilters((prev) => ({
-            ...prev,
-            page: newPage,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                page: newPage,
+            };
+            fetchMagazineList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     return (

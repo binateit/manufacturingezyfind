@@ -6,14 +6,14 @@ import Button from "../ui/Button";
 import clsx from "clsx";
 
 
-interface CustomerItemRequiredProps {
+interface CustomerEnquiryProps {
     onUpdate: (data: ItemDetailsFormData) => void;
     handleNext: () => void;
     initialValues: ItemDetailsFormData;
     formClassName?: string;
 }
 
-export const CustomerItemRequire: FC<CustomerItemRequiredProps> = ({
+export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
     onUpdate,
     handleNext,
     initialValues,
@@ -55,12 +55,12 @@ export const CustomerItemRequire: FC<CustomerItemRequiredProps> = ({
         >
             <div className="h-full flex flex-col">
                 <div>
-                    
+
 
                     {/* Item Input */}
                     <div className="mb-3 xl:mb-2 2xl:mb-3">
                         <label htmlFor="item" className={labelClass}>
-                            Item Required
+                            Title
                         </label>
                         <input
                             type="text"
@@ -69,7 +69,7 @@ export const CustomerItemRequire: FC<CustomerItemRequiredProps> = ({
                             value={formik.values.item}
                             onChange={formik.handleChange}
                             className={`${inputClass} h-8`}
-                            placeholder="Item Required"
+                            placeholder="Item"
                         />
                         {showError("item") && (
                             <p className="text-sm text-red-600 mt-1">{formik.errors.item}</p>
@@ -111,4 +111,4 @@ export const CustomerItemRequire: FC<CustomerItemRequiredProps> = ({
     );
 };
 
-export default CustomerItemRequire
+export default CustomerEnquiry

@@ -15,8 +15,11 @@ interface Props {
 }
 
 export const BusinessItemCard = ({ business }: Props) => {
-    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
+    const [selectedBusiness, setSelectedBusiness] = useState<BusinessItem | null>(null);
 
+    const handleClick = (business: BusinessItem) => {
+        setSelectedBusiness(business);
+    }
     return (
         <div className="basis-12/12 min-[550px]:basis-6/12 xl:basis-4/12 px-[12px]">
             <div className="relative px-3 py-3 product-box bg-white w-full shadow h-full flex flex-col">
@@ -85,14 +88,14 @@ export const BusinessItemCard = ({ business }: Props) => {
                     >
                         Read More
                     </Link>
-                    <Button className="bg-white text-sm border-1 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white flex" onClick={() => setQuestionModalShow(true)}>
-                    Contact Us
+                    <Button className="bg-white text-sm border-1 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white flex" onClick={() => handleClick(business)}>
+                        Contact Us
                     </Button>
                 </div>
-                {questionModalShow && (
+                {selectedBusiness && (
                     <QuickContactFormPopUp
-                        open={questionModalShow}
-                        setOpen={setQuestionModalShow}
+                        open={!!selectedBusiness}
+                        setOpen={() => setSelectedBusiness(null)}
                         companyId={business.companyId}
                         title="Contact Us"
                         formClassName="h-full border border-gray-300"

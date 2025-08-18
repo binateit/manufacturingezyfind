@@ -4,7 +4,7 @@ import { ADD_CUSTOMER_ENQUIRY } from "../graphql/mutations/addCustomerEnquiry";
 
 
 
-class BusinessService {
+class CustomerEnquiryService {
     private client = initializeApollo();
 
     async addCustomerEnquiry(customerEnquiry: CustomerEnquiryInputType): Promise<CustomerEnquiryResponse> {
@@ -21,4 +21,4 @@ class BusinessService {
     }
 }
 
-export const businessService = new BusinessService();
+export const customerEnquiryService = new CustomerEnquiryService();

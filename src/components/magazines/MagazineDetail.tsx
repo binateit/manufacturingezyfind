@@ -18,7 +18,11 @@ interface MagazineDetailProps {
 }
 
 export default function MagazineDetail({ magazine }: MagazineDetailProps) {
-    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
+    const [selectedMagazine, setSelectedMagazine] = useState<MagazineDetails | null>(null);
+
+    const handleClick = (item: MagazineDetails) => {
+        setSelectedMagazine(item);
+    }
     const images = magazine?.mapEflyersUploadDtos?.filter(dto =>
         dto.filePath &&
         (dto.filePath.toLowerCase().endsWith('.jpg') ||
@@ -109,16 +113,16 @@ export default function MagazineDetail({ magazine }: MagazineDetailProps) {
                             </p>
                             <div className="w-full xl:w-auto py-3 px-4 border border-gray-300 flex gap-2 justify-center items-center card-shadow ml-auto">
                                 <span className="btn-seller cursor-pointer"
-                                    onClick={() => setQuestionModalShow(true)}>
+                                    onClick={() => handleClick(magazine)}>
 
                                     <FontAwesomeIcon icon={faInfo} className="text-primary" />
                                     Ask the similar questions
                                 </span>
                             </div>
-                            {questionModalShow && (
+                            {selectedMagazine && (
                                 <QuickContactFormPopUp
-                                    open={questionModalShow}
-                                    setOpen={setQuestionModalShow}
+                                    open={!!selectedMagazine}
+                                    setOpen={() => setSelectedMagazine(null)}
                                     companyId={magazine.companyId}
                                     title="Ask the Seller"
                                     formClassName="h-full border border-gray-300"

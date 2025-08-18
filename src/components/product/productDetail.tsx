@@ -48,8 +48,10 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
     const [timeLeft, setTimeLeft] = useState(0);
     const { openLoginModal } = useAppUI();
     const [diffDays, setDiffDays] = useState<number | null>(null);
-    const [questionModalShow, setQuestionModalShow] = useState<boolean>(false);
-
+    const [selectedProduct, setSelectedProduct] = useState<ProductDetails | null>(null);
+    const handleClick = (product: ProductDetails) => {
+        setSelectedProduct(product)
+    }
     useEffect(() => {
         if (hireFromDate && hireEndDate) {
             const start = new Date(hireFromDate);
@@ -329,16 +331,16 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                 </p>
                                 <div className="w-full xl:w-auto py-3 px-4 border border-gray-300 flex gap-2 justify-center items-center card-shadow ml-auto">
                                     <span className="btn-seller cursor-pointer"
-                                        onClick={() => setQuestionModalShow(true)}>
+                                        onClick={() => handleClick(product)}>
 
                                         <FontAwesomeIcon icon={faInfo} className="text-primary" />
                                         Ask the similar questions
                                     </span>
                                 </div>
-                                {questionModalShow && (
+                                {selectedProduct && (
                                     <QuickContactFormPopUp
-                                        open={questionModalShow}
-                                        setOpen={setQuestionModalShow}
+                                        open={!!selectedProduct}
+                                        setOpen={() => setSelectedProduct(null)}
                                         companyId={product.companyID}
                                         title="Ask the Seller"
                                         formClassName="h-full border border-gray-300"

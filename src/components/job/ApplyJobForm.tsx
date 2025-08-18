@@ -1,23 +1,25 @@
 import { RequestItemFormData } from "@/core/models/requestItem/request-item.model";
-import { useState, useCallback, useMemo } from "react";
-import Register from "../requestItem/Register";
-import { toast } from "react-toastify";
-import { authService } from "@/core/services/authService";
-import { tokenService } from "@/core/services/token.service";
-import { detectMobileOS } from "@/lib/utils";
+import { useCallback, useMemo, useState } from "react";
 import Button from "../ui/Button";
-import CustomerEnquiry from "./CustomerEnquiry";
-import { customerEnquiryService } from "@/core/services/customerEnquiryService";
+import Register from "../requestItem/Register";
+import JobTitleDescription from "./JobTitleDescription";
+import { tokenService } from "@/core/services/token.service";
+import { authService } from "@/core/services/authService";
+import { detectMobileOS } from "@/lib/utils";
+import { toast } from "react-toastify";
+import { jobService } from "@/core/services/jobService";
+import FileSelection from "../requestItem/FileSelection";
 
-interface QuickContactFormProps {
-    companyId: number;
+interface ApplyJobFormProps {
+    postTitle: string;
+    postId: number;
     formClassName?: string;
 }
 
 const initialFormState: RequestItemFormData = {};
 
 
-const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) => {
+const ApplyJobForm = ({ postTitle, postId, formClassName }: ApplyJobFormProps) => {
 
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<RequestItemFormData>(initialFormState);
@@ -36,10 +38,12 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
     const postRequest = async (data: RequestItemFormData) => {
 
         try {
-            const result = await customerEnquiryService.addCustomerEnquiry({
-                enquiryTitle: data.item,
-                enquiryDescription: data.description,
-                companyId: companyId,
+            const result = await jobService.applyJob({
+                title: data.item,
+                description: data.description,
+                postId: postId,
+                titleCategoryId: data.categoryId,
+                // postReplyAttachments: data?.upload?.length ? data.upload.map((image) => ({thumbNailImagePath: image})) : null
             });
             if (result?.success) {
                 setCurrentStep(1)
@@ -98,7 +102,7 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
                 if (loginData && loginData?.token) {
                     tokenService.setLoggedUserDetail(loginData.token, loginData.tokenExpires, loginData.firstName, loginData.lastName);
 
-                    if (await postRequest(data)) setCurrentStep(3);
+                    if (await postRequest(data)) setCurrentStep(4);
                 }
             }
         } catch (error) {
@@ -107,18 +111,26 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
     };
 
     const steps = useMemo(() => [
-        <CustomerEnquiry
+        <JobTitleDescription
             key='step-1'
             onUpdate={handleUpdate}
             handleNext={handleNext}
             formClassName={formClassName}
             initialValues={{
-                item: formData.item || '',
+                item: postTitle || formData.item,
                 description: formData.description || ''
             }}
         />,
-        <Register
+        <FileSelection
             key="step-2"
+            onUpdate={handleUpdate}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+            formClassName={formClassName}
+            initialValues={{ upload: formData.upload || [] }}
+        />,
+        <Register
+            key="step-3"
             onUpdate={handleUpdate}
             handleSubmit={handleSubmit}
             handlePrev={handlePrev}
@@ -130,7 +142,7 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
                 mobile: formData.mobile,
             }}
         />,
-        <div key="step-3" className="text-center">
+        <div key="step-4" className="text-center">
             <h2 className="text-2xl font-bold">Thank You!</h2>
             <p>Your request has been submitted successfully.</p>
             <Button
@@ -141,9 +153,11 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
             </Button>
         </div>,
     ], [formData])
+
     return (
         <>
             <div className="xl:absolute w-full top-0 xl:-top-12 h-full">
+
                 <div className="h-full md:px-1 md:pt-1 max-md:mx-[15px] mt-2 md:mt-0">
                     {steps[currentStep - 1]}
                 </div>
@@ -151,4 +165,4 @@ const QuickContactForm = ({ companyId, formClassName }: QuickContactFormProps) =
         </>
     )
 }
-export default QuickContactForm
+export default ApplyJobForm

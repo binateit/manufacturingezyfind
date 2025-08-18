@@ -2,7 +2,7 @@ import { ENV } from "@/core/config/env";
 import { faAngleDown, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { Pagination } from "../shared/Pagination";
 import Loading from "../shared/Loading";
@@ -15,6 +15,8 @@ import { slugify } from "@/lib/slugify";
 import { formatDate } from "@/lib/format";
 import { PaginationInfo } from "../shared/PaginationInfo";
 import { NoRecordsCard } from "../ui/NoRecordsCard";
+import Button from "../ui/Button";
+import JobFormPopUp from "./JobFormPopUp";
 
 type FilterState = {
     searchText?: string;
@@ -36,22 +38,25 @@ export default function JobList({
 }: JobListProps) {
     const [jobs, setJobs] = useState<PostItem[]>(initialJobs || []);
     const [pagination, setPagination] = useState(initialPagination);
+    const [selectedJob, setSelectedJob] = useState<PostItem | null>(null);
 
+    const handleApply = (job: PostItem) => {
+        setSelectedJob(job)
+    }
     const [filters, setFilters] = useState<FilterState>({
         page: DEFAULT_PAGE,
         size: DEFAULT_PAGE_SIZE,
     });
 
-    const variables: SearchPostRequest = {
+    const buildVariables = (state: FilterState): SearchPostRequest => ({
         domainId: Number(ENV.CATEGORY_ID),
         categoryId: PostCategory.Jobs,
-        title: filters.searchText,
-        page: filters.page,
-        size: filters.size || DEFAULT_PAGE_SIZE,
-    };
+        title: state.searchText,
+        page: state.page,
+        size: state.size || DEFAULT_PAGE_SIZE,
+    });
 
-    const { data, loading } = useQuery(GET_POST_LIST, {
-        variables,
+    const [fetchJobList, { data, loading }] = useLazyQuery(GET_POST_LIST, {
         fetchPolicy: "network-only",
     });
 
@@ -69,18 +74,26 @@ export default function JobList({
     if (loading) return <Loading />;
 
     const handleSearch = (value: string) => {
-        setFilters((prev) => ({
-            ...prev,
-            searchText: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                searchText: value,
+                page: 1,
+            };
+            fetchJobList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handlePageChange = (newPage: number) => {
-        setFilters((prev) => ({
-            ...prev,
-            page: newPage,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                page: newPage,
+            };
+            fetchJobList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     return (
@@ -176,23 +189,26 @@ export default function JobList({
                                     <FontAwesomeIcon icon={faCalendarAlt} className="text-primary mr-1" />
                                     Posted: {formatDate(job.startDate || "")}
                                 </p>
-                                <Link
-                                    href={`/manufacturing/jobs/${job?.postID}/${slugify(job?.title || '')}.html`}
+                                <Button
                                     className="bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] uppercase px-4 py-1 hover:bg-white hover:text-[var(--primary-color)] transition-all"
+                                    onClick={() => handleApply(job)}
                                 >
-                                    View Details
-                                </Link>
+                                    Apply Now
+                                </Button>
                             </div>
-
+                            {selectedJob && (
+                                <JobFormPopUp
+                                    open={!!selectedJob}
+                                    setOpen={() => setSelectedJob(null)}
+                                    postTitle={selectedJob.title || ""}
+                                    postId={selectedJob.postID}
+                                    title="Apply"
+                                    formClassName="h-full border border-gray-300"
+                                />
+                            )}
                         </div>
                     ))}
                 </div>
-
-
-
-
-
-
 
                 {/* Pagination */}
                 <div className="flex flex-col md:flex-row mt-10 justify-center">

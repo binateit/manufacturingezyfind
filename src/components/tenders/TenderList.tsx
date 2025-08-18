@@ -2,7 +2,7 @@ import { ENV } from "@/core/config/env";
 import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "@/core/constants";
 import { Pagination } from "../shared/Pagination";
 import Loading from "../shared/Loading";
@@ -42,16 +42,15 @@ export default function TenderList({
         size: DEFAULT_PAGE_SIZE,
     });
 
-    const variables: SearchPostRequest = {
+    const buildVariables = (state: FilterState): SearchPostRequest => ({
         domainId: Number(ENV.CATEGORY_ID),
         categoryId: PostCategory.Tender,
-        title: filters.searchText,
-        page: filters.page,
-        size: filters.size || DEFAULT_PAGE_SIZE,
-    };
+        title: state.searchText,
+        page: state.page,
+        size: state.size || DEFAULT_PAGE_SIZE,
+    });
 
-    const { data, loading } = useQuery(GET_POST_LIST, {
-        variables,
+    const [fetchTenderList, { data, loading }] = useLazyQuery(GET_POST_LIST, {
         fetchPolicy: "network-only",
     });
 
@@ -69,18 +68,26 @@ export default function TenderList({
     if (loading) return <Loading />;
 
     const handleSearch = (value: string) => {
-        setFilters((prev) => ({
-            ...prev,
-            searchText: value,
-            page: 1,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                searchText: value,
+                page: 1,
+            };
+            fetchTenderList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     const handlePageChange = (newPage: number) => {
-        setFilters((prev) => ({
-            ...prev,
-            page: newPage,
-        }));
+        setFilters((prev) => {
+            const next: FilterState = {
+                ...prev,
+                page: newPage,
+            };
+            fetchTenderList({ variables: buildVariables(next) });
+            return next;
+        });
     };
 
     return (
