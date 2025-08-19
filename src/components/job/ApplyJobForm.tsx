@@ -102,6 +102,7 @@ const ApplyJobForm = ({ postTitle, postId, formClassName }: ApplyJobFormProps) =
             initialValues={{ upload: formData.upload || [] }}
         />,
         <Register
+            displayName={false}
             key="step-3"
             onUpdate={handleUpdate}
             onComplete={handleRegisterComplete}

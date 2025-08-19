@@ -7,6 +7,7 @@ import clsx from "clsx";
 
 
 interface CustomerEnquiryProps {
+    companyName?:string;
     onUpdate: (data: ItemDetailsFormData) => void;
     handleNext: () => void;
     initialValues: ItemDetailsFormData;
@@ -16,6 +17,7 @@ interface CustomerEnquiryProps {
 export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
     onUpdate,
     handleNext,
+    companyName,
     initialValues,
     formClassName = "h-[415px] xl:h-full border border-gray-300",
 }) => {
@@ -60,7 +62,7 @@ export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
                     {/* Item Input */}
                     <div className="mb-3 xl:mb-2 2xl:mb-3">
                         <label htmlFor="item" className={labelClass}>
-                            Title
+                            Title - {companyName}
                         </label>
                         <input
                             type="text"

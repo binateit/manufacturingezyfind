@@ -129,6 +129,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
       initialValues={{ upload: formData.upload || [] }}
     />,
     <Register
+      displayName={true}
       key="step-5"
       onUpdate={handleUpdate}
       onComplete={handleRegisterComplete}
