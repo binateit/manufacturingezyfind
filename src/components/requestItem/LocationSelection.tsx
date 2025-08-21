@@ -135,6 +135,7 @@ export default function LocationSelection({
             placeholder="Select Province"
             className={clsx(inputClass, hasError("provinceId") ? "border-red-500" : "border-gray-300")}
             filter
+            aria-label="Select province for your location"
           />
           {hasError("provinceId") && <p className="text-sm text-red-600 mt-1">{formik.errors.provinceId}</p>}
         </div>
@@ -151,6 +152,7 @@ export default function LocationSelection({
             disabled={!formik.values.provinceId}
             className={clsx(inputClass, hasError("cityId") ? "border-red-500" : "border-gray-300")}
             filter
+            aria-label="Select city for your location"
           />
           {hasError("cityId") && <p className="text-sm text-red-600 mt-1">{formik.errors.cityId}</p>}
         </div>
@@ -167,15 +169,16 @@ export default function LocationSelection({
             disabled={!formik.values.cityId}
             className={clsx(inputClass, hasError("suburbId") ? "border-red-500" : "border-gray-300")}
             filter
+            aria-label="Select suburb for your location"
           />
           {hasError("suburbId") && <p className="text-sm text-red-600 mt-1">{formik.errors.suburbId}</p>}
         </div>
 
         <div className="flex justify-between mt-auto">
-          <Button onClick={handlePrev} className="bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]">
+          <Button onClick={handlePrev} className="bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]" aria-label="Go to previous step">
             Previous
           </Button>
-          <Button onClick={handleNextStep} className="bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)]">
+          <Button onClick={handleNextStep} className="bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)]" aria-label="Proceed to next step">
             Next
           </Button>
         </div>

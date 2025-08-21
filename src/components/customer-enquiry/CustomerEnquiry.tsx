@@ -72,6 +72,7 @@ export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
                             onChange={formik.handleChange}
                             className={`${inputClass} h-8`}
                             placeholder="Item"
+                            aria-label="Enter item title for enquiry"
                         />
                         {showError("item") && (
                             <p className="text-sm text-red-600 mt-1">{formik.errors.item}</p>
@@ -91,6 +92,7 @@ export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
                             className={`${inputClass} py-3`}
                             rows={3}
                             placeholder="Description"
+                            aria-label="Enter description for enquiry"
                         />
                         {showError("description") && (
                             <p className="text-sm text-red-600 mt-1">
@@ -104,6 +106,7 @@ export const CustomerEnquiry: FC<CustomerEnquiryProps> = ({
                     <Button
                         onClick={handleNextStep}
                         className="bg-[var(--primary-color)] border border-[var(--primary-color)] text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
+                        aria-label="Proceed to next step"
                     >
                         Next
                     </Button>

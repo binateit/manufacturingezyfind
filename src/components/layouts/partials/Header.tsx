@@ -50,10 +50,14 @@ export default function Header() {
             <Menu />
             <div className='lg:hidden flex items-center'>
               <div className='md:hidden mr-3'>
-                <FontAwesomeIcon icon={faSearch} className='text-lg' onClick={toggleGlobalSearch} />
+                <button aria-label="Toggle search" onClick={toggleGlobalSearch} className="bg-transparent border-none p-0">
+                  <FontAwesomeIcon icon={faSearch} className='text-lg' />
+                </button>
               </div>
               <div className=''>
-                <FontAwesomeIcon icon={faBars} className='text-lg' onClick={toggleMobileMenu} />
+                <button aria-label="Toggle mobile menu" onClick={toggleMobileMenu} className="bg-transparent border-none p-0">
+                  <FontAwesomeIcon icon={faBars} className='text-lg' />
+                </button>
               </div>
 
             </div>
@@ -68,7 +72,8 @@ export default function Header() {
                   <input type='text' placeholder='Enter Company / Product Name' className='text-xs px-4 py-1.5 max-[450px]:w-full w-[350px] lg:w-[300px]' onFocus={toggleGlobalSearch} value={globalFilter.keyword}
                     onChange={(e) =>
                       setGlobalFilter((prev) => ({ ...prev, keyword: e.target.value }))
-                    }></input>
+                    }
+                    aria-label="Search companies and products"></input>
                   <button className='pl-3 pr-3 cursor-pointer border-l border-gray-300' title="Search" aria-label="Search" onClick={handleSearch}>
                     <FontAwesomeIcon icon={faSearch} className='text-sm text-primary' />
                   </button>

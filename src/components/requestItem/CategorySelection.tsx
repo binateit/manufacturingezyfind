@@ -100,6 +100,7 @@ export default function CategorySelection({
                                 hasError ? "p-invalid border border-red-500" : "border border-gray-300"
                             )}
                             filter
+                            aria-label="Select category for your request"
                         />
                         {hasError && (
                             <div className="mt-1 text-sm text-red-600">{formik.errors.categoryId}</div>
@@ -111,12 +112,14 @@ export default function CategorySelection({
                     <Button
                         onClick={handlePrev}
                         className="bg-[var(--secondary-color)] border border-[var(--secondary-color)] text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]"
+                        aria-label="Go to previous step"
                     >
                         Previous
                     </Button>
                     <Button
                         onClick={handleNextStep}
                         className="bg-[var(--primary-color)] border border-[var(--primary-color)] text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
+                        aria-label="Proceed to next step"
                     >
                         Next
                     </Button>

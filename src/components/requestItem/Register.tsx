@@ -157,6 +157,7 @@ export default function Register({
                         {...formik.getFieldProps("name")}
                         className={inputClass}
                         placeholder="Enter Name"
+                        aria-label="Enter your full name"
                     />
                     {errorText("name")}
                 </div>)}
@@ -171,6 +172,7 @@ export default function Register({
                         {...formik.getFieldProps("email")}
                         className={inputClass}
                         placeholder="Enter email address"
+                        aria-label="Enter your email address"
                     />
                     {errorText("email")}
                 </div>
@@ -187,6 +189,7 @@ export default function Register({
                             {...formik.getFieldProps("mobile")}
                             className="form-control border border-gray-300 text-sm w-full h-8 px-3 font-semibold text-gray-500"
                             placeholder="Enter 9-digit mobile number"
+                            aria-label="Enter your 9-digit mobile number"
                         />
                     </div>
                     {errorText("mobile")}
@@ -201,11 +204,13 @@ export default function Register({
                             {...formik.getFieldProps("password")}
                             className={`${inputClass} pr-10`}
                             placeholder="Enter Password"
+                            aria-label="Enter your password"
                         />
                         <button
                             type="button"
                             onClick={togglePasswordVisibility}
                             className="absolute top-1 right-2 text-gray-500"
+                            aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                         </button>
@@ -257,12 +262,14 @@ export default function Register({
                     <Button
                         onClick={handlePrev}
                         className="bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]"
+                        aria-label="Go to previous step"
                     >
                         Previous
                     </Button>
                     <Button
                         onClick={formik.submitForm}
                         className="bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
+                        aria-label="Submit registration and request"
                     >
                         Submit
                     </Button>

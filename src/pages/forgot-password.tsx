@@ -44,6 +44,7 @@ export default function ForgotPasswordPage() {
                                 {...formik.getFieldProps('email')}
                                 type='email'
                                 placeholder='Enter Email'
+                                aria-label='Email address for password reset'
                                 className={clsx(
                                     'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                                     formik.touched.email && formik.errors.email ? 'border border-red-500' : 'border border-gray-300'
@@ -65,6 +66,7 @@ export default function ForgotPasswordPage() {
                     <div className='text-center mt-10'>
                         <button
                             type='submit'
+                            aria-label='Send password reset link'
                             className='py-2 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10'
                             disabled={formik.isSubmitting || !formik.isValid || loading}
                         >

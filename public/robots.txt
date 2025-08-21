@@ -14,15 +14,20 @@ Disallow: /_vercel/
 # Allow important pages
 Allow: /manufacturing/
 Allow: /manufacturing/businesses/
-Allow: /manufacturing/products/
+Allow: /manufacturing/product/
 Allow: /manufacturing/jobs/
 Allow: /manufacturing/tenders/
-Allow: /manufacturing/articles/
+Allow: /manufacturing/article/
+Allow: /manufacturing/digital/
+Allow: /manufacturing/special/
+Allow: /manufacturing/list-business
 Allow: /manufacturing/about/
 Allow: /manufacturing/contact/
 Allow: /pricing
 Allow: /login
 Allow: /register
+Allow: /forgot-password
+Allow: /cart
 
 # Crawl delay (optional)
 Crawl-delay: 1

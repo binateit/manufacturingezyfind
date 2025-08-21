@@ -113,6 +113,7 @@ const Search: FC<SearchProps> = ({ globalFilter, setGlobalFilter }) => {
                             }));
                         }}
                         pt={dropdownStyle}
+                        aria-label="Filter by province"
                     />
 
                     <Dropdown
@@ -134,6 +135,7 @@ const Search: FC<SearchProps> = ({ globalFilter, setGlobalFilter }) => {
                             }));
                         }}
                         pt={dropdownStyle}
+                        aria-label="Filter by city"
                     />
                     <Dropdown
                         loading={suburbLoading}
@@ -152,6 +154,7 @@ const Search: FC<SearchProps> = ({ globalFilter, setGlobalFilter }) => {
                             }));
                         }}
                         pt={dropdownStyle}
+                        aria-label="Filter by suburb"
                     />
                 </div>
             </div>
@@ -176,6 +179,7 @@ const Search: FC<SearchProps> = ({ globalFilter, setGlobalFilter }) => {
                                 setGlobalFilter((prev) => ({ ...prev, categoryName: e.value }))
                             }
                             pt={dropdownStyle}
+                            aria-label="Filter by category"
                         />
                     </div>
                 </div>

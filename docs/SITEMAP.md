@@ -26,6 +26,8 @@ npm run build:with-sitemap
 ### 1. `public/sitemap.xml`
 - XML sitemap following the sitemap protocol
 - Includes all static pages with appropriate priorities and change frequencies
+- **Dynamically fetches and includes all product, business, job, tender, article, and digital magazine URLs**
+- Uses GraphQL API with guest authentication to retrieve current data
 - Automatically updated with current timestamp
 
 ### 2. `public/robots.txt`
@@ -44,17 +46,22 @@ The sitemap generator includes the following pages with SEO-optimized settings:
 
 ### Medium Priority (0.7-0.8)
 - Business listings (`/manufacturing/businesses`) - Priority: 0.8, Change: Weekly
-- Products (`/manufacturing/products`) - Priority: 0.8, Change: Weekly
+- Products (`/manufacturing/product`) - Priority: 0.8, Change: Weekly
 - Jobs (`/manufacturing/jobs`) - Priority: 0.8, Change: Weekly
 - Tenders (`/manufacturing/tenders`) - Priority: 0.8, Change: Weekly
-- Articles (`/manufacturing/articles`) - Priority: 0.8, Change: Weekly
-- Cart (`/cart`) - Priority: 0.6, Change: Weekly
-
-### Lower Priority (0.5-0.7)
+- Articles (`/manufacturing/article`) - Priority: 0.8, Change: Weekly
+- Digital Catalogue (`/manufacturing/digital`) - Priority: 0.7, Change: Weekly
+- Special (`/manufacturing/special`) - Priority: 0.7, Change: Weekly
+- List Business (`/manufacturing/list-business`) - Priority: 0.7, Change: Monthly
 - About (`/manufacturing/about`) - Priority: 0.7, Change: Monthly
 - Contact (`/manufacturing/contact`) - Priority: 0.7, Change: Monthly
 - Pricing (`/pricing`) - Priority: 0.7, Change: Monthly
-- Login/Register - Priority: 0.5, Change: Monthly
+- Cart (`/cart`) - Priority: 0.6, Change: Weekly
+
+### Lower Priority (0.4-0.5)
+- Login (`/login`) - Priority: 0.5, Change: Monthly
+- Register (`/register`) - Priority: 0.5, Change: Monthly
+- Forgot Password (`/forgot-password`) - Priority: 0.4, Change: Monthly
 
 ## Customization
 
@@ -65,12 +72,21 @@ Edit `scripts/generate-sitemap-advanced.js` and add new pages to the `PAGE_CONFI
 { path: '/new-page', priority: '0.8', changefreq: 'weekly' }
 ```
 
-### Adding Dynamic Routes
-For dynamic routes (like individual business pages), add them to the `PAGE_CONFIG.dynamic` array:
+### Dynamic URL Generation
+The advanced sitemap generator automatically fetches dynamic URLs from the GraphQL API:
 
-```javascript
-{ path: '/manufacturing/business/[id]', priority: '0.8', changefreq: 'weekly' }
-```
+- **Products**: Fetched from `GET_PRODUCT_LIST` query
+- **Businesses**: Fetched from `GET_BUSINESS_LIST` query  
+- **Jobs**: Fetched from `GET_POST_LIST` query with `postType: "job"`
+- **Tenders**: Fetched from `GET_POST_LIST` query with `postType: "tender"`
+- **Articles**: Fetched from `GET_POST_LIST` query with `postType: "article"`
+- **Digital Magazines**: Fetched from `GET_MAGAZINES_LIST` query
+
+Each dynamic URL includes:
+- SEO-friendly slugified paths
+- Appropriate priority (0.7 for products/magazines, 0.6 for others)
+- Weekly change frequency
+- Current timestamp
 
 ### Changing Base URL
 Update the `BASE_URL` constant in the script files:
@@ -131,6 +147,9 @@ For CI/CD pipelines, the sitemap will be automatically generated during build:
 1. **Permission Errors**: Ensure the `public` directory is writable
 2. **Missing Pages**: Check that all page paths are correctly configured
 3. **Invalid URLs**: Verify the `BASE_URL` is correct and accessible
+4. **GraphQL Authentication Errors**: Ensure the guest login functionality is working
+5. **Dynamic URL Fetching Failures**: Check GraphQL API connectivity and query validity
+6. **Large Sitemap Size**: Monitor sitemap size as dynamic content grows (current: 3676+ URLs)
 
 ### Validation
 
@@ -147,6 +166,13 @@ The sitemap generation is now integrated into the build process via package.json
 - **No extra steps**: Just run `npm run build` as usual
 - **Consistent**: Always up-to-date with your latest build
 - **CI/CD friendly**: Works seamlessly in deployment pipelines
+- **Current Status**: 3676+ URLs included in the sitemap (17 static + 3659 dynamic)
+  - 72 product pages
+  - 3206 business listings
+  - 6 job postings
+  - 0 tender listings (when available)
+  - 0 article pages (when available)
+  - 375 digital magazine pages
 
 ## Files Structure
 
