@@ -100,7 +100,7 @@ export default function BidProduct({ product, refetchOnSuccess }: BidProductProp
           href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? "")}.html`}
           className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors"
         >
-          <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
+          <ProductImage productImage={product.productImage} alt={product.productName ?? 'Product'} />
 
           {/* Title */}
           {product.productName}
@@ -123,12 +123,15 @@ export default function BidProduct({ product, refetchOnSuccess }: BidProductProp
         {/* Bid Amount Input */}
         <div className="relative mb-3">
           <input
+            type="text"
+            aria-label="Bid Amount"
             value={formatCurrency(bidAmount)}
             readOnly
             disabled
             className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold"
           />
           <button
+            aria-label="Increase Bid"
             onClick={handleIncreaseBid}
             className="absolute right-0 top-0 h-[35px] w-[35px] bg-secondary text-white flex justify-center items-center"
           >
@@ -138,7 +141,7 @@ export default function BidProduct({ product, refetchOnSuccess }: BidProductProp
 
         {/* Action */}
         <div className="flex justify-between items-center mt-auto">
-          <Button className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]" onClick={() => bidNow(bidAmount)} disabled={isWorking}>
+          <Button aria-label="Bid Now" className="w-full bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center justify-center gap-1 text-white hover:text-[var(--primary-color)]" onClick={() => bidNow(bidAmount)} disabled={isWorking}>
             <FontAwesomeIcon icon={faGavel} />
             {isWorking ? 'Processing...' : 'Bid Now'}
           </Button>

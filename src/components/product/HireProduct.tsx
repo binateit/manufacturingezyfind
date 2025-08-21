@@ -111,7 +111,7 @@ export default function HireProduct({ product, refetchOnSuccess }: HireProductPr
       <div className="px-3 py-3 product-box bg-white w-full shadow-[0px_4px_44px_0px_rgb(0,0,0,0.1)] h-full flex flex-col">
 
         <Link href={`/manufacturing/product/${product.productID}/${slugify(product.productName ?? '')}.html`}>
-          <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
+          <ProductImage productImage={product.productImage} alt={product.productName ?? 'Product'} />
           <ProductInfo productID={product.productID} productName={product.productName ?? ''} unitCost={product.unitCost} />
         </Link>
 
@@ -120,8 +120,8 @@ export default function HireProduct({ product, refetchOnSuccess }: HireProductPr
         <DateSelector fromDate={fromDate} toDate={toDate} onFromDateChange={setFromDate} onToDateChange={setToDate} />
 
         <div className="flex justify-between mt-auto">
-          <Button className="bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]" disabled={isWorking} onClick={hireNow}>{isWorking ? 'processing ' : 'Hire Now'}</Button>
-          <Button className="bg-white text-sm border-1 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white flex" disabled={isWorking} onClick={addToCart} >{isWorking ? 'Processing...' : 'Add To Cart'}</Button>
+          <Button aria-label="Hire Now" className="bg-[var(--primary-color)] hover:bg-white border border-[var(--primary-color)] text-sm flex items-center gap-1 text-white hover:text-[var(--primary-color)]" disabled={isWorking} onClick={hireNow}>{isWorking ? 'processing ' : 'Hire Now'}</Button>
+          <Button aria-label="Add To Cart" className="bg-white text-sm border-1 border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white flex" disabled={isWorking} onClick={addToCart} >{isWorking ? 'Processing...' : 'Add To Cart'}</Button>
         </div>
       </div>
     </div>

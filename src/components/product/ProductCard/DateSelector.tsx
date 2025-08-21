@@ -11,12 +11,14 @@ export default function DateSelector({ fromDate, toDate, onFromDateChange, onToD
     <div className="flex gap-5 mb-4">
       <input
         type='date'
+        aria-label="Start Date"
         value={fromDate}
         onChange={(e) => onFromDateChange(e.target.value)}
         className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
         placeholder="Start Date" />
       <input
         type='date'
+        aria-label="End Date"
         value={toDate}
         onChange={(e) => onToDateChange(e.target.value)}
         className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
