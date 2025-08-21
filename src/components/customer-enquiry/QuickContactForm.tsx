@@ -70,7 +70,6 @@ const QuickContactForm = ({ companyId, formClassName, companyName }: QuickContac
             key='step-1'
             onUpdate={handleUpdate}
             handleNext={handleNext}
-            companyName={companyName}
             formClassName={formClassName}
             initialValues={{
                 item: formData.item || '',
@@ -105,7 +104,7 @@ const QuickContactForm = ({ companyId, formClassName, companyName }: QuickContac
     return (
         <>
             <div className="xl:absolute w-full top-0 xl:-top-12 h-full">
-                <div className="xl:flex h-9 md:h-12 bg-primary text-white text-md items-center pl-4 font-semibold relative z-1 before:absolute before:h-full before:w-full before:-left-50 before:top-0 before:bg-[var(--primary-color)] before:-z-1 triangle">
+                <div className="h-full md:px-1 md:pt-1 max-md:mx-[15px] mt-2 md:mt-0 mb-3">
                     Requesting more detail for - {companyName}
                 </div>
                 <div className="h-full md:px-1 md:pt-1 max-md:mx-[15px] mt-2 md:mt-0">
