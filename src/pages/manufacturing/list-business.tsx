@@ -19,16 +19,24 @@ export default function ListBusinessPage({ packageList }: Props) {
 
     if (!isReady) return <Loading />;
 
-    const packageName = query.package as string;
-    const tenure = query.tenure as string;
+    const packageName = typeof query.package === "string" ? query.package : "";
+    const tenure = typeof query.tenure === "string" ? query.tenure : "";
 
 
     if (!packageName || !tenure) {
         router.push('/pricing');
     }
 
-    const selectedPackage = packageList.find(pkg => slugify(pkg?.packageName) === slugify(packageName));
-    const selectedTenure = tenureItems.find(t => slugify(t?.label) === slugify(tenure));
+    const selectedPackage = packageList?.find(pkg =>
+        typeof pkg?.packageName === "string" &&
+        slugify(pkg.packageName) === slugify(packageName)
+    );
+
+    const selectedTenure = tenureItems?.find(t =>
+        typeof t?.label === "string" &&
+        slugify(t.label) === slugify(tenure)
+    );
+
 
     if (!selectedPackage || !selectedTenure) {
         router.push('/pricing');

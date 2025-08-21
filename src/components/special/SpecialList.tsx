@@ -63,6 +63,25 @@ export default function ProductList({
 
     const categories = categoryRes?.getMstCategoryByParentId?.result ?? [];
 
+    const getSelectedCategoryNames = (
+        selected: number[] | number | undefined,
+        allCategories: Category[]
+    ): string[] => {
+        if (selected === undefined) return [];
+
+        const selectedIds = Array.isArray(selected) ? selected : [selected];
+
+        return allCategories
+            .filter((cat) => selectedIds.includes(cat.categoryId))
+            .map((cat) => cat.categoryName);
+    };
+
+    const selectedCategoryNames = getSelectedCategoryNames(filters.category, categories);
+
+    const categoryLabel: string = selectedCategoryNames.length > 0
+        ? `${selectedCategoryNames.join(", ")} Special Products`
+        : "Special Products";
+
     const buildVariables = (state: FilterState): SearchProductRequest => ({
         domainCategoryIds: state.category?.join(",") || String(ENV.CATEGORY_ID),
         salesTypeId: null,
@@ -213,7 +232,7 @@ export default function ProductList({
                         currentPage={pagination.currentPage}
                         pageSize={DEFAULT_PAGE_SIZE}
                         totalCount={pagination.count}
-                        label="Special Products"
+                        label={categoryLabel}
                     />
                 )}
 
