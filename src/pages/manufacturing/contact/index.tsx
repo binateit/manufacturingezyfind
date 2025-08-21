@@ -32,7 +32,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-1' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/register.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/register.png'} width={60} height={60} alt='Request icon for step 1' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Reqest</p>
                                 <p>Send us a picture of the items you are seeking with volumes and timelines.</p>
                             </Card>
@@ -41,7 +41,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-2' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/enquire.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/enquire.png'} width={60} height={60} alt='Location selection icon for step 2' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Location</p>
                                 <p>Select the correct category and add the location you seeking this item from. </p>
                             </Card>
@@ -50,7 +50,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-3' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/advice.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/advice.png'} width={60} height={60} alt='Offers and quotes icon for step 3' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Offers</p>
                                 <p>Manufacturing providers will come to you with quotes and timeslines regarding your volumes. </p>
                             </Card>
@@ -59,7 +59,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-4' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/confirm.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/confirm.png'} width={60} height={60} alt='Selection confirmation icon for step 4' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Pick</p>
                                 <p>Select the best quote & get the item you are seeking.</p>
                             </Card>

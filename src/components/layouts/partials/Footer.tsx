@@ -26,9 +26,9 @@ export default function Footer() {
                 <div className="basis-1/1 sm:basis-1/2">
                   <h3 className="text-lg font-semibold text-[#323232] mb-2">Get In Touch</h3>
                   <ul className="">
-                    <li><Link href="/manufacturing/contact" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/support247.webp'} height={35} width={35} alt="support" /> 24/7 Support online chat</Link></li>
-                    <li><Link href="tel:011 056 9123" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/call.webp'} width={35} height={35} alt="call" />011 056 9123</Link></li>
-                    <li><Link href="mailto:info@ezyfind.co.za" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/mail.webp'} width={35} height={35} alt="mail" />info@ezyfind.co.za</Link></li>
+                    <li><Link href="/manufacturing/contact" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/support247.webp'} height={35} width={35} alt="24/7 customer support icon" /> 24/7 Support online chat</Link></li>
+                    <li><Link href="tel:011 056 9123" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/call.webp'} width={35} height={35} alt="Phone call icon" />011 056 9123</Link></li>
+                    <li><Link href="mailto:info@ezyfind.co.za" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><Image src={'/images/mail.webp'} width={35} height={35} alt="Email contact icon" />info@ezyfind.co.za</Link></li>
                   </ul>
                 </div>
                 <div className="basis-1/1 sm:basis-1/2">

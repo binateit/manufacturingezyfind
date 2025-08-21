@@ -206,7 +206,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                     )}
                                 />
                             ) : images.length === 1 ? (
-                                <Image priority fetchPriority="high" src={images[0].itemImageSrc} height={466} width={495} className="w-full" alt="Product" />
+                                <Image priority fetchPriority="high" src={images[0].itemImageSrc} height={466} width={495} className="w-full" alt={`${product?.productName || 'Product'} image`} />
                             ) : (
                                 <Image priority fetchPriority="high" src="/images/no-image.webp" height={466} width={495} className="w-full" alt="No Image" />
                             )}
@@ -326,7 +326,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         </div>
                         <div className="bg-white card-shadow border border-gray-300 p-5 mt-2">
                             <div className="flex flex-wrap xl:flex-nowrap justify-center xl:justify-normal gap-x-8 items-center">
-                                <Image src="/images/company.png" height={47} width={49} alt="Company" />
+                                <Image src="/images/company.png" height={47} width={49} alt="Company verification badge" />
                                 <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/star-icon.webp')] before:-left-5 before:top-0">97.50%</p>
                                 <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/veryfied-icon.webp')] before:-left-5 before:top-0">
                                     Verified By : <span className="uppercase font-semibold">EzyFind</span>
@@ -360,7 +360,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         <div className="flex justify-between mt-5">
                             <p className="relative ml-5 pl-3 before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/shipping-icon.webp')] before:-left-5 before:top-0 font-semibold">Shipping</p>
                             <p className="flex justify-center items-center gap-2">Powered By :
-                                <Image src="/images/powered-image.webp" height={23} width={73} alt="Powered By" />
+                                <Image src="/images/powered-image.webp" height={23} width={73} alt="EzyFind shipping service logo" />
                             </p>
                         </div>
 

@@ -106,7 +106,7 @@ export default function MagazineDetail({ magazine }: MagazineDetailProps) {
                     </div>
                     <div className="bg-white card-shadow border border-gray-300 p-5 mt-2">
                         <div className="flex flex-wrap xl:flex-nowrap justify-center xl:justify-normal gap-x-8 items-center">
-                            <Image src="/images/company.png" height={47} width={49} alt="Company" />
+                            <Image src="/images/company.png" height={47} width={49} alt="Company verification badge" />
                             <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/star-icon.webp')] before:-left-5 before:top-0">97.50%</p>
                             <p className="relative before:absolute before:h-[20px] before:w-[20px] before:content-[url('/images/veryfied-icon.webp')] before:-left-5 before:top-0">
                                 Verified By : <span className="uppercase font-semibold">EzyFind</span>
