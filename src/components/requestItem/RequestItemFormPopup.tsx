@@ -5,13 +5,33 @@ import RequestItemForm from "@/components/requestItem/RequestItemForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-export default function RequestItemFormPopup() {
+interface RequestItemFormProps {
+  onClose?: () => void;
+  itemData?: {
+    title?: string;
+    description?: string | null;
+    category?: string;
+  };
+  forceOpen?: boolean;
+}
+
+export default function RequestItemFormPopup({
+  onClose,
+  itemData,
+  forceOpen = false,
+}: RequestItemFormProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setOpen(true), 6000);
+    if (forceOpen) {
+      setOpen(true); 
+      return;
+    }
+
+    const timer = setTimeout(() => setOpen(true), 6000); 
     return () => clearTimeout(timer);
-  }, []);
+  }, [forceOpen]);
+
 
   if (!open) return null;
 
@@ -21,7 +41,10 @@ export default function RequestItemFormPopup() {
         <button
           type="button"
           aria-label="Close"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            onClose?.();
+          }}
           className="absolute z-[1300] top-2 right-2 p-1 bg-white text-red-600 shadow transition-all focus:outline-none focus:ring-2 focus:ring-red-400"
         >
           <FontAwesomeIcon icon={faTimes} className="text-base" />
@@ -32,7 +55,7 @@ export default function RequestItemFormPopup() {
         </div>
 
         <div className="p-4 md:p-6 overflow-y-auto flex-1 request-item-form-modal">
-          <RequestItemForm formClassName="h-full border border-gray-300" />
+          <RequestItemForm itemData={itemData} formClassName="h-full border border-gray-300" />
         </div>
 
         <style jsx>{`
@@ -47,6 +70,6 @@ export default function RequestItemFormPopup() {
           }
         `}</style>
       </div>
-    </div>
+    </div >
   );
 }

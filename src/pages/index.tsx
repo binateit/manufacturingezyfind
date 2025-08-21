@@ -14,6 +14,7 @@ import { SubscriptionPlan } from "@/components/pricing/SubscriptionPlan";
 import Head from "next/head";
 import { ENV } from "@/core/config/env";
 import DownloadApp from "@/components/shared/DownloadApp";
+import GetItemCarousel from "@/components/home/GetItemCarousel";
 
 export default function HomePage() {
 
@@ -52,6 +53,9 @@ export default function HomePage() {
         <div className="basis-12/12 md:basis-6/12 lg:order-3 xl:basis-4/16 xl:order-3 mt-2 md:mt-0 md:px-1 md:pt-1 max-md:mb-5 overflow-hidden max-md:mx-[15px]">
           <MoreLinks />
         </div>
+      </div>
+      <div className="mb-4 mt-4">
+        <GetItemCarousel />
       </div>
 
       <div className="bg-gray-50 py-15">

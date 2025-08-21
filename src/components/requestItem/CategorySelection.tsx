@@ -18,6 +18,7 @@ interface CategorySelectionProps {
     handlePrev: () => void;
     initialValues: ItemCategoryFormData;
     formClassName?: string;
+    categoryName?: string;
 }
 
 export default function CategorySelection({
@@ -25,6 +26,7 @@ export default function CategorySelection({
     handleNext,
     handlePrev,
     initialValues,
+    categoryName,
     formClassName = "h-[415px] xl:h-full border border-gray-300",
 }: CategorySelectionProps) {
 
@@ -32,12 +34,21 @@ export default function CategorySelection({
         variables: { id: Number(ENV.CATEGORY_ID), size: 1000 },
     });
 
+    
     const categoryOptions: SelectOptionNumber[] = useMemo(() => (
         categoryData?.getMstCategoryByParentId?.result?.map((cat: Category) => ({
             value: Number(cat.categoryId),
             label: cat.categoryName,
         })) || []
     ), [categoryData]);
+
+    const resolvedCategoryId = useMemo(() => {
+        if (!categoryName || !categoryOptions.length) return undefined;
+        const match = categoryOptions.find(
+            (option) => option.label.trim().toLowerCase() === categoryName.trim().toLowerCase()
+        );
+        return match?.value;
+    }, [categoryName, categoryOptions]);
 
     const formik = useFormik({
         initialValues,
@@ -85,7 +96,7 @@ export default function CategorySelection({
                             id="categoryId"
                             loading={loading}
                             name="categoryId"
-                            value={formik.values.categoryId}
+                            value={formik.values.categoryId ?? resolvedCategoryId}
                             options={categoryOptions}
                             optionLabel="label"
                             placeholder="Select Category"

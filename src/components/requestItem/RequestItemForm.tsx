@@ -13,16 +13,31 @@ import { toast } from "react-toastify";
 
 interface RequestItemFormProps {
   formClassName?: string;
+  itemData?: {
+    title?: string;
+    description?: string | null;
+    category?: string;
+  };
 }
 
-const initialFormState: RequestItemFormData = {};
-
-export default function RequestItemForm({ formClassName }: RequestItemFormProps) {
+export default function RequestItemForm({ formClassName , itemData }: RequestItemFormProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<RequestItemFormData>(initialFormState);
+  const [formData, setFormData] = useState<RequestItemFormData>({
+    item: itemData?.title || "",
+    description: itemData?.description || "",
+    categoryId: undefined,
+    provinceId: undefined,
+    cityId: undefined,
+    suburbId: undefined,
+    upload: [],
+    name: "",
+    password: "",
+    email: "",
+    mobile: "",
+  });
 
   const resetForm = () => {
-    setFormData(initialFormState);
+    setFormData(formData);
     setCurrentStep(1);
   };
 
@@ -47,7 +62,7 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
   //     });
   // };
 
-  const postRequest = async (data: RequestItemFormData) => {
+  const postRequest = async () => {
     // const files = data.upload
     //   ? await Promise.all(
     //     data.upload.map(async (file) => {
@@ -63,12 +78,12 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
 
     try {
       const result = await authService.postItemRequest({
-        itemRequestTitle: data.item,
-        itemRequestDescription: data.description,
-        categoryId: data.categoryId,
-        suburbId: data.suburbId,
-        provinceId: data.provinceId,
-        cityId: data.cityId,
+        itemRequestTitle: formData.item,
+        itemRequestDescription: formData.description,
+        categoryId: formData.categoryId,
+        suburbId: formData.suburbId,
+        provinceId: formData.provinceId,
+        cityId: formData.cityId,
       });
       if (result?.success) {
         setCurrentStep(1)
@@ -81,9 +96,9 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
     }
   };
 
-  const handleRegisterComplete = async (result: boolean, finalData: RequestItemFormData) => {
+  const handleRegisterComplete = async (result: boolean) => {
     if (result) {
-      const success = await postRequest(finalData);
+      const success = await postRequest();
       if (success) setCurrentStep(6);
     }
   };
@@ -96,8 +111,8 @@ export default function RequestItemForm({ formClassName }: RequestItemFormProps)
       handleNext={handleNext}
       formClassName={formClassName}
       initialValues={{
-        item: formData.item || "",
-        description: formData.description || "",
+        item: formData.item || itemData?.title || "" ,
+        description: formData.description || itemData?.description || "",
       }}
     />,
     <CategorySelection
