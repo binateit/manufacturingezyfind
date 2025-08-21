@@ -163,6 +163,7 @@ export default function RequestItemForm({ formClassName , itemData }: RequestIte
       <Button
         onClick={resetForm}
         className="!bg-[var(--primary-color)] border border-[var(--primary-color)] text-sm text-white hover:!bg-white hover:!text-[var(--primary-color)]"
+        aria-label="Submit another request"
       >
         Submit Another Request
       </Button>

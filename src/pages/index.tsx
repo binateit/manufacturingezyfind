@@ -94,7 +94,7 @@ export default function HomePage() {
               </div>
               <div className="basis-4/12 text-right max-lg:basis-12/12 max-lg:order-1 max-lg:text-center">
                 <div className="relative p-1 inline-block after:absolute after:bg-[var(--primary-color)] after:w-1/2 after:h-full after:right-0 after:top-0 after:rotate-60 after:animate-[wiggle_2s_ease-in-out_infinite] overflow-hidden">
-                  <Image src={'/images/purchase-manufacturing-products-or-services-online.webp'} width={500} height={915} alt="" className="w-sm h-full m-auto relative z-1 bg-gray-50" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
+                  <Image src={'/images/purchase-manufacturing-products-or-services-online.webp'} width={500} height={915} alt="Manufacturing e-commerce platform illustration" className="w-sm h-full m-auto relative z-1 bg-gray-50" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function HomePage() {
             <div className="flex flex-row max-lg:flex-col justify-center">
               <div className="basis-4/12 max-lg:basis-12/12 max-lg:text-center">
                 <div className="relative p-1 inline-block after:absolute after:bg-[var(--primary-color)] after:w-1/2 after:h-full after:right-0 after:top-0 after:rotate-60 overflow-hidden after:animate-[wiggle_2s_ease-in-out_infinite] ">
-                  <Image src={'/images/hire-manufacturing.webp'} width={500} height={915} alt="" className="w-sm h-full m-auto relative z-1 bg-white" />
+                  <Image src={'/images/hire-manufacturing.webp'} width={500} height={915} alt="Hire manufacturing items online illustration" className="w-sm h-full m-auto relative z-1 bg-white" />
                 </div>
               </div>
               <div className="basis-8/12 max-lg:basis-12/12 mt-10 xl:pt-20">
@@ -195,7 +195,7 @@ export default function HomePage() {
 
                   <div className="basis-4/12 max-lg:basis-12/12 max-lg:order-1 text-right max-lg:text-center">
                     <div className="relative p-1 inline-block after:absolute after:bg-[var(--primary-color)] after:w-1/2 after:h-full after:right-0 after:top-0 after:rotate-60 overflow-hidden after:animate-[wiggle_2s_ease-in-out_infinite]">
-                      <Image src={'/images/bid.webp'} width={500} height={915} alt="" className="w-sm h-full m-auto relative z-1 bg-gray-50" />
+                      <Image src={'/images/bid.webp'} width={500} height={915} alt="Online bidding platform illustration" className="w-sm h-full m-auto relative z-1 bg-gray-50" />
                     </div>
                   </div>
                 </div>

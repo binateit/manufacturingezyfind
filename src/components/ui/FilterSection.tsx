@@ -62,6 +62,7 @@ export function FilterSection<T>({
                 name={title} // important for grouping radios
                 checked={selected.includes(value)}
                 onChange={() => handleChange(value)}
+                aria-label={`${mode === "single" ? "Select" : "Toggle"} ${label} for ${title} filter`}
               />
               <p className="text-md">{label}</p>
             </label>

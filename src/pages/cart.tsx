@@ -142,11 +142,11 @@ export default function CartPage() {
                 <div className="lg:flex my-10 md:my-15 gap-5">
                     <div className="w-full mb-10 lg:basis-9/12 card-shadow">
                         <div className="py-4 px-4 bg-[#252F39] text-white flex justify-between items-center">
-                            <Link href="#" className="btn bg-white text-[var(--primary-color)] border border-[var(--primary-color)] transition-all hover:bg-[var(--primary-color)] hover:text-white">
+                            <Link href="#" className="btn bg-white text-[var(--primary-color)] border border-[var(--primary-color)] transition-all hover:bg-[var(--primary-color)] hover:text-white" aria-label="Continue shopping">
                                 Continue Shopping
                             </Link>
                             <p className="text-white">You have {cartItems.length} items in your cart</p>
-                            <button className="btn bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)]" onClick={handleEmptyCart}>
+                            <button className="btn bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)]" onClick={handleEmptyCart} aria-label="Empty cart">
                                 Empty Cart
                             </button>
                         </div>
@@ -183,6 +183,7 @@ export default function CartPage() {
                                                     onChange={(e) => changeStartDate(item, e.target.value)}
                                                     className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
                                                     placeholder="Start Date"
+                                                    aria-label="Start date for rental"
                                                 />
                                                 <input
                                                     type="date"
@@ -190,6 +191,7 @@ export default function CartPage() {
                                                     onChange={(e) => changeEndDate(item, e.target.value)}
                                                     className="form-control border border-gray-300 text-sm w-full h-[35px] px-1 text-center"
                                                     placeholder="End Date"
+                                                    aria-label="End date for rental"
                                                 />
                                             </div>
                                         </>
@@ -198,15 +200,16 @@ export default function CartPage() {
                                         <div className="flex gap-4">
                                             <div className="quntity-input-box relative">
                                                 <input readOnly type="number" value={item.quantity ?? 0}
-                                                    className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
-                                                <button onClick={() => decrement(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60">
+                                                    className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" 
+                                                    aria-label={`Quantity: ${item.quantity ?? 0}`} />
+                                                <button onClick={() => decrement(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60" aria-label="Decrease quantity">
                                                     {loadingStates[item.recordID ?? 0] ? "..." : <FontAwesomeIcon icon={faMinus} />}
                                                 </button>
-                                                <button onClick={() => increment(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60">
+                                                <button onClick={() => increment(item)} disabled={loadingStates[item.recordID ?? 0]} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white cursor-pointer disabled:opacity-60" aria-label="Increase quantity">
                                                     {loadingStates[item.recordID ?? 0] ? "..." : <FontAwesomeIcon icon={faPlus} />}
                                                 </button>
                                             </div>
-                                            <button onClick={() => removeItem(item)} className="flex justify-center items-center px-4 bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer disabled:opacity-60" disabled={loadingStates[item.recordID ?? 0]}>
+                                            <button onClick={() => removeItem(item)} className="flex justify-center items-center px-4 bg-[var(--primary-color)] text-sm text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer disabled:opacity-60" disabled={loadingStates[item.recordID ?? 0]} aria-label={`Remove ${item.productName} from cart`}>
                                                 {loadingStates[item.recordID ?? 0] ? "Removing..." : "Remove"}
                                             </button>
                                         </div>
@@ -249,7 +252,7 @@ export default function CartPage() {
                                 <p className='font-semibold'>{formatCurrency(totalAmount)}</p>
                             </div>
                             <div className="flex justify-center mt-20">
-                                <Button className="px-4 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer" onClick={payNow}>
+                                <Button className="px-4 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] transition-all hover:bg-white hover:text-[var(--primary-color)] cursor-pointer" onClick={payNow} aria-label="Proceed to checkout">
                                     Proceed to Checkout
                                 </Button>
                             </div>

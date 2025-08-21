@@ -6,14 +6,16 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  'aria-label'?: string;
 }
 
-export default function Button({ children, onClick, className, disabled = false, type = 'button' }: ButtonProps) {
+export default function Button({ children, onClick, className, disabled = false, type = 'button', 'aria-label': ariaLabel }: ButtonProps) {
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
       className={`px-4 py-2 transition duration-300 ease-in-out ${disabled ? 'opacity-60 cursor-not-allowed' : 'hover:cursor-pointer'} ${className}`}
     >
       {children}

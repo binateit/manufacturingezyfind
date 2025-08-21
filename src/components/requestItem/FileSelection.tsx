@@ -132,6 +132,7 @@ export default function FileSelection({
               accept="image/*,application/pdf"
               onChange={handleUpload}
               className="hidden"
+              aria-label="Upload files for your request"
             />
             <p className="text-sm mt-2">
               <span className="text-primary">Note:</span> File size cannot be more than 20MB. Max {MAX_FILE_COUNT} files.
@@ -176,6 +177,7 @@ export default function FileSelection({
                       type="button"
                       onClick={() => handleDelete(idx)}
                       className="absolute top-0 right-0 p-[2px] text-gray-800 hover:text-red-600"
+                      aria-label={`Remove file ${file.name}`}
                     >
                       <FontAwesomeIcon icon={faClose} className="text-[12px]" />
                     </button>
@@ -190,12 +192,14 @@ export default function FileSelection({
           <Button
             onClick={handlePrev}
             className="bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]"
+            aria-label="Go to previous step"
           >
             Previous
           </Button>
           <Button
             onClick={handleNextStep}
             className="bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
+            aria-label="Proceed to next step"
           >
             Next
           </Button>

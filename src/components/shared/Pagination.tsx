@@ -17,6 +17,8 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => 
                             ? "bg-primary text-white font-bold"
                             : "hover:bg-gray-200 hover:text-primary"
                         }`}
+                    aria-label={currentPage === i + 1 ? `Current page ${i + 1}` : `Go to page ${i + 1}`}
+                    aria-current={currentPage === i + 1 ? "page" : undefined}
                 >
                     {i + 1}
                 </button>

@@ -32,7 +32,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-1' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/register.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/register.png'} width={60} height={60} alt='Request icon for step 1' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Reqest</p>
                                 <p>Send us a picture of the items you are seeking with volumes and timelines.</p>
                             </Card>
@@ -41,7 +41,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-2' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/enquire.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/enquire.png'} width={60} height={60} alt='Location selection icon for step 2' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Location</p>
                                 <p>Select the correct category and add the location you seeking this item from. </p>
                             </Card>
@@ -50,7 +50,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-3' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/advice.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/advice.png'} width={60} height={60} alt='Offers and quotes icon for step 3' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Offers</p>
                                 <p>Manufacturing providers will come to you with quotes and timeslines regarding your volumes. </p>
                             </Card>
@@ -59,7 +59,7 @@ export default function ContactPage() {
                     <div className='md:basis-6/12 lg:basis-3/12 mb-5 lg:mb-0'>
                         <div className='p-4 h-full'>
                             <Card title='Step-4' className='text-center h-full' titleClassName='text-lg lg:text-lg xl:text-xl'>
-                                <Image src={'/images/confirm.png'} width={60} height={60} alt='register' className='mx-auto' />
+                                <Image src={'/images/confirm.png'} width={60} height={60} alt='Selection confirmation icon for step 4' className='mx-auto' />
                                 <p className='uppercase text-lg font-semibold my-3'>Pick</p>
                                 <p>Select the best quote & get the item you are seeking.</p>
                             </Card>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                                 <div className='mb-5'>
                                     <label className='mb-2 block'>Name</label>
                                     <div className='relative'>
-                                        <input type='text' name='text' placeholder='Enter name' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' />
+                                        <input type='text' name='text' placeholder='Enter name' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' aria-label='Enter your full name' />
                                         <FontAwesomeIcon icon={faUser} className=' absolute top-[50%] translate-y-[-50%] right-4 text-gray-500' />
 
                                     </div>
@@ -138,8 +138,8 @@ export default function ContactPage() {
                                         <label className='mb-2 block'>Phone</label>
                                         <div className='relative'>
                                             <div className='flex'>
-                                                <input type='text' name='code' placeholder='21' value={'+21'} disabled className='form-control border border-gray-300 border-r-0 text-sm xl:text-[14px] 2xl:text-md h-10 px-3 w-[50px]' />
-                                                <input type='text' name='mobile-number' placeholder='Enter mobile number' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3' />
+                                                <input type='text' name='code' placeholder='21' value={'+21'} disabled className='form-control border border-gray-300 border-r-0 text-sm xl:text-[14px] 2xl:text-md h-10 px-3 w-[50px]' aria-label='Country code' />
+                                                <input type='text' name='mobile-number' placeholder='Enter mobile number' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3' aria-label='Enter your mobile number' />
                                             </div>
                                             <FontAwesomeIcon icon={faMobile} className=' absolute top-[50%] translate-y-[-50%] right-4 text-gray-500' />
                                         </div>
@@ -147,7 +147,7 @@ export default function ContactPage() {
                                     <div className='mb-4 w-full'>
                                         <label className='mb-2 block'>Email</label>
                                         <div className='relative'>
-                                            <input type='email' name='email' placeholder='Enter email Id' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' />
+                                            <input type='email' name='email' placeholder='Enter email Id' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' aria-label='Enter your email address' />
                                             <FontAwesomeIcon icon={faEnvelope} className=' absolute top-[50%] translate-y-[-50%] right-4 text-gray-500' />
                                         </div>
                                     </div>
@@ -155,18 +155,18 @@ export default function ContactPage() {
                                 <div className='mb-5'>
                                     <label className='mb-2 block'>Subject</label>
                                     <div className='relative'>
-                                        <input type='text' name='text' placeholder='Subject' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' />
+                                        <input type='text' name='text' placeholder='Subject' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 ' aria-label='Enter message subject' />
                                         <FontAwesomeIcon icon={faStickyNote} className=' absolute top-[50%] translate-y-[-50%] right-4 text-gray-500' />
                                     </div>
                                 </div>
                                 <div className='mb-5'>
                                     <label className='mb-2 block'>Message</label>
-                                    <textarea placeholder='Your messages' rows={5} className='form-control py-3 border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full px-3 '>
+                                    <textarea placeholder='Your messages' rows={5} className='form-control py-3 border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full px-3 ' aria-label='Enter your message'>
 
                                     </textarea>
                                 </div>
                                 <div className='text-right'>
-                                    <Button className='bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10'>Submit</Button>
+                                    <Button className='bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10' aria-label='Submit contact form'>Submit</Button>
                                 </div>
                             </form>
                         </Card>

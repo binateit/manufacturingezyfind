@@ -464,6 +464,7 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select province for business registration"
                                 />
                                 {formik.touched.provinceId && formik.errors.provinceId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceId}</div>
@@ -491,6 +492,7 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select city for business registration"
                                 />
                                 {formik.touched.cityId && formik.errors.cityId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.cityId}</div>
@@ -517,6 +519,7 @@ export default function BusinessRegister({ selectedPackage, selectedTenure }: Bu
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select suburb for business registration"
                                 />
                                 {formik.touched.suburbId && formik.errors.suburbId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbId}</div>

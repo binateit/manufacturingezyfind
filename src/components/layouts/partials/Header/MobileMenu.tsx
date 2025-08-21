@@ -12,7 +12,9 @@ const MobileMenu = () => {
         <div className='bg-white/30 backdrop-blur-sm fixed w-full h-full z-10 top-0 left-0'>
             <div className='mobile-menu fixed top-0 leading-0 h-full max-w-[400px] w-full shadow-xl z-100 bg-white'>
                 <div className='close-menu absolute top-3 right-3'>
-                    <FontAwesomeIcon icon={faTimesCircle} className='text-gray-500 text-xl' onClick={toggleMobileMenu} />
+                    <button aria-label="Close mobile menu" onClick={toggleMobileMenu} className="bg-transparent border-none p-0">
+                        <FontAwesomeIcon icon={faTimesCircle} className='text-gray-500 text-xl' />
+                    </button>
                 </div>
                 <Menu isMobileMenu={true} />
             </div>

@@ -109,6 +109,7 @@ export default function LoginForm({ onSuccess, title = "Log in", dense = false }
           <label className='mb-2 block'>Email</label>
           <div className='relative'>
             <input {...formik.getFieldProps('email')} type='email' placeholder='Enter Email'
+              aria-label='Email address'
               className={clsx('form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                 formik.touched.email && formik.errors.email ? 'border border-red-500' : 'border border-gray-300')}
             />
@@ -126,6 +127,7 @@ export default function LoginForm({ onSuccess, title = "Log in", dense = false }
           <label className='mb-2 block'>Password</label>
           <div className='relative'>
             <input {...formik.getFieldProps('password')} type='password' placeholder='Enter Password'
+              aria-label='Password'
               className={clsx('form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                 formik.touched.password && formik.errors.password ? 'border border-red-500' : 'border border-gray-300')}
             />
@@ -141,6 +143,7 @@ export default function LoginForm({ onSuccess, title = "Log in", dense = false }
 
         <div className='text-center mt-6'>
           <button type="submit" className="py-2 bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10"
+            aria-label="Submit login form"
             disabled={formik.isSubmitting || !formik.isValid}>
             {formik.isSubmitting ? 'Logging in...' : 'Log in'}
           </button>

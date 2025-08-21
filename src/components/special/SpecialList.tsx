@@ -180,10 +180,12 @@ export default function ProductList({
                                         placeholder="Enter Product name"
                                         defaultValue={filters.searchText}
                                         className="form-control border border-gray-300 text-sm w-full h-10 px-5"
+                                        aria-label="Search special products by name"
                                     />
                                     <button
                                         type="submit"
                                         className="absolute top-[50%] translate-y-[-50%] right-0 h-10 px-4 bg-primary text-white"
+                                        aria-label="Search special products"
                                     >
                                         Search
                                     </button>

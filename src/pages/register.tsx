@@ -196,6 +196,7 @@ const RegisterPage = () => {
                                     {...formik.getFieldProps('firstName')}
                                     type='text'
                                     placeholder='Enter First Name'
+                                    aria-label='First name'
                                     className={clsx(
                                         'form-control text-sm w-full h-10 px-3 pr-10 xl:text-[14px] 2xl:text-md',
                                         formik.touched.firstName && formik.errors.firstName
@@ -224,6 +225,7 @@ const RegisterPage = () => {
                                     {...formik.getFieldProps('lastName')}
                                     type='text'
                                     placeholder='Enter Last Name'
+                                    aria-label='Last name'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                                         formik.touched.lastName && formik.errors.lastName
@@ -252,6 +254,7 @@ const RegisterPage = () => {
                                     {...formik.getFieldProps('email')}
                                     type='email'
                                     placeholder='Enter Email'
+                                    aria-label='Email address'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                                         formik.touched.email && formik.errors.email
@@ -279,6 +282,7 @@ const RegisterPage = () => {
                                     {...formik.getFieldProps('password')}
                                     type='password'
                                     placeholder='Enter Password'
+                                    aria-label='Password'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                                         formik.touched.password && formik.errors.password
@@ -306,6 +310,7 @@ const RegisterPage = () => {
                                     {...formik.getFieldProps('confirmPassword')}
                                     type='password'
                                     placeholder='Confirm Password'
+                                    aria-label='Confirm password'
                                     className={clsx(
                                         'form-control w-full h-10 px-3 pr-10 text-sm xl:text-[14px] 2xl:text-md',
                                         formik.touched.confirmPassword && formik.errors.confirmPassword
@@ -350,6 +355,7 @@ const RegisterPage = () => {
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select province for individual registration"
                                 />
                                 {formik.touched.provinceId && formik.errors.provinceId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.provinceId}</div>
@@ -377,6 +383,7 @@ const RegisterPage = () => {
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select city for individual registration"
                                 />
                                 {formik.touched.cityId && formik.errors.cityId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.cityId}</div>
@@ -403,6 +410,7 @@ const RegisterPage = () => {
                                             : 'border border-gray-300'
                                     )}
                                     filter
+                                    aria-label="Select suburb for individual registration"
                                 />
                                 {formik.touched.suburbId && formik.errors.suburbId && (
                                     <div className='mt-1 text-sm text-red-600'>{formik.errors.suburbId}</div>
@@ -453,6 +461,7 @@ const RegisterPage = () => {
                                 id='agreeTerms'
                                 checked={formik.values.agreeTerms}
                                 onChange={formik.handleChange}
+                                aria-label='Agree to terms and conditions'
                                 className='mt-1'
                             />
                             <label htmlFor='agreeTerms' className='text-sm'>
@@ -467,6 +476,7 @@ const RegisterPage = () => {
                         <div className='text-center mt-10'>
                             <button
                                 type="submit"
+                                aria-label="Submit registration form"
                                 className="py-2 hover:cursor-pointer duration-300 ease-in-out bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10"
                             >
                                 {!formik.isSubmitting ? 'Register ' : 'Please wait...'}

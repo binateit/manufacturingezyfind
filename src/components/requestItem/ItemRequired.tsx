@@ -75,6 +75,7 @@ export const ItemRequired: FC<ItemRequiredProps> = ({
                             onChange={formik.handleChange}
                             className={`${inputClass} h-8`}
                             placeholder="Item Required"
+                            aria-label="Item required for request"
                         />
                         {showError("item") && (
                             <p className="text-sm text-red-600 mt-1">{formik.errors.item}</p>
@@ -94,6 +95,7 @@ export const ItemRequired: FC<ItemRequiredProps> = ({
                             className={`${inputClass} py-3`}
                             rows={3}
                             placeholder="Description"
+                            aria-label="Description of the item required"
                         />
                         {showError("description") && (
                             <p className="text-sm text-red-600 mt-1">
@@ -107,6 +109,7 @@ export const ItemRequired: FC<ItemRequiredProps> = ({
                     <Button
                         onClick={handleNextStep}
                         className="bg-[var(--primary-color)] border border-[var(--primary-color)] text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
+                        aria-label="Proceed to next step"
                     >
                         Next
                     </Button>
