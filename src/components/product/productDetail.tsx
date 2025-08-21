@@ -342,6 +342,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                         open={!!selectedProduct}
                                         setOpen={() => setSelectedProduct(null)}
                                         companyId={product.companyID}
+                                        companyName={product.productName}
                                         title="Ask the Seller"
                                         formClassName="h-full border border-gray-300"
                                     />

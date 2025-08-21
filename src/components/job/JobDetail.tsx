@@ -1,12 +1,20 @@
 import Link from "next/link";
 import { PostDetail } from "@/core/models/posts/postDetail";
 import { formatDate } from "@/lib/format";
+import Button from "../ui/Button";
+import { useState } from "react";
+import JobFormPopUp from "./JobFormPopUp";
 
 interface JobDetailProps {
     job: PostDetail;
 }
 
 export default function JobDetail({ job }: JobDetailProps) {
+    const [selectedJob, setSelectedJob] = useState<PostDetail | null>(null);
+
+    const handleApply = (job: PostDetail) => {
+        setSelectedJob(job)
+    }
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="container">
@@ -58,9 +66,19 @@ export default function JobDetail({ job }: JobDetailProps) {
                             />
                         </div>
 
-                        {/* <div className='py-3 border-t border-gray-300 text-right mt-5'>
-                            <Button className='bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10'>Apply Now</Button>
-                        </div> */}
+                        <div className='py-3 border-t border-gray-300 text-right mt-5'>
+                            <Button className='bg-[var(--primary-color)] text-white border border-[var(--primary-color)] uppercase transition-all hover:bg-white hover:text-[var(--primary-color)] px-10' onClick={() => handleApply(job)}>Apply Now</Button>
+                        </div>
+                        {selectedJob && (
+                            <JobFormPopUp
+                                open={!!selectedJob}
+                                setOpen={() => setSelectedJob(null)}
+                                postTitle={selectedJob.title || ""}
+                                postId={selectedJob.postID}
+                                title="Apply"
+                                formClassName="h-full border border-gray-300"
+                            />
+                        )}
                     </div>
                 </div>
                 <div className="lg:basis-4/12 px-5 mt-5 lg:mt-0">
