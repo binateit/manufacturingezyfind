@@ -23,7 +23,7 @@ export default function ProductImage({ productImage, alt }: ProductImageProps) {
           alt={alt}
         />
       </div>
-      <button className="bg-primary absolute right-2 bottom-2 h-[35px] w-[35px] text-white flex items-center justify-center">
+      <button aria-label="Add to Wishlist" className="bg-primary absolute right-2 bottom-2 h-[35px] w-[35px] text-white flex items-center justify-center">
         <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
       </button>
     </div>

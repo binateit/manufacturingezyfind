@@ -82,7 +82,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
       <div className="product-box px-3 py-3 bg-white w-full h-full shadow-[0px_4px_44px_0px_rgb(0,0,0,0.1)] flex flex-col">
         {/* Image */}
         <Link href={productLink}>
-        <ProductImage productImage={product.productImage} alt={product.productName ?? ''} />
+        <ProductImage productImage={product.productImage} alt={product.productName ?? 'Product'} />
 
         {/* Title */}
           <p className="text-base font-semibold mb-3 line-clamp-2 min-h-[48px] hover:text-[var(--primary-color)] transition-colors">
@@ -122,6 +122,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
         {/* Actions */}
         <div className="flex justify-between mt-auto gap-2">
           <Button
+            aria-label="Buy Now"
             onClick={buyNow}
             disabled={isWorking}
             className="bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] text-sm flex items-center gap-1"
@@ -129,6 +130,7 @@ export default function PurchaseProduct({ product }: PurchaseProductProps) {
             {product?.unitCost || product?.unitCost === 0 && product.typeID !==2 ? 'Buy Now' : 'Download Now'}
           </Button>
           <Button
+            aria-label="Add To Cart"
             onClick={addToCart}
             disabled={isWorking}
             className="bg-white text-sm border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white"

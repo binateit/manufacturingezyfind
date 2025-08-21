@@ -13,8 +13,8 @@ import { useApollo } from "@/lib/useApollo";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CookiesProvider } from 'react-cookie';
-import { GoogleTagManager } from '@next/third-parties/google'
-import { ENV } from "@/core/config/env";
+// import { GoogleTagManager } from '@next/third-parties/google'
+// import { ENV } from "@/core/config/env";
 import { Poppins } from 'next/font/google'
 
 const poppins = Poppins({
@@ -52,7 +52,7 @@ export default function App({ Component, pageProps }: AppProps) {
               <CookiesProvider>
                 <RootLayout>
                   <Component {...pageProps} />
-                  <GoogleTagManager gtmId={ENV.GOOGLE_TAG_MANAGER_KEY} />
+                  {/* <GoogleTagManager gtmId={ENV.GOOGLE_TAG_MANAGER_KEY} /> */}
                 </RootLayout>
               </CookiesProvider>
             </TailwindProvider>

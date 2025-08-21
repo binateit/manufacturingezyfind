@@ -199,16 +199,16 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                     responsiveOptions={responsiveOptions}
                                     numVisible={4}
                                     item={(item) => (
-                                        <Image src={item.itemImageSrc} height={466} width={495} className="w-full object-contain" alt={item.alt} />
+                                        <Image  src={item.itemImageSrc} height={466} width={495} className="w-full object-contain" alt={item.alt} />
                                     )}
                                     thumbnail={(item) => (
                                         <Image src={item.thumbnailImageSrc} height={466} width={495} className="w-full object-cover" alt={item.alt} />
                                     )}
                                 />
                             ) : images.length === 1 ? (
-                                <Image src={images[0].itemImageSrc} height={466} width={495} className="w-full" alt="Product" />
+                                <Image priority fetchPriority="high" src={images[0].itemImageSrc} height={466} width={495} className="w-full" alt="Product" />
                             ) : (
-                                <Image src="/images/no-image.webp" height={466} width={495} className="w-full" alt="No Image" />
+                                <Image priority fetchPriority="high" src="/images/no-image.webp" height={466} width={495} className="w-full" alt="No Image" />
                             )}
                         </div>
                     </div>
@@ -244,11 +244,11 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
 
                         {(product?.salesTypeId === 1 || product?.salesTypeId === 3) && (
                             <div className="quntity-input-box relative mb-3 w-[300px] mt-5">
-                                <input type="number" value={quantity} readOnly className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
-                                <button onClick={onDecreaseQuantity} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer justify-items-center">
+                                <input aria-label="Quantity" type="number" value={quantity} readOnly className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 font-semibold text-center" />
+                                <button aria-label="Decrease Quantity" onClick={onDecreaseQuantity} className="bg-secondary absolute left-0 h-[35px] w-[35px] text-center text-white cursor-pointer justify-items-center">
                                     <FontAwesomeIcon icon={faMinus} className="w-5 h-5" />
                                 </button>
-                                <button onClick={onIncreaseQuantity} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white justify-items-center cursor-pointer">
+                                <button aria-label="Increase Quantity" onClick={onIncreaseQuantity} className="bg-secondary absolute right-0 h-[35px] w-[35px] text-center text-white justify-items-center cursor-pointer">
                                     <FontAwesomeIcon icon={faPlus} className="w-5 h-5" />
                                 </button>
                             </div>
@@ -257,6 +257,8 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                             <div className="quntity-input-box relative mb-3 w-[300px] mt-5">
                                 <div className="relative mb-3">
                                     <input
+                                        aria-label="Bid Amount"
+                                        type="text"
                                         value={formatCurrency(bidAmount)}
                                         readOnly
                                         disabled
@@ -264,6 +266,7 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                                     />
                                     <button
                                         onClick={handleIncreaseBid}
+                                        aria-label="Increase Bid"
                                         className="absolute right-0 top-0 h-[35px] w-[35px] bg-secondary text-white flex justify-center items-center"
                                     >
                                         <FontAwesomeIcon icon={faGavel} />
@@ -274,8 +277,8 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         {product?.salesTypeId === 3 && (
                             <div className="quntity-input-box relative mb-3 w-[300px] mt-5">
                                 <div className="flex gap-5 mb-4">
-                                    <input type='date' value={hireFromDate} onChange={(e) => onChangeHireFromDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
-                                    <input type='date' value={hireEndDate} onChange={(e) => onChangeHireEndDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
+                                    <input aria-label="Start Date" type='date' value={hireFromDate} onChange={(e) => onChangeHireFromDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="Start Date" />
+                                    <input aria-label="End Date" type='date' value={hireEndDate} onChange={(e) => onChangeHireEndDate?.(e.target.value)} className="form-control border border-gray-300 text-sm w-full h-[35px] px-3 text-center" placeholder="End Date" />
                                     {diffDays ? (
                                         <div className="">
                                             {`Days: ${diffDays}; Total:${formatCurrency(product.unitCost * diffDays)}`}
@@ -285,19 +288,19 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                             </div>)}
                         <div className="flex gap-4 mt-5">
                             {(product?.salesTypeId === 1 || product?.salesTypeId === 3) && (
-                                <button onClick={onAddToCartClick} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
+                                <button aria-label="Add To Cart" onClick={onAddToCartClick} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
                                     <FontAwesomeIcon icon={faShoppingCart} />
                                     Add Cart
                                 </button>
                             )}
                             {product?.salesTypeId === 3 && (
-                                <button className="px-5 py-2 font-medium rounded border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition-all duration-200" onClick={hireNow}>
+                                <button aria-label="Hire Now" className="px-5 py-2 font-medium rounded border border-[var(--primary-color)] text-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white transition-all duration-200" onClick={hireNow}>
                                     Hire Now
                                 </button>
                             )}
 
                             {product?.salesTypeId === 2 && (
-                                <button onClick={() => bidNow(bidAmount)} disabled={isWorking} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
+                                <button aria-label="Bid Now" onClick={() => bidNow(bidAmount)} disabled={isWorking} className="px-5 py-2 font-medium rounded bg-[var(--primary-color)] text-white hover:bg-white hover:text-[var(--primary-color)] border border-[var(--primary-color)] flex items-center gap-2 transition-all duration-200">
                                     <FontAwesomeIcon icon={faGavel} />
                                     {isWorking ? 'Processing...' : 'Bid Now'}
                                 </button>
@@ -306,17 +309,16 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         <div className="flex justify-between items-center mt-10">
                             <p>Ends {formatDate(product?.endDate || "")}</p>
                             <div className="flex gap-4">
-                                <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+                                <a aria-label="Add to cart" className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
                                     <span className="text-sm font-light">Add to cart</span>
                                 </a>
-                                <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
-
-                                    <button className=" h-[35px] w-[35px]text-white cursor-pointer ">
+                                <a aria-label="Add to Favourites" className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+                                    <button aria-label="Add to Favourites" className=" h-[35px] w-[35px]text-white cursor-pointer ">
                                         <FontAwesomeIcon icon={faHeart} className="w-5 h-5" />
                                     </button>
                                     <span className="text-sm font-light">Favourite</span>
                                 </a>
-                                <a className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
+                                <a aria-label="Share" className="flex items-center gap-1 hover:text-[var(--primary-color)] transition-all">
                                     <FontAwesomeIcon icon={faShare} />
                                     Share
                                 </a>
@@ -362,9 +364,9 @@ export default function ProductDetail({ product, quantity = 1, onIncreaseQuantit
                         </div>
 
                         <div className='flex gap-4 mt-5 border-b border-gray-300 pb-5'>
-                            <input type='text' name='suburb' placeholder='Suburb' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 bg-white' />
-                            <input type='text' name='postal' placeholder='Postal Code' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 bg-white' />
-                            <Button className="bg-[var(--primary-color)] text-sm hover:bg-white border !border-[var(--primary-color)] flex items-center gap-1 text-white hover:text-[var(--primary-color)] w-[200px]">Calculate</Button>
+                            <input aria-label="Suburb" type='text' name='suburb' placeholder='Suburb' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 bg-white' />
+                            <input aria-label="Postal Code" type='text' name='postal' placeholder='Postal Code' className='form-control border border-gray-300 text-sm xl:text-[14px] 2xl:text-md w-full h-10 px-3 bg-white' />
+                            <Button aria-label="Calculate" className="bg-[var(--primary-color)] text-sm hover:bg-white border !border-[var(--primary-color)] flex items-center gap-1 text-white hover:text-[var(--primary-color)] w-[200px]">Calculate</Button>
                         </div>
 
 
