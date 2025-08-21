@@ -27,8 +27,8 @@ export default function ListBusinessPage({ packageList }: Props) {
         router.push('/pricing');
     }
 
-    const selectedPackage = packageList.find(pkg => slugify(pkg.packageName) === slugify(packageName));
-    const selectedTenure = tenureItems.find(t => slugify(t.label) === slugify(tenure));
+    const selectedPackage = packageList.find(pkg => slugify(pkg?.packageName) === slugify(packageName));
+    const selectedTenure = tenureItems.find(t => slugify(t?.label) === slugify(tenure));
 
     if (!selectedPackage || !selectedTenure) {
         router.push('/pricing');

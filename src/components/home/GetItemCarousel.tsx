@@ -7,6 +7,7 @@ import Button from "../ui/Button";
 import { useState } from "react";
 import RequestItemFormPopup from "../requestItem/RequestItemFormPopup";
 import { itemServiceSetting } from "@/core/config/itemServiceSetting";
+import Loading from "../shared/Loading";
 
 const GetItemCarousel = () => {
     const { data, loading, error } = useQuery(Get_Item_Request_Service_List, {
@@ -20,7 +21,7 @@ const GetItemCarousel = () => {
         category?: string;
     } | undefined>(undefined);
 
-    if (loading) return <div>Loading carousel...</div>;
+    if (loading) return <Loading/>;
     if (error) return <div>Error loading items.</div>;
 
     const items = data?.getItemRequestServiceList?.result || [];
@@ -71,12 +72,12 @@ const GetItemCarousel = () => {
                                 <Button
                                     className="bg-[var(--primary-color)] border border-[var(--primary-color)] text-sm text-white hover:bg-white hover:text-[var(--primary-color)] px-4 py-2 transition-all mb-4"
                                     onClick={() => handleRequestClick(item)}
+                                    aria-label="Request Quote"
                                 >
                                     Request For Quote
                                 </Button>
                             </div>
                         </div>
-
                     ))}
                 </Slider>
             </div>
