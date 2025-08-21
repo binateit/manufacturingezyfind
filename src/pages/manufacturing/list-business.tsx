@@ -22,7 +22,6 @@ export default function ListBusinessPage({ packageList }: Props) {
     const packageName = typeof query.package === "string" ? query.package : "";
     const tenure = typeof query.tenure === "string" ? query.tenure : "";
 
-
     if (!packageName || !tenure) {
         router.push('/pricing');
     }
@@ -47,7 +46,10 @@ export default function ListBusinessPage({ packageList }: Props) {
         <>
             <PageBanner backgroundImage='/images/register_banner.webp' title='Register Business' />
             <div className="container">
-                <BusinessRegister selectedPackage={selectedPackage as Package} selectedTenure={selectedTenure as TenureItem} />
+                {
+                    selectedPackage && selectedTenure &&
+                    <BusinessRegister selectedPackage={selectedPackage as Package} selectedTenure={selectedTenure as TenureItem} />
+                }
             </div>
             <DownloadApp />
 
@@ -59,9 +61,9 @@ export const getStaticProps = async () => {
     const apolloClient = initializeApollo();
 
     const { data: packageData } = await apolloClient.query({
-            query: GET_PACKAGE_LIST,
-            variables: { status: true },
-        });
+        query: GET_PACKAGE_LIST,
+        variables: { status: true },
+    });
 
     return {
         props: {
