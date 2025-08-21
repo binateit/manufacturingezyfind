@@ -12,7 +12,7 @@ import { Province } from "@/core/models/locations/province";
 import { Suburb } from "@/core/models/locations/suburb";
 import { SelectOptionNumber } from "@/core/models/shared/selectOption";
 import { LocationSelectionSchema } from "@/core/validators/request-item.schema";
-import { Button } from "primereact/button";
+import Button from "../ui/Button";
 
 
 

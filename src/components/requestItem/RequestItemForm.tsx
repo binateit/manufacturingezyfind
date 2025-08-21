@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import { Button } from "primereact/button";
 import { RequestItemFormData } from "@/core/models/requestItem/request-item.model";
 import { ItemRequired } from "./ItemRequired";
 import CategorySelection from "./CategorySelection";
@@ -10,6 +9,7 @@ import FileSelection from "./FileSelection";
 import Register from "./Register";
 import { authService } from "@/core/services/authService";
 import { toast } from "react-toastify";
+import Button from "../ui/Button";
 
 interface RequestItemFormProps {
   formClassName?: string;

@@ -11,7 +11,6 @@ import { BusinessRegisterValidationSchema } from "@/core/validators/business-reg
 import { formatCurrency } from "@/lib/format";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { FormikHelpers, useFormik } from "formik";
-import { Button } from "primereact/button";
 import { useMemo, useEffect } from "react";
 import { Card } from "../ui";
 import { TenureItem } from "@/core/constants/tenure";
@@ -30,6 +29,7 @@ import { useCookies } from "react-cookie";
 import { DISCOUNTS } from "@/core/constants/discounts";
 import { tokenService } from "@/core/services/token.service";
 import Cryptr from "cryptr";
+import Button from "../ui/Button";
 
 interface BusinessRegisterProps {
     selectedPackage: Package;
