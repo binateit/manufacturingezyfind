@@ -49,7 +49,7 @@ export default function HomePage() {
         </div>
         <div className="basis-12/12 md:basis-6/12 lg:order-2 xl:basis-4/16 xl:order-1 2xl:basis-4/16 relative top-0">
           <RequestItemForm
-            formClassName="min-h-[415px]  xl:max-h-full 2xl:max-h-full overflow-hidden border border-gray-300"
+            formClassName="min-h-[506px]  xl:max-h-full 2xl:max-h-full overflow-hidden border border-gray-300"
           />
         </div>
         <div className="basis-12/12 md:basis-6/12 lg:order-3 xl:basis-3/16 xl:order-3 2xl:basis-3/16 mt-2 md:mt-0 md:px-1 md:pt-1 max-md:mb-5 overflow-hidden max-md:mx-[15px]">

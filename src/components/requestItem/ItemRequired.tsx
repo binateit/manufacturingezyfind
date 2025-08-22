@@ -17,7 +17,7 @@ export const ItemRequired: FC<ItemRequiredProps> = ({
     onUpdate,
     handleNext,
     initialValues,
-    formClassName = "h-[415px] xl:h-full border border-gray-300",
+    formClassName 
 }) => {
     const formik = useFormik({
         initialValues,
