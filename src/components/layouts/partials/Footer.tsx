@@ -1,4 +1,4 @@
-import {  faFacebookF, faGooglePlusG, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
+import {  faFacebookF, faGooglePlusG, faInstagram, faXTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,7 +36,7 @@ export default function Footer() {
                   <ul>
                     <li><Link href="https://www.facebook.com/ManufacturingEzyFind.co.za" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><FontAwesomeIcon icon={faFacebookF} className="w-[20px]" /> Facebook</Link></li>
                     <li><Link href="https://plus.google.com/111975390368301243237" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><FontAwesomeIcon icon={faGooglePlusG} className="w-[20px]" /> Google+</Link></li>
-                    <li><Link href="https://twitter.com/EzyFind" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><FontAwesomeIcon icon={faTwitter} className="w-[20px]" /> X</Link></li>
+                    <li><Link href="https://twitter.com/EzyFind" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><FontAwesomeIcon icon={faXTwitter} className="w-[20px]" /> X</Link></li>
                     <li><Link href="https://www.instagram.com/manufacturingezyfind/" className="flex items-center gap-3 text-md text-gray-700 hover:text-[var(--primary-color)] mb-2"><FontAwesomeIcon icon={faInstagram} className="w-[20px]" /> Instagram</Link></li>
                   </ul>
                 </div>

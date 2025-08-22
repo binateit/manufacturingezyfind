@@ -30,7 +30,7 @@ const VideoBanner: FC = () => {
                     <button
                         title="Play Now" aria-label="Play Now"
                         onClick={() => setPlayVideo(true)}
-                        className="absolute inset-0 z-20 flex items-center justify-center 
+                        className="absolute inset-0 flex items-center justify-center 
                         bg-black/0 hover:bg-black/40 md:group-hover:bg-black/40 
                         
                         transition-colors duration-300">
