@@ -7,7 +7,14 @@ const VideoBanner: FC = () => {
     const [playVideo, setPlayVideo] = useState<boolean>(false);
 
     return (
-        <div className="aspect-[1280/545] w-full relative group">
+        <div className="
+    relative 
+    w-full 
+    h-[415px]    
+    md:h-[415px] 
+    xl:h-[510px] 
+    group
+    ">
             {!playVideo && (
                 <>
                     <Image
@@ -17,13 +24,13 @@ const VideoBanner: FC = () => {
                         priority
                         fetchPriority="high"
                         sizes="100vw"
-                        className="object-cover"
+                        className="object-fill"
                     />
                     {/* Button only visible on hover */}
                     <button
                         title="Play Now" aria-label="Play Now"
                         onClick={() => setPlayVideo(true)}
-                        className="absolute inset-0 flex items-center justify-center 
+                        className="absolute inset-0 z-20 flex items-center justify-center 
                         bg-black/0 hover:bg-black/40 md:group-hover:bg-black/40 
                         
                         transition-colors duration-300">
@@ -44,7 +51,7 @@ const VideoBanner: FC = () => {
                     controls
                     autoPlay
                     playsInline
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                 >
                     <source src="/videos/manufacturing.mp4" type="video/mp4" />
                     Your browser does not support the video tag.

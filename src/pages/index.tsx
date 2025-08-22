@@ -43,14 +43,16 @@ export default function HomePage() {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
       </Head>
-      <div className="flex flex-col md:flex-row md:flex-wrap xl:flex-row">
-        <div className="basis-12/12 md:basis-12/12 lg:order-1 xl:basis-9/16 xl:order-2 relative overflow-hidden mt-0">
+      <div className="flex flex-col md:flex-row md:flex-wrap xl:flex-row 2xl:h-full">
+        <div className="basis-12/12 md:basis-12/12 lg:order-1 xl:basis-9/16 xl:order-2 2xl:basis-9/16 relative overflow-hidden mt-0">
           <VideoBanner />
         </div>
-        <div className="basis-12/12 md:basis-6/12 lg:order-2 xl:basis-3/16 xl:order-1 relative top-0">
-          <RequestItemForm formClassName="h-[415px] xl:h-full border border-gray-300" />
+        <div className="basis-12/12 md:basis-6/12 lg:order-2 xl:basis-4/16 xl:order-1 2xl:basis-4/16 relative top-0">
+          <RequestItemForm
+            formClassName="min-h-[415px]  xl:max-h-full 2xl:max-h-full overflow-hidden border border-gray-300"
+          />
         </div>
-        <div className="basis-12/12 md:basis-6/12 lg:order-3 xl:basis-4/16 xl:order-3 mt-2 md:mt-0 md:px-1 md:pt-1 max-md:mb-5 overflow-hidden max-md:mx-[15px]">
+        <div className="basis-12/12 md:basis-6/12 lg:order-3 xl:basis-3/16 xl:order-3 2xl:basis-3/16 mt-2 md:mt-0 md:px-1 md:pt-1 max-md:mb-5 overflow-hidden max-md:mx-[15px]">
           <MoreLinks />
         </div>
       </div>

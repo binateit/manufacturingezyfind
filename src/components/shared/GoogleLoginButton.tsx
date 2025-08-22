@@ -31,7 +31,7 @@ export default function GoogleLoginButton({
   size = "large",
   shape = "rectangular",
   text = "signin_with",
-  logoAlignment = "left",
+  logoAlignment = "center",
   width,
   useOneTap = false,
 }: GoogleLoginButtonProps) {

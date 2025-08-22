@@ -43,12 +43,14 @@ export default function Register({
     onComplete,
     displayName,
     initialValues,
-    formClassName = "h-[415px] xl:h-full border border-gray-300",
+    formClassName = "min-h-[415px] h-full xl:h-full border border-gray-300 overflow-hidden",
 }: RegisterProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [loadingProvider, setLoadingProvider] = useState<"google" | "facebook" | null>(null);
     const googleWrapperRef = useRef<HTMLDivElement | null>(null);
     const [googleWidth, setGoogleWidth] = useState<number | undefined>(undefined);
+    console.log("ds",googleWidth);
+    
     useEffect(() => {
         const element = googleWrapperRef.current;
         if (!element) return;
@@ -56,7 +58,7 @@ export default function Register({
         const compute = () => {
             const containerWidth = element.clientWidth;
             // Clamp to GIS allowed range roughly [200, 400]
-            const desired = Math.max(220, Math.min(380, containerWidth));
+            const desired = Math.max(215, Math.min(380, containerWidth));
             setGoogleWidth(Math.floor(desired));
         };
 
@@ -144,7 +146,7 @@ export default function Register({
 
     return (
         <form onSubmit={(e) => e.preventDefault()}
-            className={clsx("p-4", formClassName)}>
+            className={clsx("flex flex-col h-full p-4", formClassName)}>
             <div className="flex flex-col h-full">
                 <p className="text-md font-semibold">Register</p>
                 <p className="text-sm text-[var(--primary-color)] mb-3 font-normal">Fill input fields</p>
@@ -218,9 +220,10 @@ export default function Register({
                     {errorText("password")}
                 </div>
                 {/* Buttons */}
-                <div className="flex justify-between mt-auto">
-                    <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch">
-                        <div className="w-full flex justify-center sm:justify-start" ref={googleWrapperRef}>
+                <div className="w-full mt-4 ">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full items-center sm:items-stretch">
+                        {/* Google Login Button */}
+                        <div className="w-full sm:w-auto flex justify-center sm:justify-start" ref={googleWrapperRef}>
                             <GoogleLoginButton
                                 onSuccess={(res) => {
                                     if (res.credential) {
@@ -238,42 +241,50 @@ export default function Register({
                             />
                         </div>
 
-                        <FacebookLoginButton
-                            className={clsx(
-                                "h-10 py-2 px-4 border border-gray-200 text-sm flex items-center justify-center gap-2 w-full transition-all delay-100 hover:bg-gray-50"
-                            )}
-                            style={{ width: "100%", maxWidth: googleWidth ? `${googleWidth}px` : undefined }}
-                            text={loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
-                            onSuccess={(res) => {
-                                const accessToken = (res as unknown as { accessToken?: string }).accessToken;
-                                if (accessToken) {
-                                    setLoadingProvider("facebook");
-                                    // handleSsoLogin(`Bearer ${accessToken}`);
-                                } else {
-                                    toast.error("Facebook did not return an access token");
-                                }
-                            }}
-                            onError={(reason) => toast.error(reason)}
-                            scope="public_profile,email"
-                        />
+                        {/* Facebook Login Button */}
+                        <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+                            <FacebookLoginButton
+                                className={clsx(
+                                    "h-10 min-h-[40px] py-2 px-4 border border-gray-200 text-sm font-medium flex items-center justify-center gap-2 sm:w-auto transition-colors duration-150 hover:bg-gray-50"
+                                )}
+                                style={{ width: "100%",maxWidth: googleWidth ? `${googleWidth}px` : undefined }}
+                                text={loadingProvider === 'facebook' ? 'Connecting...' : 'Continue with Facebook'}
+                                onSuccess={(res) => {
+                                    const accessToken = (res as unknown as { accessToken?: string }).accessToken;
+                                    if (accessToken) {
+                                        setLoadingProvider("facebook");
+                                        // handleSsoLogin(`Bearer ${accessToken}`);
+                                    } else {
+                                        toast.error("Facebook did not return an access token");
+                                    }
+                                }}
+                                onError={(reason) => toast.error(reason)}
+                                scope="public_profile,email"
+                            />
+                        </div>
                     </div>
                 </div>
-                <div className="flex justify-between mt-auto">
-                    <Button
-                        onClick={handlePrev}
-                        className="bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)]"
-                        aria-label="Go to previous step"
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        onClick={formik.submitForm}
-                        className="bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)]"
-                        aria-label="Submit registration and request"
-                    >
-                        Submit
-                    </Button>
+
+                {/* Submit & Previous Buttons */}
+                <div className="w-full mt-6">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full justify-between">
+                        <Button
+                            onClick={handlePrev}
+                            className="w-full sm:w-auto h-10 bg-[var(--secondary-color)] border text-sm text-white hover:bg-white hover:text-[var(--secondary-color)] transition-colors duration-150"
+                            aria-label="Go to previous step"
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            onClick={formik.submitForm}
+                            className="w-full sm:w-auto h-10 bg-[var(--primary-color)] border text-sm text-white hover:bg-white hover:text-[var(--primary-color)] transition-colors duration-150"
+                            aria-label="Submit registration and request"
+                        >
+                            Submit
+                        </Button>
+                    </div>
                 </div>
+
             </div>
         </form>
     );
